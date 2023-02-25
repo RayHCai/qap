@@ -1,0 +1,52 @@
+.join-containers {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+}
+
+.join-room-container {
+    text-align: center;
+}
+
+.join-room-container h1 {
+    margin-bottom: 30px;
+}
+
+.join-room-container input {
+    width: 50%;
+    padding: 10px 20px;
+    align-self: center;
+    text-align: center;
+    transition: 0.2s;
+    outline: none;
+    border: 1px solid black;
+}
+
+.join-room-container button {
+    margin-left: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+    padding: 10px 20px;
+    background: none;
+    border: 1px solid black;
+}
+
+.join-room-container button:hover {
+    background: black;
+    color: white;
+}
+
+.create {
+    margin-top: 20px;
+    transition: 0.2s;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    display: block;
+}
+
+.create:hover {
+    text-decoration: underline;
+}
