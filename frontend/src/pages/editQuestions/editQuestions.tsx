@@ -63,7 +63,7 @@ export default function EditQuestions() {
         const json = await res.json();
 
         if(!res.ok) alert(json.message);
-        else navigate('/');
+        else navigate('/'); // TODO: store code in local storage so login bs doesnt happen
     }
 
     if(isLoading) return <Loading />;
