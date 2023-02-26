@@ -3,6 +3,16 @@
     margin-top: 20px;
 }
 
+.questions-container input {
+    padding: 10px 50px;
+    align-self: center;
+    text-align: center;
+    transition: 0.2s;
+    outline: none;
+    margin-bottom: 40px;
+    border: 1px solid black;
+}
+
 .questions-container button {
     margin-top: 20px;
     padding: 10px 20px;
@@ -17,22 +27,7 @@
     color: white;
 }
 
-.code-editor {
-    margin-top: 20px;
-    width: 500px;
-    height: 200px;
-    font-size: larger;
-    font-weight: bold !important;
-    font-family: 'Roboto', sans-serif !important;
-    background-color: #959cbd;
-}
-
-.questions-container input {
-    padding: 10px 20px;
-    align-self: center;
-    text-align: center;
-    transition: 0.2s;
-    outline: none;
-    margin-bottom: 40px;
-    border: 1px solid black;
+.md-editor {
+    width: 1000px !important;
+    height: 400px !important;
 }

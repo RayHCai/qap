@@ -2,7 +2,6 @@ import { useContext, useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router';
 
 import MDEditor from '@uiw/react-md-editor';
-import CodeEditor from '@uiw/react-textarea-code-editor';
 
 import { UserContext } from '../../contexts/userContext';
 
@@ -64,7 +63,7 @@ export default function EditQuestions() {
         const json = await res.json();
 
         if(!res.ok) alert(json.message);
-        else navigate(0);
+        else navigate('/');
     }
 
     if(isLoading) return <Loading />;
@@ -76,17 +75,11 @@ export default function EditQuestions() {
                     <Modal closeModal={ () => updateModalState(false) }>
                         <input ref={ title } type="text" placeholder="Question Title" />
 
-                        {/* <MDEditor
+                        <MDEditor
+                            className="md-editor"
+                            visibleDragbar={ false }
                             value={ content }
                             onChange={ (v) => updateContent(v!) }
-                        /> */}
-                        
-                        <CodeEditor
-                            className="code-editor"
-                            value={ content }
-                            language="js"
-                            placeholder="Please enter JS code."
-                            onChange={ (evn) => updateContent(evn.target.value) }
                         />
 
                         <button onClick={ createQuestion }>Create</button>
