@@ -1,0 +1,22 @@
+.modal-container {
+    position: absolute;
+    height: 100vh;
+    top: 0;
+    width: 100vw;
+    background: rgba(250, 250, 250, 0.9);
+}
+
+.modal-content-container {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}
+
+.close-modal-button {
+    position: absolute;
+    margin: 20px;
+    right: 0;
+    font-size: 30px;
+    cursor: pointer;
+}

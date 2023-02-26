@@ -1,17 +1,21 @@
 import { useRef, useState, useContext } from 'react';
 import { useNavigate } from 'react-router';
 
-import Loading from '../../components/loading';
-import { SERVER_URL } from '../../settings';
-
 import { UserContext } from '../../contexts/userContext';
 
-import './createRoom.css';
+import Loading from '../../components/loading/loading';
 
-export default function CreateRoom() {
-    const { setCode } = useContext(UserContext);
+import { SERVER_URL } from '../../settings';
+
+
+import './CreateAndManageRoom.css';
+
+export default function CreateAndManageRoom() {
     const navigate = useNavigate();
+    const { setCode } = useContext(UserContext);
 
+    const roomInput = useRef({} as HTMLInputElement);
+    const passwordInput = useRef({} as HTMLInputElement);
     const code = useRef({} as HTMLInputElement);
     const password = useRef({} as HTMLInputElement);
 
@@ -57,16 +61,31 @@ export default function CreateRoom() {
         }
     }
 
+    function manageRoom() {
+
+    }
+
     if(isLoading) return <Loading />;
 
     return (
-        <div className="create-room-container">
-            <h1>Create Room</h1>
+        <div>
+            <div className="join-room-container">
+                    <h1>Create Room</h1>
 
-            <input ref={ code } placeholder="Class Code..." type="text" />
-            <input ref={ password } placeholder="Teacher Password..." type="password" />
+                    <input ref={ code } placeholder="Class Code..." type="text" />
+                    <input ref={ password } placeholder="Teacher Password..." type="password" />
 
-            <button onClick={ createRoom }>Create</button>
+                    <button onClick={ createRoom }>Create</button>
+                </div>
+
+                <div className="join-room-container">
+                    <h1>Manage Room</h1>
+
+                    <input placeholder="Enter Room Code" ref={ roomInput } />
+                    <input placeholder="Enter Room Password" ref={ passwordInput } />
+
+                    <button onClick={ manageRoom }>Login</button>
+                </div>
         </div>
     );
 }

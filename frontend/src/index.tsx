@@ -6,8 +6,11 @@ import PrivateRoute from './components/privateRoute';
 
 import JoinRoom from './pages/joinRoom/joinRoom';
 import Room from './pages/room/room';
-import CreateRoom from './pages/createRoom/createRoom';
 import Manage from './pages/manage/manage';
+import PageNotFound from './pages/pageNotFound/pageNotFound';
+import CreateOrManageRoom from './pages/createOrManageRoom/createOrManageRoom';
+import EditQuestions from './pages/editQuestions/editQuestions';
+import Responses from './pages/responses/responses';
 
 import { UserContext } from './contexts/userContext';
 
@@ -22,12 +25,18 @@ function App() {
         <Routes>
           <Route index element={ <JoinRoom /> } />
 
-          <Route path="/room/:roomName" element={ <Room /> } />
-          <Route path="/create" element={ <CreateRoom /> } />
+          <Route path="/create-or-manage" element={ <CreateOrManageRoom /> } />
 
-          <Route element={ <PrivateRoute /> } path="/manage">
+          <Route path="/room/:roomName" element={ <Room /> } />
+          
+          <Route path="/manage" element={ <PrivateRoute /> }>
             <Route index element={ <Manage /> } />
+
+            <Route path="responses" element={ <Responses /> } />
+            <Route path="edit" element={ <EditQuestions /> } />
           </Route>
+
+          <Route path="*" element={ <PageNotFound /> } />
         </Routes>
       </BrowserRouter>
     </UserContext.Provider>

@@ -9,38 +9,26 @@ import './joinRoom.css';
 export default function JoinRoom() {
     const navigate = useNavigate();
 
-    const roomInput = useRef({} as HTMLInputElement);
+    const code = useRef({} as HTMLInputElement);
 
     function joinRoom() {
         (async function validateRoom() {
-            const res = await fetch(`${ SERVER_URL }/classes/${ roomInput.current.value }/`);
+            const res = await fetch(`${ SERVER_URL }/classes/${ code.current.value }/`);
 
             if(!res.ok) alert('Room not found.');
-            else navigate(`/room/${ roomInput.current.value }`);
+            else navigate(`/room/${ code.current.value }`);
         })();
     }
 
     return (
-        <div className="join-content-container">
-            <div className="join-containers">
-                <div className="join-room-container">
-                    <h1>Enter Room Name</h1>
+        <div className="join-room-container">
+            <h1>Join Room</h1>
 
-                    <input placeholder="Enter Room Code" ref={ roomInput } />
+            <input placeholder="Enter Room Code" ref={ code } />
 
-                    <button onClick={ joinRoom }>Join</button>
-                </div>
+            <button onClick={ joinRoom }>Join</button>
 
-                <div className="join-room-container">
-                    <h1>Enter Room Name</h1>
-
-                    <input placeholder="Enter Room Code" ref={ roomInput } />
-
-                    <button onClick={ joinRoom }>Join</button>
-                </div>
-            </div>
-
-            <Link to="/create" className="create">Or create a room</Link>
+            <Link className="animated-link" to="/create-or-manage">Or if you're a teacher, manage/create a room</Link>
         </div>
     );
 }

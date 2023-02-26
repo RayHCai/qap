@@ -2,4 +2,28 @@
 
 body {
     font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: none;
+}
+
+.animated-link {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.animated-link:after {    
+    background: none repeat scroll 0 0 transparent;
+    content: "";
+    display: block;
+    height: 1px;
+    left: 50%;
+    position: absolute;
+    background: #000000;
+    transition: width 0.3s ease 0s, left 0.3s ease 0s;
+    width: 0;
+}
+.animated-link:hover:after { 
+    width: 100%; 
+    left: 0; 
 }

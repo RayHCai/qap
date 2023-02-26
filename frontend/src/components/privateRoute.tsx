@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Outlet } from 'react-router';
+import { Outlet, Navigate } from 'react-router';
 
 import { UserContext } from '../contexts/userContext';
 
@@ -8,5 +8,5 @@ export default function PrivateRoute() {
 
     if(code) return <Outlet />
 
-    return <></>;
+    return <Navigate to="/create-or-manage" />;
 }
