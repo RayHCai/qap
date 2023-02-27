@@ -6,12 +6,19 @@ import MDEditor from '@uiw/react-md-editor';
 import { UserContext } from '../../contexts/userContext';
 
 import Loading from '../../components/loading/loading';
-import Question from '../../components/question';
 import Modal from '../../components/modal/modal';
 
 import { SERVER_URL } from '../../settings';
 
 import './editQuestions.css';
+
+function EditQuestionComponent(props: { title: string }) {
+    return (
+        <div className="edit-question-content">
+            <h3>{ props.title }</h3>
+        </div>
+    );
+}
 
 export default function EditQuestions() {
     const navigate = useNavigate();
@@ -63,7 +70,7 @@ export default function EditQuestions() {
         const json = await res.json();
 
         if(!res.ok) alert(json.message);
-        else navigate('/'); // TODO: store code in local storage so login bs doesnt happen
+        else navigate(0);
     }
 
     if(isLoading) return <Loading />;
@@ -91,11 +98,13 @@ export default function EditQuestions() {
 
             <button onClick={ () => updateModalState(true) }>Add a quesiton</button>
 
-            {
-                questions.map(
-                    q => <Question title={ q.title } content={ q.content } />
-                )
-            }
+            <div className="questions-content">
+                {
+                    questions.map(
+                        (q, i) => <EditQuestionComponent title={ q.title } key={ i } />
+                    )
+                }
+            </div>
         </div>
     );
 }

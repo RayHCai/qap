@@ -17,7 +17,14 @@ import { UserContext } from './contexts/userContext';
 import './main.css';
 
 function App() {
-  const [code, setCode] = useState(null as string | null);
+  const [code, updateCode] = useState(localStorage.getItem('classCode') as string | null);
+
+  function setCode(c: string | null) {
+    if(c) localStorage.setItem('classCode', c);
+    else localStorage.removeItem('classCode');
+
+    updateCode(c);
+  }
 
   return (
     <UserContext.Provider value={ { code, setCode } }>

@@ -1,8 +1,11 @@
 from rest_framework import serializers
+from questions.models import Question
 
 class QuestionsSerializer(serializers.ModelSerializer):
-    fields = [
-        'id',
-        'title',
-        'content'
-    ]
+    class Meta:
+        model = Question
+        fields = [
+            'id',
+            'title',
+            'content'
+        ]
