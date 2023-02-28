@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -12,12 +12,35 @@ import CreateOrManageRoom from './pages/createOrManageRoom/createOrManageRoom';
 import EditQuestions from './pages/editQuestions/editQuestions';
 import Responses from './pages/responses/responses';
 
+import Loading from './components/loading/loading';
+
 import { UserContext } from './contexts/userContext';
+
+import { SERVER_URL } from './settings';
 
 import './main.css';
 
 function App() {
   const [code, updateCode] = useState(localStorage.getItem('classCode') as string | null);
+  const [isLoading, updateLoading] = useState(false);
+
+  useEffect(() => {
+    if(!code) return;
+
+    updateLoading(true);
+
+    (async function() {
+      const res = await fetch(`${ SERVER_URL }/classes/${ code }`);
+      
+      if(!res.ok) {
+        updateCode(null);
+
+        localStorage.removeItem('classCode');
+      }
+
+      updateLoading(false);
+    })();
+  }, []);
 
   function setCode(c: string | null) {
     if(c) localStorage.setItem('classCode', c);
@@ -25,6 +48,8 @@ function App() {
 
     updateCode(c);
   }
+
+  if(isLoading) return <Loading />;
 
   return (
     <UserContext.Provider value={ { code, setCode } }>

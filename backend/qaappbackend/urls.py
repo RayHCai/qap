@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 
 from classes.views import ClassViews, CreateClassViews, ValidateTeacherViews
-from questions.views import QuestionsView
+from questions.views import QuestionsView, UpdateQuestionsView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -11,4 +11,5 @@ urlpatterns = [
     path('validate/', ValidateTeacherViews.as_view()),
     path('questions/<str:class_code>/', QuestionsView.as_view()),
     path('questions/<str:class_code>/<uuid:q_id>/', QuestionsView.as_view()),
+    path('update/', UpdateQuestionsView.as_view())
 ]

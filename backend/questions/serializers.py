@@ -7,5 +7,6 @@ class QuestionsSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'title',
-            'content'
+            'content',
+            'visible'
         ]

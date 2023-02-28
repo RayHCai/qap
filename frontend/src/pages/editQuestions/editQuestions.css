@@ -45,3 +45,18 @@
     padding: 20px 20px;
     border: 1px solid black;
 }
+
+.edit-question-content nav {
+    float: right;
+}
+
+.edit-quesiton-nav-icon {
+    font-size: 20px;
+    cursor: pointer;
+    margin: 10px;
+    transition: 0.2s;
+}
+
+.edit-quesiton-nav-icon:hover {
+    color: maroon;
+}

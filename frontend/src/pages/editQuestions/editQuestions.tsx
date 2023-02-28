@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router';
 
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { FaTrashAlt } from 'react-icons/fa';
@@ -21,20 +20,31 @@ type ChangeParameters = boolean | {
 };
 
 function EditQuestionComponent(props: { title: string, visible: boolean, changeVisibility: (v: boolean) => void }) {
-    const [isVisible, updateVisibility] = useState(props.visible);
-
     return (
         <div className="edit-question-content">
             <nav>
-                
+                {
+                    !props.visible ? 
+                        <AiFillEyeInvisible 
+                            onClick={ () => props.changeVisibility(true) } 
+                            className="edit-quesiton-nav-icon" 
+                        /> 
+                    : 
+                        <AiFillEye 
+                            onClick={ () => props.changeVisibility(false) } 
+                            className="edit-quesiton-nav-icon" 
+                        />
+                } 
+
+                <FaTrashAlt className="edit-quesiton-nav-icon" />   
             </nav>
+
             <h3>{ props.title }</h3>
         </div>
     );
 }
 
 export default function EditQuestions() {
-    const navigate = useNavigate();
     const { code } = useContext(UserContext);
 
     const [questions, updateQuestions] = useState([] as Question[]);
@@ -45,16 +55,22 @@ export default function EditQuestions() {
 
     const [content, updateContent] = useState('');
 
+    async function fetchQuestions() {
+        const res = await fetch(`${ SERVER_URL }/questions/${ code }/`);
+        const data = await res.json();
+
+        updateQuestions(data.data);
+    }
+
     useEffect(() => {
         updateLoading(true);
 
         (async function() {
-            const res = await fetch(`${ SERVER_URL }/questions/${ code }/`);
-            const data = await res.json();
+            await fetchQuestions();
 
-            updateQuestions(data.data);
             updateLoading(false);
         })();
+
     }, [code]);
 
     async function createQuestion() {
@@ -83,11 +99,36 @@ export default function EditQuestions() {
         const json = await res.json();
 
         if(!res.ok) alert(json.message);
-        else navigate(0);
+        else {
+            fetchQuestions();
+            updateModalState(false);  
+        }
     }
 
-    function editQuestion(id: string, changeObj: ChangeParameters) {
+    async function editQuestion(id: string, changeObj: ChangeParameters) {
+        updateLoading(true);
+        
+        const res = await fetch(`${ SERVER_URL }/update/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(
+                {
+                    id: id,
+                    change: changeObj
+                }
+            )
+        });
 
+        console.log(res, changeObj);
+
+        const json = await res.json();
+
+        if(!res.ok) alert(json.message);
+        else fetchQuestions();
+
+        updateLoading(false)
     }
 
     if(isLoading) return <Loading />;
@@ -118,7 +159,16 @@ export default function EditQuestions() {
             <div className="questions-content">
                 {
                     questions.map(
-                        (q, i) => <EditQuestionComponent title={ q.title } key={ i } visible={ true } changeVisibility={ (v: boolean) => editQuestion(q.id, v) } />
+                        (q, i) => (
+                            <EditQuestionComponent 
+                                key={ i }
+                                title={ q.title } 
+                                visible={ true } 
+                                changeVisibility={
+                                    (v: boolean) => editQuestion(q.id, v)
+                                } 
+                            />
+                        )
                     )
                 }
             </div>
