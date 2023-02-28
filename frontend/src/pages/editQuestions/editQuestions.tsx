@@ -1,6 +1,9 @@
 import { useContext, useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router';
 
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import { FaTrashAlt } from 'react-icons/fa';
+
 import MDEditor from '@uiw/react-md-editor';
 
 import { UserContext } from '../../contexts/userContext';
@@ -12,9 +15,19 @@ import { SERVER_URL } from '../../settings';
 
 import './editQuestions.css';
 
-function EditQuestionComponent(props: { title: string }) {
+type ChangeParameters = boolean | {
+    content?: string
+    title?: string
+};
+
+function EditQuestionComponent(props: { title: string, visible: boolean, changeVisibility: (v: boolean) => void }) {
+    const [isVisible, updateVisibility] = useState(props.visible);
+
     return (
         <div className="edit-question-content">
+            <nav>
+                
+            </nav>
             <h3>{ props.title }</h3>
         </div>
     );
@@ -73,6 +86,10 @@ export default function EditQuestions() {
         else navigate(0);
     }
 
+    function editQuestion(id: string, changeObj: ChangeParameters) {
+
+    }
+
     if(isLoading) return <Loading />;
 
     return (
@@ -101,7 +118,7 @@ export default function EditQuestions() {
             <div className="questions-content">
                 {
                     questions.map(
-                        (q, i) => <EditQuestionComponent title={ q.title } key={ i } />
+                        (q, i) => <EditQuestionComponent title={ q.title } key={ i } visible={ true } changeVisibility={ (v: boolean) => editQuestion(q.id, v) } />
                     )
                 }
             </div>
