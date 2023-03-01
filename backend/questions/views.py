@@ -54,14 +54,28 @@ class QuestionsView(APIView):
 
         return Response({'message': 'Success'}, status=200)
 
+class DeleteQuestionsView(APIView):
+    def post(self, request):
+        id = request.data.get('id')
+
+        if not id:
+            return Response({'message': 'Invalid Request'}, status=400)
+        
+        try:
+            question = Question.objects.get(id=id)
+        except Question.DoesNotExist:
+            return Response({'message': 'Question does not exist'}, status=404)
+
+        question.delete()
+
+        return Response({'message': 'Success'}, status=200)
+
 class UpdateQuestionsView(APIView):
     def post(self, request):
         id = request.data.get('id')
         change_obj = request.data.get('change')
 
-        print(id, change_obj)
-
-        if not id or not change_obj:
+        if not id or change_obj == None:
             return Response({'message': 'Invalid request'}, status=400)
 
         try:
@@ -71,10 +85,12 @@ class UpdateQuestionsView(APIView):
 
         if type(change_obj) == bool:
             question.visible = change_obj
-        elif content := change_obj.get('content'):
-            question.content = content
-        elif title := change_obj.get('title'):
-            question.title = title
+        else:
+            if content := change_obj.get('content'):
+                question.content = content
+            
+            if title := change_obj.get('title'):
+                question.title = title
 
         question.save()
 

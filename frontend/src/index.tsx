@@ -21,6 +21,7 @@ import { SERVER_URL } from './settings';
 import './main.css';
 
 function App() {
+  const [name, updateName] = useState(null as string | null);
   const [code, updateCode] = useState(localStorage.getItem('classCode') as string | null);
   const [isLoading, updateLoading] = useState(false);
 
@@ -52,14 +53,14 @@ function App() {
   if(isLoading) return <Loading />;
 
   return (
-    <UserContext.Provider value={ { code, setCode } }>
+    <UserContext.Provider value={ { code, setCode, name, updateName } }>
       <BrowserRouter>
         <Routes>
           <Route index element={ <JoinRoom /> } />
 
           <Route path="/create-or-manage" element={ <CreateOrManageRoom /> } />
 
-          <Route path="/room/:roomName" element={ <Room /> } />
+          <Route path="/room/:code" element={ <Room /> } />
           
           <Route path="/manage" element={ <PrivateRoute /> }>
             <Route index element={ <Manage /> } />

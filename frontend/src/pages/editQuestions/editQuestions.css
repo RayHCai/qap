@@ -46,6 +46,15 @@
     border: 1px solid black;
 }
 
+.edit-question-content h3 {
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.edit-question-content h3:hover {
+    color: maroon;
+}
+
 .edit-question-content nav {
     float: right;
 }

@@ -1,0 +1,9 @@
+.room-container {
+    margin-top: 20px;
+}
+
+.questions {
+    display: flex;
+    flex-direction: column;
+    margin-top: 100px;
+}

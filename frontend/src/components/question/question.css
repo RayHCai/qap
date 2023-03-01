@@ -1,0 +1,9 @@
+.question-container {
+    margin-bottom: 50px;
+    width: 40vw;
+    align-self: center;
+}
+
+.q {
+    padding: 10px;
+}
