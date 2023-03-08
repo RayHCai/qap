@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState, useRef } from 'react';
 
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import { GrClose } from 'react-icons/gr';
 import { FaTrashAlt } from 'react-icons/fa';
 
 import MDEditor from '@uiw/react-md-editor';
@@ -64,6 +65,9 @@ export default function EditQuestions() {
 
     const [updatingTitle, updateUpdatingTitle] = useState('');
     const [content, updateContent] = useState('');
+
+    const choices = useRef([] as HTMLInputElement[]);
+    const [numChoices, updateNumChoices] = useState(0);
 
     const title = useRef({} as HTMLInputElement);
 
@@ -176,6 +180,14 @@ export default function EditQuestions() {
         updateUpdateModalState(false);
     }
 
+    function deleteChoice(index: number) {
+        choices.current = choices.current.filter(
+            (_, i) => i !== index
+        );
+
+        updateNumChoices(numChoices - 1);
+    }
+
     if(isLoading) return <Loading />;
 
     return (
@@ -198,6 +210,30 @@ export default function EditQuestions() {
                             value={ content }
                             onChange={ (v) => updateContent(v!) }
                         />
+
+                        <div>
+                            <button onClick={ () => updateNumChoices(numChoices + 1) }>
+                                Add choice
+                            </button>
+
+                            <div className="choices-container">
+                                {
+                                    (new Array(numChoices)).fill((<input />)).map(
+                                        (_, index) => (
+                                            <div className="choice-container" key={ index }>
+                                                <GrClose className="delete-choice-button" onClick={ () => deleteChoice(index) } />
+
+                                                <input
+                                                    className="choice-input"
+                                                    ref={ el => choices.current[index] = el! }
+                                                />
+                                            </div>
+                                        )
+                                    )
+                                }
+                            </div>
+                        </div>
+
 
                         <button onClick={ createQuestion }>Create</button>
                     </Modal>

@@ -8,5 +8,6 @@ class QuestionsSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'content',
-            'visible'
+            'visible',
+            'choices',
         ]

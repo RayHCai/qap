@@ -18,3 +18,5 @@ class Question(models.Model):
     visible = models.BooleanField()
 
     c = models.ForeignKey(Classes, on_delete=models.CASCADE)
+
+    choices = models.TextField() # comma seperated list of choices

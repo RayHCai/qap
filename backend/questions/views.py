@@ -36,6 +36,7 @@ class QuestionsView(APIView):
     def post(self, request, class_code):
         title = request.data.get('title')
         content = request.data.get('content')
+        choices = request.data.get('choices')
 
         if not class_code or not title or not content:
             return Response({'message': 'Invalid request'}, status=400)
@@ -49,7 +50,8 @@ class QuestionsView(APIView):
             title=title,
             content=content,
             c=c,
-            visible=True
+            visible=True,
+            choices=choices
         )
 
         return Response({'message': 'Success'}, status=200)

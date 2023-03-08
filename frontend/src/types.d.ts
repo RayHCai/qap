@@ -3,4 +3,5 @@ declare interface Question {
     id: string;
     content: string;
     visible: boolean;
+    choices?: [];
 }
