@@ -13,11 +13,13 @@ class Answers(models.Model):
         editable=False
     )
 
-    answer = models.TextField(blank=True)
-    date_answered = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=255)
 
+    date_answered = models.DateTimeField(auto_now_add=True)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    username = models.CharField(max_length=255)
+
+    answer = models.TextField(blank=True)
+    choice = models.TextField(blank=True)
 
     correct = models.BooleanField()
     

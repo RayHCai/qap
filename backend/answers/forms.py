@@ -1,8 +1,8 @@
 from django import forms
 
 class AnswerCreationForm(forms.Form):
-    answer = forms.TextField()
-    
     question_id = forms.UUIDField()
-    username = forms.CharField(blank=True, max_length=255)
-    correct = forms.BooleanField()
+
+    name = forms.CharField(max_length=255)
+    answer = forms.CharField(required=False, widget=forms.Textarea)
+    choice = forms.CharField(required=False, widget=forms.Textarea)

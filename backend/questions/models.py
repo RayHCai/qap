@@ -19,4 +19,6 @@ class Question(models.Model):
 
     c = models.ForeignKey(Classes, on_delete=models.CASCADE)
 
-    choices = models.TextField() # comma seperated list of choices
+    choices = models.TextField(null=True) # comma seperated list of choices
+    select_multiple = models.BooleanField(null=True)
+    correct_answer = models.TextField(null=True)

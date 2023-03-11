@@ -7,3 +7,21 @@
     flex-direction: column;
     margin-top: 100px;
 }
+
+.room-btn-container {
+    
+}
+
+.room-btn-container button{
+    margin-top: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    background: none;
+    transition: 0.2s;
+    border: 1px solid black;
+}
+
+.room-btn-container button:hover {
+    color: white;
+    background: black;
+}

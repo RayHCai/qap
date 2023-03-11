@@ -10,4 +10,6 @@ class QuestionsSerializer(serializers.ModelSerializer):
             'content',
             'visible',
             'choices',
+            'select_multiple',
+            'correct_answer',
         ]

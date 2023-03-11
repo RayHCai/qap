@@ -7,3 +7,20 @@
 .q {
     padding: 10px;
 }
+
+.frq-section {
+    resize: none;
+}
+
+.options-container {
+    float: left !important;;
+    margin-top: 20px;
+}
+
+.choice-container {
+    display: flex;
+}
+
+.choice-container input {
+    margin-right: 20px;
+}

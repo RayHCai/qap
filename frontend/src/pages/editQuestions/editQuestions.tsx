@@ -62,14 +62,19 @@ export default function EditQuestions() {
 
     const [isUpdateModalOpen, updateUpdateModalState] = useState(false);
     const [updatingId, updateId] = useState('');
+    const [updatingSelectBox, updateSelectBoxState] = useState(false);
+    const [updatingCorrectAnswer, updateCorrectAnswer] = useState('');
 
     const [updatingTitle, updateUpdatingTitle] = useState('');
     const [content, updateContent] = useState('');
 
-    const choices = useRef([] as HTMLInputElement[]);
-    const [numChoices, updateNumChoices] = useState(0);
+    type Choice = { value: string };
+
+    const [choices, updateChoices] = useState<Choice[]>([]);
 
     const title = useRef({} as HTMLInputElement);
+    const selectMultiple = useRef({} as HTMLInputElement)
+    const correctAnswer = useRef({} as HTMLInputElement)
 
     async function fetchQuestions() {
         const res = await fetch(`${ SERVER_URL }/questions/${ code }/`);
@@ -107,7 +112,16 @@ export default function EditQuestions() {
             body: JSON.stringify(
                 {
                     title: t,
-                    content: c
+                    content: c,
+                    ...(
+                        choices.length === 0 ? {} : {
+                            choices: choices.map(
+                                c => c.value
+                            ).join(','),
+                            select_multiple: selectMultiple.current.checked,
+                            correct: correctAnswer.current.value
+                        }
+                    )
                 }
             )
         });
@@ -117,7 +131,7 @@ export default function EditQuestions() {
         if(!res.ok) alert(json.message);
         else {
             fetchQuestions();
-            updateModalState(false);  
+            refreshState();
         }
     }
 
@@ -171,21 +185,50 @@ export default function EditQuestions() {
     }
 
     function updateQuestion() {
+        const stringifiedQuestion = choices.map(
+            c => c.value
+        ).join(',');
+
         editQuestion(updatingId, {
             title: title.current.value,
-            content: content
+            content: content,
+            ...(
+                choices.length === 0 ? {} : {
+                    choices: stringifiedQuestion,
+                    select_multiple: updatingSelectBox,
+                    correct: updatingCorrectAnswer
+                }
+            )
         });
 
-        updateContent('');
-        updateUpdateModalState(false);
+        refreshState();
     }
 
     function deleteChoice(index: number) {
-        choices.current = choices.current.filter(
+        let newChoices = [...choices];
+
+        newChoices = newChoices.filter(
             (_, i) => i !== index
         );
 
-        updateNumChoices(numChoices - 1);
+        updateChoices(newChoices);
+    }
+
+    function changeChoice(index: number, value: string) {
+        let newChoices = [...choices];
+
+        newChoices[index] = { value: value };
+        
+        updateChoices(newChoices);
+    }
+
+    function refreshState() {
+        updateModalState(false);
+        updateUpdateModalState(false);
+        updateContent('');
+        updateChoices([]);
+        updateSelectBoxState(false);
+        updateCorrectAnswer('');
     }
 
     if(isLoading) return <Loading />;
@@ -195,12 +238,7 @@ export default function EditQuestions() {
             {
                 modalOpen ? (
                     <Modal 
-                        closeModal={
-                            () => {
-                                updateModalState(false);
-                                updateContent('');
-                            }
-                        }
+                        closeModal={ refreshState }
                     >
                         <input ref={ title } type="text" placeholder="Question Title" />
 
@@ -212,20 +250,33 @@ export default function EditQuestions() {
                         />
 
                         <div>
-                            <button onClick={ () => updateNumChoices(numChoices + 1) }>
+                            <button onClick={ () => updateChoices([...choices, { value: '' }]) }>
                                 Add choice
                             </button>
 
+                            <div className="select-multiple-container">
+                                <label>Allow Multiple Choices</label>
+                                <input type="checkbox" ref={ selectMultiple } disabled={ choices.length === 0 } />
+                            </div>
+
+                            <div className="correct-answer-container">
+                                <label>Correct Answer</label>
+                                <input type="text" className="choice-input" ref={ correctAnswer } disabled={ choices.length === 0 } />
+                            </div>
+
                             <div className="choices-container">
                                 {
-                                    (new Array(numChoices)).fill((<input />)).map(
-                                        (_, index) => (
+                                    choices.map(
+                                        (c, index) => (
                                             <div className="choice-container" key={ index }>
-                                                <GrClose className="delete-choice-button" onClick={ () => deleteChoice(index) } />
+                                                <div className="edit-q-d-choice-container">
+                                                    <GrClose className="delete-choice-button" onClick={ () => deleteChoice(index) } />
+                                                </div>
 
                                                 <input
                                                     className="choice-input"
-                                                    ref={ el => choices.current[index] = el! }
+                                                    value={ c.value }
+                                                    onChange={ (e) => changeChoice(index, e.target.value) }
                                                 />
                                             </div>
                                         )
@@ -233,7 +284,6 @@ export default function EditQuestions() {
                                 }
                             </div>
                         </div>
-
 
                         <button onClick={ createQuestion }>Create</button>
                     </Modal>
@@ -243,12 +293,7 @@ export default function EditQuestions() {
             {
                 isUpdateModalOpen ? (
                     <Modal 
-                        closeModal={
-                            () => {
-                                updateUpdateModalState(false);
-                                updateContent('');
-                            }
-                        }
+                        closeModal={ refreshState }
                     >
                         <input ref={ title } defaultValue={ updatingTitle } type="text" placeholder="Question Title" />
 
@@ -258,6 +303,54 @@ export default function EditQuestions() {
                             value={ content }
                             onChange={ (v) => updateContent(v!) }
                         />
+
+                        <div>
+                            <button onClick={ () => updateChoices([...choices, { value: '' }]) }>
+                                Add choice
+                            </button>
+
+                            <div className="select-multiple-container">
+                                <label>Allow Multiple Choices</label>
+
+                                <input 
+                                    type="checkbox" 
+                                    onChange={ (e) => updateSelectBoxState(e.target.checked) } 
+                                    checked={ updatingSelectBox } 
+                                    disabled={ choices.length === 0 } 
+                                />
+                            </div>
+
+                            <div className="correct-answer-container">
+                                <label>Correct Answer</label>
+                                <input 
+                                    type="text" 
+                                    className="choice-input" 
+                                    value={ updatingCorrectAnswer } 
+                                    disabled={ choices.length === 0 }
+                                    onChange={ (e) => updateCorrectAnswer(e.target.value) } 
+                                />
+                            </div>
+
+                            <div className="choices-container">
+                                {
+                                    choices.map(
+                                        (c, index) => (
+                                            <div className="choice-container" key={ index }>
+                                                <div className="edit-q-d-choice-container">
+                                                    <GrClose className="delete-choice-button" onClick={ () => deleteChoice(index) } />
+                                                </div>
+
+                                                <input
+                                                    className="choice-input"
+                                                    value={ c.value }
+                                                    onChange={ (e) => changeChoice(index, e.target.value) }
+                                                />
+                                            </div>
+                                        )
+                                    )
+                                }
+                            </div>
+                        </div>
 
                         <button onClick={ updateQuestion }>Update</button>
                     </Modal>
@@ -284,11 +377,20 @@ export default function EditQuestions() {
                                 }
                                 openModal={
                                     () => {
-                                        
                                         updateUpdateModalState(true);
                                         updateId(q.id);
                                         updateContent(q.content);
                                         updateUpdatingTitle(q.title);
+
+                                        if(q.select_multiple) updateSelectBoxState(q.select_multiple);
+                                        if(q.correct_answer) updateCorrectAnswer(q.correct_answer);
+
+                                        updateChoices(
+                                            q.choices ? q.choices.split(',').map(
+                                                s => ( { value: s } )
+                                            ) 
+                                            : [] as Choice[]
+                                        );
                                     }
                                 }
                             />

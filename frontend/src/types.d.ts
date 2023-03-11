@@ -3,5 +3,7 @@ declare interface Question {
     id: string;
     content: string;
     visible: boolean;
-    choices?: [];
+    choices?: string;
+    select_multiple?: boolean;
+    correct_answer?: string;
 }

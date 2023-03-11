@@ -37,6 +37,8 @@ class QuestionsView(APIView):
         title = request.data.get('title')
         content = request.data.get('content')
         choices = request.data.get('choices')
+        correct_answer = request.data.get('correct')
+        select_multiple = request.data.get('select_multiple')
 
         if not class_code or not title or not content:
             return Response({'message': 'Invalid request'}, status=400)
@@ -51,7 +53,9 @@ class QuestionsView(APIView):
             content=content,
             c=c,
             visible=True,
-            choices=choices
+            choices=choices,
+            correct_answer=correct_answer,
+            select_multiple=select_multiple,
         )
 
         return Response({'message': 'Success'}, status=200)
@@ -93,6 +97,12 @@ class UpdateQuestionsView(APIView):
             
             if title := change_obj.get('title'):
                 question.title = title
+
+            question.choices = change_obj.get('choices')
+
+            if change_obj.get('choices'):
+                question.select_multiple = change_obj.get('select_multiple')
+                question.correct_answer = change_obj.get('correct')
 
         question.save()
 
