@@ -21,7 +21,6 @@ import { SERVER_URL } from './settings';
 import './main.css';
 
 function App() {
-  // TODO: need to be able to answer questions bruh
   const [name, updateName] = useState(null as string | null);
   const [code, updateCode] = useState(localStorage.getItem('classCode') as string | null);
   const [isLoading, updateLoading] = useState(false);
