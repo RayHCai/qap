@@ -1,8 +1,10 @@
+import { forwardRef } from 'react';
+
 import MDEditor from '@uiw/react-md-editor';
 
 import './question.css';
 
-export default function Question(props: { question: Question }) {
+const Question = forwardRef<HTMLFormElement & HTMLTextAreaElement, { question: Question, answers: Answer[], curQ: number }>((props, ref) => {
     return (
         <div className="question-container">
             <h1>{ props.question.title }</h1>
@@ -12,19 +14,35 @@ export default function Question(props: { question: Question }) {
             {
                 props.question.choices ? (
                     <div className="options-container">
-                        {
-                            props.question.choices.split(',').map(
-                                (c, i) => (
-                                    <div className="choice-container" key={ i }>
-                                        <input type={ props.question.select_multiple ? "checkbox" : "radio" } />
-                                        <p>{ c }</p>
-                                    </div>
+                        <form ref={ ref }>
+                            {
+                                props.question.choices.split(',').map(
+                                    (c, i) => (
+                                        <div className="choice-container" key={ i }>
+                                            <input
+                                                type={ props.question.select_multiple ? "checkbox" : "radio" } 
+                                                value={ c } 
+                                                name="choice"
+                                                defaultChecked={ c === props.answers[props.curQ].answer }
+                                            />
+
+                                            <p>{ c }</p>
+                                        </div>
+                                    )
                                 )
-                            )
-                        }
+                            }
+                        </form>
                     </div>
-                ) : <textarea className="frq-sections" />
+                ) : (
+                    <textarea
+                        ref={ ref } 
+                        className="frq-sections"
+                        defaultValue={ props.answers[props.curQ].answer }
+                    />
+                )
             }
         </div>
     );
-}
+});
+
+export default Question;

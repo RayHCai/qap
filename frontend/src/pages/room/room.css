@@ -8,12 +8,12 @@
     margin-top: 100px;
 }
 
-.room-btn-container {
-    
+.room-btns-container {
+    margin: auto;
 }
 
-.room-btn-container button{
-    margin-top: 20px;
+.room-btns-container button{
+    margin: 20px;
     padding: 10px 20px;
     cursor: pointer;
     background: none;
@@ -21,7 +21,7 @@
     border: 1px solid black;
 }
 
-.room-btn-container button:hover {
+.room-btns-container button:hover {
     color: white;
     background: black;
 }

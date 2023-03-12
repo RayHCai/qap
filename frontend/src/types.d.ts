@@ -7,3 +7,8 @@ declare interface Question {
     select_multiple?: boolean;
     correct_answer?: string;
 }
+
+declare type Answer = {
+    question: number;
+    answer: string;
+};
