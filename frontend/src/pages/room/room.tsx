@@ -19,7 +19,7 @@ export default function Room() {
 
     const [curPage, updateCurPage] = useState(0);
 
-    const answer = createRef<HTMLFormElement & HTMLTextAreaElement>();
+    const answer = createRef<HTMLDivElement & HTMLTextAreaElement>();
 
     const [answers, updateAnswers] = useState([] as Answer[]);
 
@@ -69,7 +69,13 @@ export default function Room() {
                 }
             }
 
-            console.log(curAnswer);
+            const newAnswers = [...answers];
+
+            if(!curAnswer.answer) return;
+
+            newAnswers[curPage] = curAnswer;
+
+            updateAnswers(newAnswers);
         }
     }
 
@@ -94,25 +100,33 @@ export default function Room() {
     }
 
     if(isLoading) return <Loading />;
-
+    
     return (
         <div className="room-container">
             <div className="questions">
                 {
-                    questions.length > curPage ? <Question question={ questions[curPage] } ref={ answer } answers={ answers } curQ={ curPage } /> : <></>
+                    questions.filter(
+                        (_, i) => i === curPage
+                    ).map(
+                        (q, i) => <Question key={ i } question={ q } ref={ answer } answer={ answers.filter(a => a.question === curPage)[0] } />
+                    )
                 }
 
                 <div className="room-btns-container">
-                    {
-                        curPage === questions.length - 1 
-                        ? (
-                            <div className="room-btns-back-and-submit">
-                                <button onClick={ () => updateCurPage(curPage - 1) }>Back</button>
-                                <button onClick={ submit }>Submit</button>
-                            </div>
-                        ) 
-                        : <button onClick={ nextQuestion }>Next Question</button>
-                    }
+                    <div className="room-btns-back-and-submit">
+                        {
+                            curPage > 0 ? <button onClick={ () => {
+                                getAnswer();
+                                updateCurPage(curPage - 1);
+                            } }>Back</button> : <></>
+                        }
+
+                        {
+                            curPage === questions.length - 1 
+                            ? <button onClick={ submit }>Submit</button>
+                            : <button onClick={ nextQuestion }>Next Question</button>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
