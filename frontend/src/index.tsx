@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import PrivateRoute from './components/privateRoute';
+import StudentRoute from './components/studentRoute';
 
 import JoinRoom from './pages/joinRoom/joinRoom';
 import Room from './pages/room/room';
@@ -57,11 +58,12 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route index element={ <JoinRoom /> } />
-
           <Route path="/create-or-manage" element={ <CreateOrManageRoom /> } />
 
-          <Route path="/room/:code" element={ <Room /> } />
-          
+          <Route path="/room/:code" element={ <StudentRoute /> }>
+            <Route index element={ <Room /> } />
+          </Route>
+
           <Route path="/manage" element={ <PrivateRoute /> }>
             <Route index element={ <Manage /> } />
 

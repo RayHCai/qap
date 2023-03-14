@@ -25,9 +25,24 @@ class CreateAnswerView(APIView):
         if question.correct_answer and question.correct_answer == form_data.get('choice'):
             correct = True
 
-        # TODO: need to handle case where multiple options are correct.
+        if question.select_multiple:
+            correct = True
+            chosen = question.correct_answer.split(',')
+            selected = form_data.get('choice').split(',')
 
-        Answers.ojects.create(
+            chosen.sort()
+            selected.sort()
+
+            if len(chosen) != len(selected):
+                correct = False
+            else:
+                for i in range(len(chosen)):
+                    if chosen[i] != selected[i]:
+                        correct = False
+
+                        break
+
+        Answers.objects.create(
             question=question,
             name=form_data.get('name'),
             answer=form_data.get('answer'),

@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext, createRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import Loading from '../../components/loading/loading';
 import Question from '../../components/question/question';
@@ -13,6 +13,8 @@ import './room.css';
 export default function Room() {
     const { name } = useContext(UserContext);
     const { code } = useParams();
+
+    const navigate = useNavigate();
 
     const [questions, updateQuestions] = useState([] as Question[]);
     const [isLoading, updateLoadingState] = useState(false);
@@ -46,7 +48,18 @@ export default function Room() {
     }, []);
 
     function getAnswer() {
-        if(answer.current!.value) console.log(answer.current!.value);
+        if(answer.current!.value) {
+            const newAnswers = [...answers];
+
+            newAnswers[curPage] = {
+                question: curPage,
+                answer: answer.current!.value
+            };
+
+            updateAnswers(newAnswers);
+
+            return newAnswers;
+        }
         else {
             const curAnswer = {} as Answer;
 
@@ -71,11 +84,13 @@ export default function Room() {
 
             const newAnswers = [...answers];
 
-            if(!curAnswer.answer) return;
+            if(!curAnswer.answer) return newAnswers;
 
             newAnswers[curPage] = curAnswer;
 
             updateAnswers(newAnswers);
+
+            return newAnswers;
         }
     }
 
@@ -85,22 +100,57 @@ export default function Room() {
     }
 
     async function submit() {
-        getAnswer();
-        // const res = await fetch(`${ SERVER_URL }/answers/`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(
-        //         {
-        //             question_id: 
-        //         }
-        //     )
-        // });
+        const newAnswers = getAnswer();
+
+        if(newAnswers.filter(
+            a => a.answer.replaceAll(' ', '').length === 0
+        ).length !== 0) {
+            alert('Need to answer all questions before submitting.');
+
+            return;
+        }
+
+        const res = await Promise.all(
+            questions.map(
+                async (q, i) => {
+                    const answer = newAnswers[i];
+
+                    return await fetch(`${ SERVER_URL }/answers/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(
+                            {
+                                question_id: q.id,
+                                name: name,
+                                ...(
+                                    q.choices ? {
+                                        choice: answer.answer
+                                    } : {
+                                        answer: answer.answer
+                                    }
+                                )
+                            }
+                        )
+                    });
+                }
+            )
+        );
+
+        for(const r of res) {
+            if(!r.ok) {
+                alert('Something went wrong.');
+                
+                return;
+            }
+
+            navigate('/');
+        }
     }
 
     if(isLoading) return <Loading />;
-    
+
     return (
         <div className="room-container">
             <div className="questions">
@@ -108,7 +158,7 @@ export default function Room() {
                     questions.filter(
                         (_, i) => i === curPage
                     ).map(
-                        (q, i) => <Question key={ i } question={ q } ref={ answer } answer={ answers.filter(a => a.question === curPage)[0] } />
+                        (q, i) => <Question key={ q.id } question={ q } ref={ answer } answer={ answers.filter(a => a.question === curPage)[0] } />
                     )
                 }
 

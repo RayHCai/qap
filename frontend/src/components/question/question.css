@@ -9,7 +9,13 @@
 }
 
 .frq-section {
-    resize: none;
+    resize: vertical;
+    width: 90%;
+    margin-left: 20px;
+    margin-top: 20px;
+    outline: none;
+    height: 60%;
+    padding: 10px;
 }
 
 .options-container {

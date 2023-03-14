@@ -14,7 +14,11 @@ const Question = forwardRef<HTMLDivElement & HTMLTextAreaElement, { question: Qu
             if(props.answer.answer.length === 0) return temp;
 
             temp = temp.map(
-                (_, i) => props.question.choices!.split(',')[i] === props.answer.answer
+                (_, i) => {
+                    if(props.question.select_multiple) return props.answer.answer.split(',').includes(props.question.choices!.split(',')[i]);
+
+                    return props.question.choices!.split(',')[i] === props.answer.answer
+                }
             );
 
             return temp;
@@ -60,7 +64,7 @@ const Question = forwardRef<HTMLDivElement & HTMLTextAreaElement, { question: Qu
                 ) : (
                     <textarea
                         ref={ ref } 
-                        className="frq-sections"
+                        className="frq-section"
                         defaultValue={ props.answer.answer }
                     />
                 )
