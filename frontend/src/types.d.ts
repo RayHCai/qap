@@ -9,6 +9,10 @@ declare interface Question {
 }
 
 declare type Answer = {
-    question: number;
+    question?: number;
     answer: string;
+    name?: string;
+    date_answered?: string;
+    choice?: string;
+    correct?: string;
 };

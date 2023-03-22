@@ -112,6 +112,8 @@ export default function CreateOrManageRoom() {
 
     if(isLoading) return <Loading />;
 
+    // TODO: Need to chnage how you mark correct question. Can just use checkbox next to question to mark if its right or not.
+
     return (
         <div className="create-or-manage-content-container">
             <div className="create-or-manage-flexed-container">

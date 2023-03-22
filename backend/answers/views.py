@@ -6,6 +6,8 @@ from answers.forms import AnswerCreationForm
 
 from questions.models import Question
 
+from classes.models import Classes
+
 class CreateAnswerView(APIView):
     def post(self, request):
         form = AnswerCreationForm(request.data)
@@ -53,23 +55,30 @@ class CreateAnswerView(APIView):
         return Response({'message': 'Success'}, status=200)
 
 class GetAnswerView(APIView):
-    def get(self, request, question_id):
+    def get(self, request, class_code):
         try:
-            question = Question.objects.get(id=question_id)
-        except Question.DoesNotExist:
-            return Response({'message': 'Question not found'}, status=404)
+            c = Classes.objects.get(code=class_code)
+        except Classes.DoesNotExist:
+            return Response({'message': 'Class does not exist'}, status=404)
 
-        answers = Answers.objects.filter(question=question)
+        all_questions = Question.objects.filter(c=c)
 
-        serialized_answers = []
+        total_serialized = {}
 
-        for a in answers:
-            serialized_answers.append({
-                'date_answered': a.date_answered,
-                'answer': a.answer,
-                'choice': a.choice,
-                'correct': a.correct,
-                'name': a.name,
-            })
+        for question in all_questions:
+            answers = Answers.objects.filter(question=question)
 
-        return Response({'data': serialized_answers}, status=200)
+            serialized_answers = []
+
+            for a in answers:
+                serialized_answers.append({
+                    'date_answered': a.date_answered,
+                    'answer': a.answer,
+                    'choice': a.choice,
+                    'correct': a.correct,
+                    'name': a.name,
+                })
+            
+            total_serialized[question.title] = serialized_answers
+
+        return Response({'data': total_serialized}, status=200)
