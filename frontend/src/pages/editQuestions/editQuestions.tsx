@@ -11,6 +11,8 @@ import { UserContext } from '../../contexts/userContext';
 import Loading from '../../components/loading/loading';
 import Modal from '../../components/modal/modal';
 
+import EditChoice from './editChoice';
+
 import { SERVER_URL } from '../../settings';
 
 import './editQuestions.css';
@@ -68,7 +70,7 @@ export default function EditQuestions() {
     const [updatingTitle, updateUpdatingTitle] = useState('');
     const [content, updateContent] = useState('');
 
-    type Choice = { value: string };
+    type Choice = { value: string; correct: boolean };
 
     const [choices, updateChoices] = useState<Choice[]>([]);
 
@@ -126,6 +128,8 @@ export default function EditQuestions() {
             )
         });
         
+        console.log(choices);
+
         const json = await res.json();
 
         if(!res.ok) alert(json.message);
@@ -217,8 +221,20 @@ export default function EditQuestions() {
     function changeChoice(index: number, value: string) {
         let newChoices = [...choices];
 
-        newChoices[index] = { value: value };
+        newChoices[index] = { value: value, correct: false };
         
+        console.log(newChoices);
+
+        updateChoices(newChoices);
+    }
+
+    function changeCorrect(index: number, checked: boolean) {
+        let newChoices = [...choices];
+
+        newChoices[index].correct = checked;
+
+        console.log(newChoices);
+
         updateChoices(newChoices);
     }
 
@@ -250,7 +266,7 @@ export default function EditQuestions() {
                         />
 
                         <div>
-                            <button onClick={ () => updateChoices([...choices, { value: '' }]) }>
+                            <button onClick={ () => updateChoices([...choices, { value: '', correct: false }]) }>
                                 Add choice
                             </button>
 
@@ -268,17 +284,14 @@ export default function EditQuestions() {
                                 {
                                     choices.map(
                                         (c, index) => (
-                                            <div className="choice-container" key={ index }>
-                                                <div className="edit-q-d-choice-container">
-                                                    <GrClose className="delete-choice-button" onClick={ () => deleteChoice(index) } />
-                                                </div>
-
-                                                <input
-                                                    className="choice-input"
-                                                    value={ c.value }
-                                                    onChange={ (e) => changeChoice(index, e.target.value) }
-                                                />
-                                            </div>
+                                            <EditChoice 
+                                                deleteChoice={ () => deleteChoice(index) }
+                                                changeChoice={ (v) => changeChoice(index, v) }
+                                                changeCorrect={ (v) => changeCorrect(index, v) }
+                                                correct={ c.correct }
+                                                value={ c.value }
+                                                key={ index }
+                                            />
                                         )
                                     )
                                 }
@@ -305,7 +318,7 @@ export default function EditQuestions() {
                         />
 
                         <div>
-                            <button onClick={ () => updateChoices([...choices, { value: '' }]) }>
+                            <button onClick={ () => updateChoices([...choices, { value: '', correct: false }]) }>
                                 Add choice
                             </button>
 
@@ -336,14 +349,13 @@ export default function EditQuestions() {
                                     choices.map(
                                         (c, index) => (
                                             <div className="choice-container" key={ index }>
-                                                <div className="edit-q-d-choice-container">
-                                                    <GrClose className="delete-choice-button" onClick={ () => deleteChoice(index) } />
-                                                </div>
-
-                                                <input
-                                                    className="choice-input"
+                                                <EditChoice 
+                                                    deleteChoice={ () => deleteChoice(index) }
+                                                    changeChoice={ (v) => changeChoice(index, v) }
+                                                    changeCorrect={ (v) => changeCorrect(index, v) }
+                                                    correct={ c.correct }
                                                     value={ c.value }
-                                                    onChange={ (e) => changeChoice(index, e.target.value) }
+                                                    key={ index }
                                                 />
                                             </div>
                                         )
@@ -387,7 +399,13 @@ export default function EditQuestions() {
 
                                         updateChoices(
                                             q.choices ? q.choices.split(',').map(
-                                                s => ( { value: s } )
+                                                s => {
+                                                    let isCorrect = false;
+
+                                                    if(q.correct_answer!.split(',').includes(s)) isCorrect = true;
+
+                                                    return { value: s, correct: isCorrect };
+                                                }
                                             ) 
                                             : [] as Choice[]
                                         );
