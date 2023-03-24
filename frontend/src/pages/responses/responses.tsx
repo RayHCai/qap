@@ -28,7 +28,7 @@ export default function Responses() {
 
             updateLoading(false);
         })();
-    }, []);
+    }, [code]);
 
     if(isLoading) return <Loading />;
 

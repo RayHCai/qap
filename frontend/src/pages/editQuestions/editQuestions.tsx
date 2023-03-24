@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useRef } from 'react';
+import { useContext, useEffect, useState, useRef, useCallback } from 'react';
 
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { FaTrashAlt } from 'react-icons/fa';
@@ -77,12 +77,12 @@ export default function EditQuestions() {
     const selectMultiple = useRef({} as HTMLInputElement)
     const correctAnswer = useRef({} as HTMLInputElement)
 
-    async function fetchQuestions() {
+    const fetchQuestions = useCallback(async function() {
         const res = await fetch(`${ SERVER_URL }/questions/${ code }/`);
         const data = await res.json();
 
         updateQuestions(data.data);
-    }
+    }, [code]);
 
     useEffect(() => {
         updateLoading(true);
@@ -93,7 +93,7 @@ export default function EditQuestions() {
             updateLoading(false);
         })();
 
-    }, [code]);
+    }, [code, fetchQuestions]);
 
     async function createQuestion() {
         const t = title.current.value.replaceAll(' ', '');

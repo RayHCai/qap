@@ -45,7 +45,7 @@ export default function Room() {
                 updateLoadingState(false);
             }
         })();
-    }, []);
+    }, [code]);
 
     function getAnswer() {
         if(answer.current!.value) {
