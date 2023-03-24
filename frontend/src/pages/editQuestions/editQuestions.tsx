@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState, useRef } from 'react';
 
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
-import { GrClose } from 'react-icons/gr';
 import { FaTrashAlt } from 'react-icons/fa';
 
 import MDEditor from '@uiw/react-md-editor';

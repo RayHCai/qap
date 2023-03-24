@@ -42,7 +42,7 @@ function App() {
 
       updateLoading(false);
     })();
-  }, []);
+  }, [code]);
 
   function setCode(c: string | null) {
     if(c) localStorage.setItem('classCode', c);
