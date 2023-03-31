@@ -8,7 +8,7 @@ import Loading from '../../components/loading/loading';
 
 import { SERVER_URL } from '../../settings';
 
-import './createOrManageRoom.css';
+import classes from './createOrManageRoom.module.css';
 
 export default function CreateOrManageRoom() {
     const navigate = useNavigate();
@@ -113,25 +113,23 @@ export default function CreateOrManageRoom() {
     if(isLoading) return <Loading />;
 
     return (
-        <div className="create-or-manage-content-container">
-            <div className="create-or-manage-flexed-container">
-                <div className="create-or-manage-container">
-                    <h1>Create Room</h1>
+        <div className={ classes.contentContainer }>
+            <div className="create-or-manage-container">
+                <h1>Create Room</h1>
 
-                    <input ref={ createRoomCode } placeholder="Enter Room Code" type="text" />
-                    <input ref={ createPassword } placeholder="Enter Teacher Password" type="password" />
+                <input ref={ createRoomCode } placeholder="Enter Room Code" type="text" />
+                <input ref={ createPassword } placeholder="Enter Teacher Password" type="password" />
 
-                    <button onClick={ createRoom }>Create</button>
-                </div>
+                <button onClick={ createRoom }>Create</button>
+            </div>
 
-                <div className="create-or-manage-container">
-                    <h1>Manage Room</h1>
+            <div className="create-or-manage-container">
+                <h1>Manage Room</h1>
 
-                    <input placeholder="Enter Room Code" ref={ manageRoomCode } />
-                    <input placeholder="Enter Teacher Password" type="password" ref={ managePassword } />
+                <input placeholder="Enter Room Code" ref={ manageRoomCode } />
+                <input placeholder="Enter Teacher Password" type="password" ref={ managePassword } />
 
-                    <button onClick={ manageRoom }>Login</button>
-                </div>
+                <button onClick={ manageRoom }>Login</button>
             </div>
 
             <Link className="animated-link" to="/">Or if you're a student, join a room</Link>

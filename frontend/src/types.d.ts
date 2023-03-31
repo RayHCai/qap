@@ -1,3 +1,5 @@
+declare module '*.css';
+
 declare interface Question {
     title: string;
     id: string;

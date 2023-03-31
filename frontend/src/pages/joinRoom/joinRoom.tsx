@@ -6,7 +6,7 @@ import { UserContext } from '../../contexts/userContext';
 
 import { SERVER_URL } from '../../settings';
 
-import './joinRoom.css';
+import classes from './joinRoom.module.css';
 
 export default function JoinRoom() {
     const navigate = useNavigate();
@@ -18,6 +18,7 @@ export default function JoinRoom() {
     async function joinRoom() {
         if(name.current.value.replaceAll(' ', '').length === 0 || code.current.value.replaceAll(' ', '').length === 0) {
             alert('Name and code cannot be empty');
+
             return;
         }
         
@@ -33,13 +34,16 @@ export default function JoinRoom() {
     }
 
     return (
-        <div className="join-room-container">
-            <h1>Join Room</h1>
+        <div className={ classes.joinRoomContainer }>
+            <h1>Student Login</h1>
 
-            <input placeholder="Enter Name" ref={ name } />
-            <input placeholder="Enter Room Code" ref={ code } />
+            <div className={ classes.inputContainer }>
+                <input placeholder="Enter Name" ref={ name } />
+                <input placeholder="Enter Room Code" ref={ code } />
+            </div>
 
-            <button onClick={ joinRoom }>Join</button>
+
+            <button className="styled-button" onClick={ joinRoom }>Join</button>
 
             <Link className="animated-link" to="/create-or-manage">Or if you're a teacher, manage/create a room</Link>
         </div>

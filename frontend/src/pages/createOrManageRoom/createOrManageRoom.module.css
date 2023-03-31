@@ -1,17 +1,20 @@
-.join-room-container {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+.contentContainer {
     text-align: center;
+    display: flex;
+    margin: 0 auto;
+    display: block;
 }
 
-.join-room-container h1 {
+.create-or-manage-container {
+    margin: 50px;
+}
+
+.create-or-manage-container h1 {
     margin-bottom: 30px;
 }
 
-.join-room-container input {
-    padding: 10px 20px;
+.create-or-manage-container input {
+    padding: 10px 50px;
     align-self: center;
     text-align: center;
     transition: 0.2s;
@@ -20,7 +23,7 @@
     border: 1px solid black;
 }
 
-.join-room-container button {
+.create-or-manage-container button {
     cursor: pointer;
     transition: 0.2s;
     padding: 10px 20px;
@@ -31,7 +34,7 @@
     margin-bottom: 50px;
 }
 
-.join-room-container button:hover {
+.create-or-manage-container button:hover {
     background: black;
     color: white;
 }

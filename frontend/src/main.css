@@ -1,7 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
 
+:root {
+    --red: rgb(78, 6, 6);
+    --gold: gold;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
+    
     margin: 0;
     padding: none;
 }
@@ -23,11 +29,34 @@ body {
     height: 1px;
     left: 50%;
     position: absolute;
-    background: #000000;
+    background: var(--gold);
     transition: width 0.3s ease 0s, left 0.3s ease 0s;
     width: 0;
 }
 .animated-link:hover:after { 
     width: 100%; 
     left: 0; 
+}
+
+.styled-button {
+    cursor: pointer;
+    transition: 0.2s;
+    padding: 10px 20px;
+    background: none;
+    border: 1px solid black;
+}
+
+.styled-button:hover {
+    background: var(--red);
+    color: var(--gold);
+}
+
+input:focus {
+    border-color: var(--red);
+    color: var(--gold);
+    background: var(--red);
+}
+
+input:focus::placeholder {
+    color: var(--gold);
 }
