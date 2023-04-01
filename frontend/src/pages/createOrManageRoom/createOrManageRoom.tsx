@@ -1,8 +1,9 @@
 import { useRef, useState, useContext } from 'react';
 import { useNavigate } from 'react-router';
-import { Link } from 'react-router-dom';
 
 import { UserContext } from '../../contexts/userContext';
+
+import { ErrorModal } from '../../components/modal/modal';
 
 import Loading from '../../components/loading/loading';
 
@@ -18,9 +19,10 @@ export default function CreateOrManageRoom() {
     const createPassword = useRef({} as HTMLInputElement);
 
     const manageRoomCode = useRef({} as HTMLInputElement);
-    const managePassword = useRef({} as HTMLInputElement);
+    const manageRoomPassword = useRef({} as HTMLInputElement);
 
     const [isLoading, updateLoading] = useState(false);
+    const [error, updateError] = useState('');
 
     async function createRoom() {
         const code = createRoomCode.current.value;
@@ -67,16 +69,16 @@ export default function CreateOrManageRoom() {
     }
 
     async function manageRoom() {
-        const code = createRoomCode.current.value;
-        const password = createPassword.current.value;
+        const code = manageRoomCode.current.value;
+        const password = manageRoomPassword.current.value;
 
         if(code.replaceAll(' ', '').length === 0 || password.replaceAll(' ', '').length === 0) {
-            alert('Please enter a room code and password.');
+            updateError('Please enter a room code and password.');
 
             return;
         }
         else if(code.length > 255) {
-            alert('Code must be less than 255 characters.');
+            updateError('Code must be less than 255 characters.');
 
             return;
         }
@@ -99,7 +101,7 @@ export default function CreateOrManageRoom() {
         const json = await res.json();
 
         if(!res.ok) {
-            alert(json.message);
+            updateError(json.message);
 
             updateLoading(false);
         }
@@ -113,26 +115,36 @@ export default function CreateOrManageRoom() {
     if(isLoading) return <Loading />;
 
     return (
-        <div className={ classes.contentContainer }>
-            <div className="create-or-manage-container">
-                <h1>Create Room</h1>
+        <div>
+            {
+                error.length > 0 ? (
+                    <ErrorModal closeModal={ () => updateError('') }>
+                        <h1>{ error }</h1>
+                    </ErrorModal>
+                ) : <></>
+            }
 
-                <input ref={ createRoomCode } placeholder="Enter Room Code" type="text" />
-                <input ref={ createPassword } placeholder="Enter Teacher Password" type="password" />
+            <div className={ classes.contentContainer }>
+                <div className={ classes.containersContainer }>
+                    <div className={ classes.container }>
+                        <h1>Create Room</h1>
 
-                <button onClick={ createRoom }>Create</button>
+                        <input ref={ createRoomCode } placeholder="Enter Room Code" type="text" />
+                        <input ref={ createPassword } placeholder="Enter Teacher Password" type="password" />
+
+                        <button onClick={ createRoom }>Create</button>
+                    </div>
+
+                    <div className={ classes.container }>
+                        <h1>Manage Room</h1>
+
+                        <input placeholder="Enter Room Code" ref={ manageRoomCode } />
+                        <input placeholder="Enter Teacher Password" type="password" ref={ manageRoomPassword } />
+
+                        <button onClick={ manageRoom }>Manage</button>
+                    </div>
+                </div>
             </div>
-
-            <div className="create-or-manage-container">
-                <h1>Manage Room</h1>
-
-                <input placeholder="Enter Room Code" ref={ manageRoomCode } />
-                <input placeholder="Enter Teacher Password" type="password" ref={ managePassword } />
-
-                <button onClick={ manageRoom }>Login</button>
-            </div>
-
-            <Link className="animated-link" to="/">Or if you're a student, join a room</Link>
         </div>
     );
 }

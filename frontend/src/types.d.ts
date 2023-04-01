@@ -1,4 +1,5 @@
 declare module '*.css';
+declare module '*.scss';
 
 declare interface Question {
     title: string;
