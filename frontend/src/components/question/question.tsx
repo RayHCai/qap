@@ -7,17 +7,17 @@ import './question.css';
 const Question = forwardRef<HTMLDivElement & HTMLTextAreaElement, { question: Question, answer: Answer }>((props, ref) => {
     const [checked, updateChecked] = useState<boolean[]>(
         (function() {
-            if(!props.question.choices) return [];
+            if(props.question.choices!.length === 0) return [];
 
-            let temp = (new Array(props.question.choices.split(',').length)).fill(false);
+            let temp = (new Array(props.question.choices.length)).fill(false);
 
-            if(props.answer.answer.length === 0) return temp;
+            if(props.answer.selected!.length === 0) return temp;
 
             temp = temp.map(
                 (_, i) => {
-                    if(props.question.select_multiple) return props.answer.answer.split(',').includes(props.question.choices!.split(',')[i]);
+                    if(props.question.selectMultiple) return props.answer.selected!.includes(props.question.choices![i]);
 
-                    return props.question.choices!.split(',')[i] === props.answer.answer
+                    return props.question.choices![i] === props.answer.selected![i]
                 }
             );
 
@@ -43,11 +43,11 @@ const Question = forwardRef<HTMLDivElement & HTMLTextAreaElement, { question: Qu
                     <div className="options-container">
                         <div ref={ ref }>
                             {
-                                props.question.choices.split(',').map(
+                                props.question.choices.map(
                                     (c, i) => (
                                         <div className="choice-container" key={ i }>
                                             <input
-                                                type={ props.question.select_multiple ? "checkbox" : "radio" } 
+                                                type={ props.question.selectMultiple ? "checkbox" : "radio" } 
                                                 value={ c } 
                                                 name={ `choice${ props.question.id }` }
                                                 checked={ checked[i] }
@@ -65,7 +65,7 @@ const Question = forwardRef<HTMLDivElement & HTMLTextAreaElement, { question: Qu
                     <textarea
                         ref={ ref } 
                         className="frq-section"
-                        defaultValue={ props.answer.answer }
+                        defaultValue={ props.answer.textAnswer }
                     />
                 )
             }

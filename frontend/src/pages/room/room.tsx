@@ -4,87 +4,95 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Loading from '../../components/loading/loading';
 import Question from '../../components/question/question';
 
-import { UserContext } from '../../contexts/userContext';
+import { StudentContext } from '../../contexts/studentContext';
+import { ErrorContext } from '../../contexts/errorContext';
 
 import { SERVER_URL } from '../../settings';
 
 import './room.css';
 
 export default function Room() {
-    const { name } = useContext(UserContext);
-    const { code } = useParams();
-
     const navigate = useNavigate();
+    const { sessionCode } = useParams();
 
-    const [questions, updateQuestions] = useState([] as Question[]);
+    const { name } = useContext(StudentContext);
+    const { throwError } = useContext(ErrorContext);
+
+    const [questions, updateQuestions] = useState<Question[]>([]);
     const [isLoading, updateLoadingState] = useState(false);
 
     const [curPage, updateCurPage] = useState(0);
 
     const answer = createRef<HTMLDivElement & HTMLTextAreaElement>();
 
-    const [answers, updateAnswers] = useState([] as Answer[]);
+    const [answers, updateAnswers] = useState<Answer[]>([]);
 
     useEffect(() => {
         updateLoadingState(true);
 
         (async function() {
-            const res = await fetch(`${ SERVER_URL }/questions/${ code }`);
+            const res = await fetch(`${ SERVER_URL }/sessions/${ sessionCode }/`);
             const json = await res.json();
 
             if(!res.ok) alert(json.message);
             else {
-                updateQuestions(json.data);
-                updateAnswers((new Array(json.data.length)).fill({}).map((_, index) => (
-                    {
-                        question: index,
-                        answer: ''
-                    }
-                )));
+                const classId = json.data.session_for;
+
+                const questionsRes = await fetch(`${ SERVER_URL }/questions/${ classId }/`)
+                const questionsJson = await questionsRes.json();
+
+                console.log('Questions looks like this: ', questionsJson.data);
+
+                updateQuestions(questionsJson.data);
+
+                updateAnswers(
+                    (new Array(questionsJson.data.length)).fill({}).map((_, index) => (
+                        {
+                            id: '',
+                            studentName: '',
+                            answerFor: '',
+                            textAnswer: '',
+                            selected: [],
+                            correct: false,
+                            dateAnswered: ''
+                        }
+                    ))
+                );
                 
                 updateLoadingState(false);
             }
         })();
-    }, [code]);
+    }, []);
 
     function getAnswer() {
-        if(answer.current!.value) {
+        if(answer.current!.value) { // if its a text area
             const newAnswers = [...answers];
 
-            newAnswers[curPage] = {
-                question: curPage,
-                answer: answer.current!.value
-            };
+            const curQuestion = questions[curPage];
+
+            newAnswers[curPage].answerFor = curQuestion.id;
+            newAnswers[curPage].textAnswer = answer.current!.value;
 
             updateAnswers(newAnswers);
 
             return newAnswers;
         }
         else {
-            const curAnswer = {} as Answer;
+            const newAnswers = [...answers];
+
+            const curAnswer = newAnswers[curPage];
+            const curQuestion = questions[curPage];
 
             for(const c of Array.from(answer.current!.children)) {
                 const inpElement = c.children[0] as HTMLInputElement;
 
                 if(!inpElement.checked) continue;
 
-                if(inpElement.type === 'radio') {
-                    curAnswer.answer = inpElement.value;
-                    curAnswer.question = curPage;
-                    
-                    break;
-                }
-                else {
-                    if(curAnswer.answer) curAnswer.answer += `,${ inpElement.value }`;
-                    else curAnswer.answer = inpElement.value;
+                curAnswer.answerFor = curQuestion.id;
+                curAnswer.selected!.push(inpElement.value);
 
-                    curAnswer.question = curPage;
-                }
+                if(inpElement.type === 'radio') break;
             }
-
-            const newAnswers = [...answers];
-
-            if(!curAnswer.answer) return newAnswers;
 
             newAnswers[curPage] = curAnswer;
 
@@ -102,10 +110,20 @@ export default function Room() {
     async function submit() {
         const newAnswers = getAnswer();
 
-        if(newAnswers.filter(
-            a => a.answer.replaceAll(' ', '').length === 0
-        ).length !== 0) {
-            alert('Need to answer all questions before submitting.');
+        const unanswered = newAnswers.filter(
+            (a, i) => (
+                questions[i].required && (
+                    questions[i].choices.length === 0 ? a.textAnswer!.replaceAll(' ', '').length === 0 : a.selected!.length === 0
+                )
+            )
+        );
+
+        if(unanswered.length !== 0) {
+            const missedQuestions = newAnswers.map(
+                (a, i) => unanswered.filter(a => a.answerFor === a.answerFor).length !== 0 ? i : -1
+            ).filter(i => i !== -1);
+
+            throwError(`Questions: ${ missedQuestions.join(', ') }`);
 
             return;
         }
@@ -122,15 +140,10 @@ export default function Room() {
                         },
                         body: JSON.stringify(
                             {
-                                question_id: q.id,
-                                name: name,
-                                ...(
-                                    q.choices ? {
-                                        choice: answer.answer
-                                    } : {
-                                        answer: answer.answer
-                                    }
-                                )
+                                answer_for: q.id,
+                                student_name: name,
+                                selected: answer.selected,
+                                text_answer: answer.textAnswer
                             }
                         )
                     });
@@ -139,13 +152,16 @@ export default function Room() {
         );
 
         for(const r of res) {
-            if(!r.ok) {
-                alert('Something went wrong.');
-                
-                return;
-            }
+            const json = await r.json();
 
-            navigate('/');
+            if(!r.ok) {
+                throwError(json.message);
+             
+                continue;
+            }
+            else {
+                console.log('Answer json ', json);
+            }
         }
     }
 
@@ -158,7 +174,7 @@ export default function Room() {
                     questions.filter(
                         (_, i) => i === curPage
                     ).map(
-                        (q, i) => <Question key={ q.id } question={ q } ref={ answer } answer={ answers.filter(a => a.question === curPage)[0] } />
+                        (q, i) => <Question key={ q.id } question={ q } ref={ answer } answer={ answers[i] } />
                     )
                 }
 

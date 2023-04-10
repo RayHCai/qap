@@ -1,0 +1,27 @@
+.createContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.content {
+    text-align: center;
+}
+
+.content h1 {
+    margin-bottom: 50px;
+    font-weight: 100;
+    font-size: 30px;
+}
+
+.content input {
+    display: block;
+    padding: 10px 10px;
+    border-radius: 3px;
+    margin-bottom: 30px;
+    justify-self: center;
+}
+
+.content button {
+    display: block;
+    margin: 0 auto;
+}

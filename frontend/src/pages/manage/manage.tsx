@@ -1,16 +1,16 @@
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
-import { UserContext } from '../../contexts/userContext';
+import { TeacherContext } from '../../contexts/teacherContext';
 
 import './manage.css';
 
 export default function Manage() {
-    const { code } = useContext(UserContext);
+    const { user } = useContext(TeacherContext);
 
     return (
         <div className="manage-container">
-            <h1>Manage Class { code }</h1>
+            <h1>Manage Class </h1>
 
             <div>
                 <Link className="manage-link" to="responses">View Student Responses</Link>

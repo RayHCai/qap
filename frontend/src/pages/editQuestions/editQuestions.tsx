@@ -1,11 +1,13 @@
 import { useContext, useEffect, useState, useRef, useCallback } from 'react';
+import { useParams } from 'react-router';
 
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { FaTrashAlt } from 'react-icons/fa';
 
 import MDEditor from '@uiw/react-md-editor';
 
-import { UserContext } from '../../contexts/userContext';
+import { TeacherContext } from '../../contexts/teacherContext';
+import { ErrorContext } from '../../contexts/errorContext';
 
 import Loading from '../../components/loading/loading';
 import Modal from '../../components/modal/modal';
@@ -55,7 +57,11 @@ function EditQuestionComponent(props: EditQuestionProps) {
 }
 
 export default function EditQuestions() {
-    const { code } = useContext(UserContext);
+    const { classId } = useParams();
+    const { user } = useContext(TeacherContext);
+    const { throwError } = useContext(ErrorContext);
+
+    const [classObj, updateClass] = useState<Quiz>();
 
     const [questions, updateQuestions] = useState([] as Question[]);
     const [isLoading, updateLoading] = useState(false);
@@ -78,34 +84,44 @@ export default function EditQuestions() {
     const correctAnswer = useRef({} as HTMLInputElement)
 
     const fetchQuestions = useCallback(async function() {
-        const res = await fetch(`${ SERVER_URL }/questions/${ code }/`);
-        const data = await res.json();
+        const res = await fetch(`${ SERVER_URL }/questions/${ classId }/`);
+        const json = await res.json();
 
-        updateQuestions(data.data);
-    }, [code]);
+        if(!res.ok) throwError(json.message);
+        else updateQuestions(json.data);
+    }, []);
+
+    const fetchClass = useCallback(async function() {
+        const res = await fetch(`${ SERVER_URL }/classes/${ classId }/`);
+        const json = await res.json();
+
+        if(!res.ok) throwError(json.message);
+        else updateClass(json.data);
+    }, []);
 
     useEffect(() => {
         updateLoading(true);
 
         (async function() {
             await fetchQuestions();
+            await fetchClass();
 
             updateLoading(false);
         })();
 
-    }, [code, fetchQuestions]);
+    }, [fetchQuestions, fetchClass]);
 
     async function createQuestion() {
         const t = title.current.value.replaceAll(' ', '');
         const c = content;
 
         if(t.length === 0 || c.replaceAll(' ', '').length === 0) {
-            alert('Title and Content cannot be empty');
+            throwError('Title and Content cannot be empty');
 
             return;
         }
 
-        const res = await fetch(`${ SERVER_URL }/questions/${ code }/`, {
+        const res = await fetch(`${ SERVER_URL }/questions/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -114,15 +130,24 @@ export default function EditQuestions() {
                 {
                     title: t,
                     content: c,
+                    is_visible: true,
+                    question_for: classId,
+                    choices: choices,
+                    required: true,
                     ...(
-                        choices.length === 0 ? {} : {
-                            choices: choices.map(
-                                c => c.value
-                            ).join(','),
-                            select_multiple: selectMultiple.current.checked,
-                            correct: correctAnswer.current.value
+                        {
+                            select_multiple: correctAnswer
                         }
                     )
+                    // ...(
+                    //     choices.length === 0 ? {} : {
+                    //         choices: choices.map(
+                    //             c => c.value
+                    //         ).join(','),
+                    //         select_multiple: selectMultiple.current.checked,
+                    //         correct: correctAnswer.current.value
+                    //     }
+                    // )
                 }
             )
         });
@@ -163,6 +188,7 @@ export default function EditQuestions() {
     }
 
     async function deleteQuesiton(id: string) {
+        // !TODO: make this a modal
         if(!window.confirm('Are you sure you want to delete this question?')) return;
         
         updateLoading(true);
@@ -368,7 +394,7 @@ export default function EditQuestions() {
                 ) : <></>
             }
 
-            <h1>Questions for { code }</h1>
+            <h1>Questions for { classObj!.name }</h1>
 
             <button onClick={ () => updateModalState(true) }>Add a quesiton</button>
 
@@ -379,7 +405,7 @@ export default function EditQuestions() {
                             <EditQuestionComponent 
                                 key={ i }
                                 title={ q.title } 
-                                visible={ q.visible } 
+                                visible={ q.isVisible } 
                                 changeVisibility={
                                     (v: boolean) => editQuestion(q.id, v)
                                 }
@@ -393,15 +419,15 @@ export default function EditQuestions() {
                                         updateContent(q.content);
                                         updateUpdatingTitle(q.title);
 
-                                        if(q.select_multiple) updateSelectBoxState(q.select_multiple);
-                                        if(q.correct_answer) updateCorrectAnswer(q.correct_answer);
+                                        if(q.selectMultiple) updateSelectBoxState(q.selectMultiple);
+                                        // if(q.correctAnswer) updateCorrectAnswer(q.correctAnswer);
 
                                         updateChoices(
-                                            q.choices ? q.choices.split(',').map(
+                                            q.choices ? q.choices.map(
                                                 s => {
                                                     let isCorrect = false;
 
-                                                    if(q.correct_answer!.split(',').includes(s)) isCorrect = true;
+                                                    if(q.correctAnswer!.includes(s)) isCorrect = true;
 
                                                     return { value: s, correct: isCorrect };
                                                 }

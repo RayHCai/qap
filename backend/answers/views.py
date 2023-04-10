@@ -4,12 +4,41 @@ from rest_framework.response import Response
 from answers.models import Answers
 from answers.forms import AnswerCreationForm
 
-from questions.models import Question
+from questions.models import Questions
 
-from classes.models import Classes
+def serialize_answer(answer):
+    return {
+        'studentName': answer.student_name,
+        'answerFor': answer.answer_for.id,
+        'textAnswer': answer.text_answer,
+        'selected': answer.selected,
+        'correct': answer.correct,
+        'dateAnswered': answer.date_answered,
+    }
 
-class CreateAnswerView(APIView):
+class AnswersView(APIView):
+    def get(self, request, question_id):
+        '''
+        Get all answers for a given question
+        '''
+        
+        try:
+            question = Questions.objects.get(id=question_id)
+        except Questions.DoesNotExist:
+            return Response({'message': f'Question does not exist with id { question_id }'}, status=404)
+
+        serialized_answers = []
+
+        for answer in Answers.objects.filter(answer_for=question):
+            serialized_answers.append(serialize_answer(answer))
+
+        return Response({'data': serialized_answers}, status=200)
+    
     def post(self, request):
+        '''
+        Create an answer
+        '''
+        
         form = AnswerCreationForm(request.data)
 
         if not form.is_valid():
@@ -17,68 +46,44 @@ class CreateAnswerView(APIView):
 
         form_data = form.cleaned_data
 
+        answer_for = form_data.get('answer_for')
+
         try:
-            question = Question.objects.get(id=form_data.get('question_id'))
-        except Question.DoesNotExist:
-            return Response({'message': 'Question does not exist'}, status=404)
+            question = Questions.objects.get(id=answer_for)
+        except Questions.DoesNotExist:
+            return Response({'message': f'Question does not exist with id { answer_for }'}, status=404)
 
-        correct = False
+        if not question.choices:
+            correct = False
+        else:
+            selected = form_data.get('selected')
 
-        if question.correct_answer and question.correct_answer == form_data.get('choice'):
-            correct = True
-
-        if question.select_multiple:
-            correct = True
-            chosen = question.correct_answer.split(',')
-            selected = form_data.get('choice').split(',')
-
-            chosen.sort()
-            selected.sort()
-
-            if len(chosen) != len(selected):
-                correct = False
+            if not question.select_multiple:
+                correct = question.correct_answer == selected[0]
             else:
-                for i in range(len(chosen)):
-                    if chosen[i] != selected[i]:
-                        correct = False
+                correct = True
 
-                        break
+                correct_choices = question.correct_answer
+                selected_choices = selected
 
-        Answers.objects.create(
-            question=question,
-            name=form_data.get('name'),
-            answer=form_data.get('answer'),
-            choice=form_data.get('choice'),
+                correct_choices.sort()
+                selected_choices.sort()
+
+                if len(correct_choices) != len(selected_choices):
+                    correct = False
+                else:
+                    for choice, selected_option in zip(correct_choices, selected_choices):
+                        if choice != selected_option:
+                            correct = False
+
+                            break
+
+        answer = Answers.objects.create(
+            answer_for=question,
+            student_name=form_data.get('student_name'),
+            text_answer=form_data.get('text_answer'),
+            selected=selected,
             correct=correct,
         )
 
-        return Response({'message': 'Success'}, status=200)
-
-class GetAnswerView(APIView):
-    def get(self, request, class_code):
-        try:
-            c = Classes.objects.get(code=class_code)
-        except Classes.DoesNotExist:
-            return Response({'message': 'Class does not exist'}, status=404)
-
-        all_questions = Question.objects.filter(c=c)
-
-        total_serialized = {}
-
-        for question in all_questions:
-            answers = Answers.objects.filter(question=question)
-
-            serialized_answers = []
-
-            for a in answers:
-                serialized_answers.append({
-                    'date_answered': a.date_answered,
-                    'answer': a.answer,
-                    'choice': a.choice,
-                    'correct': a.correct,
-                    'name': a.name,
-                })
-            
-            total_serialized[question.title] = serialized_answers
-
-        return Response({'data': total_serialized}, status=200)
+        return Response({'data': serialize_answer(answer)}, status=200)

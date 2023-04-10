@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+:root {
+    --white: #E1DBD1;
+    --pink: #EA899A;
+    --navy: #252850;
+    --red: #E74C3C;
+    --green: #27AE60;
+    --orange: #F39C12;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+
+    margin: 0;
+    padding: none;
+
+    background: var(--white);
+    color: var(--navy);
+}
+
+button {
+    color: var(--navy);
+    font-size: 17px;
+    border-radius: 3px;
+    background: none;
+    transition: 0.15s;
+    cursor: pointer;
+    padding: 10px 70px;
+    border: 1px solid var(--navy);
+}
+
+button:hover {
+    background: var(--navy);
+    color: var(--pink);
+
+    border-color: var(--pink);
+}
+
+input {
+    font-size: 17px;
+    transition: 0.15s;
+    background: none;
+    border: 1px solid var(--navy);
+    color: var(--navy);
+    outline: none;
+}
+
+input:focus {
+    color: var(--pink);
+    background: var(--navy);
+    border-color: var(--pink);
+}
+
+input:focus::placeholder {
+    color: var(--pink);
+    opacity: 0.7;
+}
+
+.hidden {
+    display: none;
+}
+
+.error-content h1 {
+    font-size: 20px;
+}
+
+.animated-link {
+    color: var(--navy);
+    text-decoration: none;
+}
+
+.animated-link:after {    
+    background: none repeat scroll 0 0 transparent;
+    background: var(--navy);    
+
+    content: "";
+    
+    height: 2px;
+    width: 0;
+    left: 50%;
+
+    display: block;
+    position: absolute;
+    
+    transition: width 0.15s ease 0s, left 0.15s ease 0s;
+}
+
+.animated-link:hover:after { 
+    width: 100%; 
+    left: 0;
+}

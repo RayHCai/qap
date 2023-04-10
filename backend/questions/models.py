@@ -1,10 +1,11 @@
 import uuid
 
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
-from classes.models import Classes
+from quizzes.models import Quizzes
 
-class Question(models.Model):
+class Questions(models.Model):
     id = models.UUIDField(
         primary_key=True,
         unique=True,
@@ -15,10 +16,16 @@ class Question(models.Model):
 
     title = models.CharField(max_length=255)
     content = models.TextField()
-    visible = models.BooleanField()
 
-    c = models.ForeignKey(Classes, on_delete=models.CASCADE)
+    is_visible = models.BooleanField()
 
-    choices = models.TextField(null=True) # comma seperated list of choices
+    question_for = models.ForeignKey(Quizzes, on_delete=models.CASCADE)
+
+    choices = ArrayField(
+        models.CharField(max_length=255),
+    )
     select_multiple = models.BooleanField(null=True)
+    
+    required = models.BooleanField(default=True)
+    
     correct_answer = models.TextField(null=True)

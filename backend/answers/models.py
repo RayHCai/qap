@@ -1,8 +1,9 @@
 import uuid
 
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
-from questions.models import Question
+from questions.models import Questions
 
 class Answers(models.Model):
     id = models.UUIDField(
@@ -13,13 +14,15 @@ class Answers(models.Model):
         editable=False
     )
 
-    name = models.CharField(max_length=255)
+    student_name = models.CharField(max_length=255)
 
-    date_answered = models.DateTimeField(auto_now_add=True)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    answer_for = models.ForeignKey(Questions, on_delete=models.CASCADE)
 
-    answer = models.TextField(blank=True)
-    choice = models.TextField(blank=True)
+    text_answer = models.TextField(blank=True)
+    selected = ArrayField(
+        models.CharField(max_length=255),
+    )
 
     correct = models.BooleanField()
     
+    date_answered = models.DateTimeField(auto_now_add=True)

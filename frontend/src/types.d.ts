@@ -1,21 +1,51 @@
 declare module '*.css';
-declare module '*.scss';
+
+declare interface User {
+    id: string;
+
+    username: string;
+    email: string;
+}
 
 declare interface Question {
-    title: string;
     id: string;
+    
+    title: string;
     content: string;
-    visible: boolean;
-    choices?: string;
-    select_multiple?: boolean;
-    correct_answer?: string;
+
+    isVisible: boolean;
+
+    questionFor: string;
+
+    choices: string[];
+    selectMultiple?: boolean;
+
+    required: boolean;
+
+    correctAnswer?: string[];
+}
+
+declare interface Session {
+    id: string;
+    code: string;
+    active: boolean;
+    dateCreated: string;
+    sessionFor: string;
+}
+
+declare interface Quiz {
+    id: string;
+
+    name: string;
+    teacher: string;
 }
 
 declare type Answer = {
-    question?: number;
-    answer: string;
-    name?: string;
-    date_answered?: string;
-    choice?: string;
-    correct?: string;
-};
+    id: string;
+    studentName: string;
+    answerFor: string;
+    textAnswer?: string;
+    selected?: string[];
+    correct: boolean;
+    dateAnswered: string;
+}

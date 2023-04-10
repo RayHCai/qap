@@ -1,0 +1,57 @@
+.container {
+    margin: 0 auto;
+    display: block;
+}
+
+.title {
+    min-width: 20rem;
+    border-radius: 3px;
+    padding: 1rem 1rem;
+}
+
+.header {
+    margin: 3rem 5rem 5rem 5rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.header button {
+    padding: 0rem 1rem;
+    display: flex;
+    color: var(--white);
+    text-align: left;
+    background: var(--navy);
+    
+    align-self: center;
+}
+
+.header button:hover {
+    color: var(--pink);
+}
+
+.iconContainer {
+    margin-top: 5px;
+    align-self: center;
+    margin-left: 30px;
+    font-size: 20px;    
+}
+
+.questions {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.footer {
+    margin-top: 6rem;
+    text-align: center;
+}
+
+.footer p {
+    font-size: 20px;
+}
+
+.questionTypes button {
+    margin: 1rem;
+}

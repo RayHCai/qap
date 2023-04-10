@@ -1,8 +1,10 @@
 from django import forms
+from django.contrib.postgres.forms import SimpleArrayField
 
 class AnswerCreationForm(forms.Form):
-    question_id = forms.UUIDField()
+    answer_for = forms.UUIDField()
 
-    name = forms.CharField(max_length=255)
-    answer = forms.CharField(required=False)
-    choice = forms.CharField(required=False)
+    student_name = forms.CharField(max_length=255)
+    
+    text_answer = forms.CharField()
+    selected = SimpleArrayField(forms.CharField(max_length=255))

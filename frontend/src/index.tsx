@@ -1,85 +1,157 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import PrivateRoute from './components/privateRoute';
+import TeacherRoute from './components/teacherRoute';
 import StudentRoute from './components/studentRoute';
+import PageWrapper from './components/pageWrapper';
+
+import { ErrorModal } from './components/modal/modal';
+import Loading from './components/loading/loading';
 
 import JoinRoom from './pages/joinRoom/joinRoom';
 import Room from './pages/room/room';
-import Manage from './pages/manage/manage';
+
+import LoginOrSignup from './pages/loginOrSignup/loginOrSignup';
+import Dashboard from './pages/dashboard/dashboard';
+import CreateQuiz from './pages/createQuiz/createQuiz';
+import EditQuiz from './pages/editQuiz/editQuiz';
+
 import PageNotFound from './pages/pageNotFound/pageNotFound';
-import CreateOrManageRoom from './pages/createOrManageRoom/createOrManageRoom';
-import EditQuestions from './pages/editQuestions/editQuestions';
-import Responses from './pages/responses/responses';
 
-import Loading from './components/loading/loading';
-
-import { UserContext } from './contexts/userContext';
+import { TeacherContext } from './contexts/teacherContext';
+import { StudentContext } from './contexts/studentContext';
+import { ErrorContext, Error } from './contexts/errorContext';
 
 import { SERVER_URL } from './settings';
 
-import './main.css';
+import './index.css';
 
 function App() {
-  const [name, updateName] = useState(null as string | null);
-  const [code, updateCode] = useState(localStorage.getItem('classCode') as string | null);
-  const [isLoading, updateLoading] = useState(false);
+    const [name, updateName] = useState<string | null>(null);
+    const [user, setUser] = useState<User | null>(
+        localStorage.getItem('user')
+            ? JSON.parse(localStorage.getItem('user')!)
+            : null
+    );
 
-  useEffect(() => {
-    if(!code) return;
+    const [errors, updateErrors] = useState<Error[]>([]);
+    const errorModals: ReactNode[] = [];
 
-    updateLoading(true);
+    const [isLoading, updateLoading] = useState(false);
 
-    (async function() {
-      const res = await fetch(`${ SERVER_URL }/classes/${ code }`);
-      
-      if(!res.ok) {
-        updateCode(null);
+    useEffect(() => {
+        if (!user) return;
 
-        localStorage.removeItem('classCode');
-      }
+        updateLoading(true);
 
-      updateLoading(false);
-    })();
-  }, [code]);
+        (async function () {
+            const res = await fetch(`${ SERVER_URL }/users/manage/${ user.id }`);
 
-  function setCode(c: string | null) {
-    if(c) localStorage.setItem('classCode', c);
-    else localStorage.removeItem('classCode');
+            if (!res.ok) {
+                setUser(null);
 
-    updateCode(c);
-  }
+                localStorage.removeItem('user');
+            }
 
-  if(isLoading) return <Loading />;
+            updateLoading(false);
+        })();
+    }, []);
 
-  return (
-    <UserContext.Provider value={ { code, setCode, name, updateName } }>
-      <BrowserRouter>
-        <Routes>
-          <Route index element={ <JoinRoom /> } />
-          <Route path="/create-or-manage" element={ <CreateOrManageRoom /> } />
+    function updateUser(newUser: User | null) {
+        if (newUser) localStorage.setItem('user', JSON.stringify(newUser));
+        else localStorage.removeItem('user');
 
-          <Route path="/room/:code" element={ <StudentRoute /> }>
-            <Route index element={ <Room /> } />
-          </Route>
+        setUser(newUser);
+    }
 
-          <Route path="/manage" element={ <PrivateRoute /> }>
-            <Route index element={ <Manage /> } />
+    function throwError(title: string, description?: string) {
+        if(
+            errors.filter(
+                e => e.title === title
+            ).length !== 0
+        ) return;
 
-            <Route path="responses" element={ <Responses /> } />
-            <Route path="edit" element={ <EditQuestions /> } />
-          </Route>
+        const newErrors = [...errors];
+            
+        newErrors.push(
+            {
+                title: title,
+                description: description
+            }
+        );
 
-          <Route path="*" element={ <PageNotFound /> } />
-        </Routes>
-      </BrowserRouter>
-    </UserContext.Provider>
-  );
+        updateErrors(newErrors);
+    }
+
+    function closeModal(index: number) {
+        const newErrors = [...errors].filter(
+            (_, i) => i !== index
+        );
+                
+        updateErrors(newErrors);
+    }
+
+    errors.forEach(
+        (e, i) => errorModals.push((
+            <ErrorModal key={ i } closeModal={ () => closeModal(i) }>
+                <div className="error-content">
+                    <h1>{ e.title }</h1>
+
+                    {
+                        e.description && <p>{ e.description }</p>
+                    }
+                </div>
+            </ErrorModal>
+        ))
+    )
+
+    if (isLoading) return <Loading />;
+
+    return (
+        <ErrorContext.Provider value={{ errors, throwError }}>
+            { errorModals }
+
+            <TeacherContext.Provider value={{ user, updateUser }}>
+                <StudentContext.Provider value={{ name, updateName }}>
+                    <BrowserRouter>
+                        <Routes>
+                            <Route element={ <PageWrapper /> }>
+                                <Route index element={ <JoinRoom /> } />
+
+                                <Route
+                                    path="/login"
+                                    element={ <LoginOrSignup isLogin={ true } /> }
+                                />
+
+                                <Route
+                                    path="/signup"
+                                    element={ <LoginOrSignup isLogin={ false } /> }
+                                />
+
+                                <Route path="/dashboard" element={ <TeacherRoute /> }>
+                                    <Route index element={ <Dashboard /> } />
+
+                                    <Route path="create" element={ <CreateQuiz /> } />
+                                    <Route path="edit/:quizId" element={ <EditQuiz /> } />
+                                </Route>
+                                
+                                {/* <Route path="/room/:quizId" element={ <StudentRoute /> }>
+                                    <Route index element={ <Room /> } />
+                                </Route> */}
+
+                                <Route path="*" element={ <PageNotFound /> } />
+                            </Route>
+                        </Routes>
+                    </BrowserRouter>
+                </StudentContext.Provider>
+            </TeacherContext.Provider>
+        </ErrorContext.Provider>
+    );
 }
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+    document.getElementById('root') as HTMLElement
 );
 
 root.render(<App />);

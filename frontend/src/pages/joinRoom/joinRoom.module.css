@@ -6,6 +6,7 @@
 }
 
 .joinRoomContainer h1 {
+    font-weight: 100;
     margin-bottom: 2em;
 }
 
@@ -14,11 +15,6 @@
     align-self: center;
 
     text-align: center;
-    
-    border: 1px solid black;
-    outline: none;
-    
-    transition: 0.2s;
     
     padding: 10px 20px;
     
@@ -31,7 +27,7 @@
 }
 
 .joinRoomContainer button {
-    margin: 0 auto;
     display: block;
-    margin-bottom: 50px;
+
+    margin: 40px auto;
 }

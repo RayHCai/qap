@@ -2,7 +2,8 @@ import { useRef, useContext } from 'react';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 
-import { UserContext } from '../../contexts/userContext';
+import { StudentContext } from '../../contexts/studentContext';
+import { ErrorContext } from '../../contexts/errorContext';
 
 import { SERVER_URL } from '../../settings';
 
@@ -10,26 +11,47 @@ import classes from './joinRoom.module.css';
 
 export default function JoinRoom() {
     const navigate = useNavigate();
-    const { updateName } = useContext(UserContext);
+    const { updateName } = useContext(StudentContext);
+    const { throwError } = useContext(ErrorContext);
 
     const name = useRef({} as HTMLInputElement);
     const code = useRef({} as HTMLInputElement);
 
     async function joinRoom() {
-        if(name.current.value.replaceAll(' ', '').length === 0 || code.current.value.replaceAll(' ', '').length === 0) {
-            alert('Name and code cannot be empty');
+        const studentName = name.current.value;
+        const sessionCode = code.current.value;
+
+        if(studentName.replaceAll(' ', '').length === 0 || sessionCode.replaceAll(' ', '').length === 0) {
+            throwError('Name and code cannot be empty');
+
+            return;
+        }
+        else if(studentName.length > 255) {
+            throwError('Name must be less than 255 characters');
 
             return;
         }
         
-        const res = await fetch(`${ SERVER_URL }/classes/${ code.current.value }/`);
+        const res = await fetch(`${ SERVER_URL }/sessions/join/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(
+                {
+                    student_name: studentName,
+                    session_code: sessionCode
+                }
+            )
+        });
 
         const json = await res.json();
 
-        if(!res.ok) alert(json.message);
+        if(!res.ok) throwError(json.message);
         else {
-            updateName(name.current.value);
-            navigate(`/room/${ code.current.value }`);
+            updateName(studentName);
+
+            navigate(`/room/${ json.data.sessionFor }`);
         }
     }
 
@@ -42,10 +64,9 @@ export default function JoinRoom() {
                 <input placeholder="Enter Room Code" ref={ code } />
             </div>
 
-
             <button className="styled-button" onClick={ joinRoom }>Join</button>
 
-            <Link className="animated-link" to="/create-or-manage">Or if you're a teacher, manage/create a room</Link>
+            <Link className="animated-link" to="/login">Or signin/signup here if you're a teacher</Link>
         </div>
     );
 }

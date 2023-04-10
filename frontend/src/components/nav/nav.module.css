@@ -1,0 +1,56 @@
+.nav {
+    padding: 30px 20px;
+    margin-bottom: 40px;
+}
+
+.linksContainer {
+    display: flex;
+    align-items: center;
+}
+
+.link {
+    margin: 0px 40px;
+    color: var(--navy);
+    text-decoration: none;
+    transition: 0.15s;
+}
+
+.link:hover {
+    color: var(--pink);
+}
+
+.profileBtnContainer {
+    align-self: center;
+    align-items: center;
+    vertical-align: center;
+    
+    margin-left: auto;
+    float: right;
+    padding: 0rem 1rem;
+    border-radius: 3px;
+    border: 1px solid var(--navy);
+    transition: .15s;
+    cursor: pointer;
+}
+
+.profileBtnContainer:hover {
+    background: var(--navy);
+    border-color: var(--pink);
+}
+
+.profileBtnContainer:hover .profileLink {
+    color: var(--pink);
+}
+
+.profileLink {
+    display: flex;
+    color: var(--navy);
+    text-decoration: none;
+    transition: 0.15s;
+}
+
+.iconContainer {
+    margin-top: 1.1rem;
+    align-self: center;
+    margin-left: 15px;
+}

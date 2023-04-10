@@ -1,0 +1,52 @@
+.modalContainer {
+    background: #0005;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modalContent {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background: var(--navy);
+    box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.473);
+    border-radius: 5px;
+    padding: 2rem 3rem;
+    gap: 2rem;
+    height: fit-content;
+    overflow: hidden;
+    color: var(--white);
+}
+
+.closeErrorModal {
+    color: var(--white);
+    border-color: var(--white);
+}
+
+.closeErrorModal:hover {
+    background: var(--red);
+    color: var(--navy);
+
+    border-color: var(--red);
+}
+
+
+/* .md-editor {
+    margin: auto;
+} */
+
+.closeModalSVG {
+    position: absolute;
+    margin: 20px;
+    right: 0;
+    font-size: 30px;
+    cursor: pointer;
+}

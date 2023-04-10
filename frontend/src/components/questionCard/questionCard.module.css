@@ -1,0 +1,27 @@
+.container {
+    width: 70%;
+    margin-bottom: 3rem;
+}
+
+.header {
+    display: flex;
+    margin-bottom: 2rem;
+    gap: 2rem;
+}
+
+.header h1 {
+    font-size: 20px;
+}
+
+.header input {
+    padding: 0 1rem;
+    border-radius: 3px;
+}
+
+.title {
+    width: 50%;
+}
+
+.points::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}

@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import { GrClose } from 'react-icons/gr';
 
-import './modal.css';
+import classes from './modal.module.css';
 
 interface ModalProps extends PropsWithChildren {
     closeModal?: () => void;
@@ -9,12 +9,17 @@ interface ModalProps extends PropsWithChildren {
 
 export default function Modal(props: ModalProps) {
     return (
-        <div className="modal-container">
+        <div className={ classes.modalContainer }>
             {
-                props.closeModal !== undefined ? <GrClose className="close-modal-button" onClick={ () => props.closeModal!() } /> : <></>
+                props.closeModal !== undefined ? 
+                    <GrClose
+                        className={ classes.closeModalSVG }
+                        onClick={ () => props.closeModal!() }
+                    /> 
+                    : <></>
             }
 
-            <div className="modal-content-container">
+            <div className={ classes.modalContent }>
                 { props.children }
             </div>
         </div>
@@ -26,7 +31,7 @@ export function ErrorModal(props: ModalProps) {
         <Modal>
             { props.children }
 
-            <button className="styled-button" onClick={ props.closeModal }>Close</button>
+            <button className={ classes.closeErrorModal } onClick={ props.closeModal }>Close</button>
         </Modal>
     );
 }
