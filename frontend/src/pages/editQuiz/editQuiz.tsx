@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext, createRef } from 'react';
-import { useParams } from 'react-router';
+import { useParams, useNavigate } from 'react-router';
 
 import { BsArrowRight } from 'react-icons/bs';
 
@@ -12,8 +12,11 @@ import { SERVER_URL } from '../../settings';
 
 import classes from './editQuiz.module.css';
 
+// TODO: before user leaves the page see if there are unsaved changes
+
 export default function EditQuiz() {
     const { quizId } = useParams();
+    const navigate = useNavigate();
 
     const { throwError } = useContext(ErrorContext);
 
@@ -80,6 +83,10 @@ export default function EditQuiz() {
     }
 
     function deleteQuestion(i: number) {
+
+    }
+
+    async function save() {
 
     }
 

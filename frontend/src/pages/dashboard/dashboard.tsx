@@ -1,7 +1,7 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { BsArrowRight, BsThreeDots } from 'react-icons/bs';
+import { BsArrowRight } from 'react-icons/bs';
 
 import QuizCard from '../../components/quizCard/quizCard';
 import Loading from '../../components/loading/loading';
@@ -23,24 +23,40 @@ export default function Dashboard() {
     const [quizzes, updateQuizzes] = useState<Quiz[]>([]);
     const [isLoading, updateLoading] = useState(false);
 
+    const fetchQuizzes = useCallback(async function(): Promise<string | undefined> {
+        updateLoading(true);
+
+        const res = await fetch(`${ SERVER_URL }/quizzes/teacher/${ user!.id }/`);
+        const json = await res.json();
+
+        updateLoading(false);
+
+        if(!res.ok) return json.message;
+
+        updateQuizzes(json.data);
+    }, []);
+
     useEffect(() => {
         (async function() {
-            updateLoading(true);
+            const res = await fetchQuizzes();
 
-            const res = await fetch(`${ SERVER_URL }/quizzes/teacher/${ user!.id }/`);
-            const json = await res.json();
-
-            updateLoading(false);
-
-            if(!res.ok) return throwError(json.message);
-            
-            updateQuizzes(json.data);
+            if(res) return throwError(res);
         })();
     }, []);
 
-    if(!user) return <Loading />;
+    async function deleteQuiz(id: string) {
+        const res = await fetch(`${ SERVER_URL }/quizzes/delete/${ id }/`, {
+            method: 'POST'
+        });
+        
+        const json = await res.json();
 
-    if(isLoading) return <Loading />;
+        if(!res.ok) throwError(json.message);
+        
+        await fetchQuizzes();
+    }
+
+    if(isLoading || !user) return <Loading />;
 
     return (
         <div className={ classes.dashboardContainer }>
@@ -88,7 +104,7 @@ export default function Dashboard() {
                     quizzes.filter(
                         c => c.name.toLowerCase().includes(filter.toLowerCase())
                     ).map(
-                        (c, i) => <QuizCard key={ i } quiz={ c } />
+                        (c, i) => <QuizCard key={ i } quiz={ c } deleteQuiz={ deleteQuiz } />
                     )
                 }
             </div>

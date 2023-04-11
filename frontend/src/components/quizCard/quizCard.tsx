@@ -1,11 +1,16 @@
 import { useNavigate } from 'react-router';
+
 import { BsDownload, BsFillTrashFill } from 'react-icons/bs';
 import { FaCopy } from 'react-icons/fa';
 
 import classes from './quizCard.module.css';
 
-export default function QuizCard(props: { quiz: Quiz }) {
+export default function QuizCard(props: { quiz: Quiz, deleteQuiz: (id: string) => void }) {
     const navigate = useNavigate();
+
+    async function download() {}
+
+    async function copy() {}
 
     return (
         <div className={ classes.cardContainer }>
@@ -23,7 +28,7 @@ export default function QuizCard(props: { quiz: Quiz }) {
                         <FaCopy />
                     </div>
 
-                    <div className={ classes.iconContainer }>
+                    <div className={ classes.iconContainer } onClick={ () => props.deleteQuiz(props.quiz.id) }>
                         <BsFillTrashFill />
                     </div>
                 </div>
