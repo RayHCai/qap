@@ -1,14 +1,16 @@
-import { useEffect, useState, useContext, createRef } from 'react';
+import { useEffect, useState, useContext, createRef, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router';
 
 import { BsArrowRight } from 'react-icons/bs';
 
-import QuestionCard from '../../components/questionCard/questionCard';
+import QuestionCard, { QuestionCardRef } from '../../components/questionCard/questionCard';
 import Loading from '../../components/loading/loading';
 
 import { ErrorContext } from '../../contexts/errorContext';
 
 import { SERVER_URL } from '../../settings';
+
+import { verifyQuestion } from '../../helpers/questionsHelpers';
 
 import classes from './editQuiz.module.css';
 
@@ -20,14 +22,19 @@ export default function EditQuiz() {
 
     const { throwError } = useContext(ErrorContext);
 
-    const [questions, updateQuestions] = useState<Question[]>();
+    const [questions, updateQuestions] = useState<Question[]>([]);
     const [quiz, updateQuiz] = useState<Quiz>();
 
     const [editingQuestion, updateEditingQuestion] = useState(-1);
 
-    const [filter, updateFilter] = useState('');
-
     const [isLoading, updateLoading] = useState(false);
+
+    const questionRefs = useRef<QuestionCardRef[]>([]);
+
+    if(questionRefs.current.length !== questions.length) {
+        questionRefs.current = Array.from(questionRefs.current)
+            .map((_, i) => questionRefs.current[i] || createRef());
+    }
 
     useEffect(() => {
         (async function() {
@@ -45,6 +52,10 @@ export default function EditQuiz() {
         })();
     }, []);
 
+    async function saveQuiz() {
+
+    }
+    
     function resizeInput(e: React.ChangeEvent<HTMLInputElement>) {
         const newVal = e.target.value;
 
@@ -59,38 +70,114 @@ export default function EditQuiz() {
     }
 
     function addQuestion(type: 'mc' | 'tf' | 'sa') {
+        let questionsToCopy = [...questions];
+
+        if(editingQuestion !== -1) {
+            const updatedQ = createQuestionFromRef(editingQuestion);
+
+            const title = updatedQ.title;
+            const choices = updatedQ.choices;
+            const content = updatedQ.content;
+    
+            // if the question is completely blank
+            if(
+                title.replaceAll(' ', '').length === 0 &&
+                choices.length === 0 &&
+                content.length === 0
+            ) {
+                questionsToCopy = questionsToCopy.filter(
+                    (_, i) => i !== editingQuestion
+                );
+            }
+            else if(verifyQuestion(updatedQ)) {
+                questionsToCopy.push(updatedQ);
+            }
+            else
+                return throwError('Question is not complete. Please make sure there is a title and at least two options for multiple choice questions');
+        }
+
         const newQuestion: Question = {
             id: '',
             title: '',
             content: '',
-            isVisible: true,
             questionFor: quizId!,
             choices: [] as string[],
-            required: true,
+            questionType: type,
+            numPoints: 0
         };
 
         if(type === 'mc') {
-            newQuestion.selectMultiple = false;
             newQuestion.correctAnswer = [];
         }
         else if(type === 'tf') {
             newQuestion.choices = ['True', 'False'];
-            newQuestion.selectMultiple = false;
         }
 
-        updateEditingQuestion(questions!.length);
-        updateQuestions([...questions!, newQuestion]);
+        updateEditingQuestion(questionsToCopy!.length);
+        updateQuestions(
+            [
+                ...questionsToCopy, 
+                newQuestion
+            ]
+        );
     }
 
     function deleteQuestion(i: number) {
+        // TODO: make sure to confirm with user to delete question
+
+        const newQuestions = [...questions].filter(
+            (_, ind) => ind !== i
+        );
+
+        updateQuestions(newQuestions);
+
+        if(i === editingQuestion) updateEditingQuestion(-1);
+    }
+
+    function createQuestionFromRef(i: number) {
+        const qObj = questionRefs.current[i];
+
+        const question: Question = {
+            id: '',
+            title: qObj.title.value,
+            content: qObj.content,
+            questionFor: quizId!,
+            choices: qObj.choices.map(c => c.value),
+            correctAnswer: qObj.choices.filter(c => c.isCorrect).map(c => c.value),
+            questionType: questions[i].questionType,
+            numPoints: Number(qObj.points.value)
+        };
+
+        return question;
+    }
+
+    function saveQuestion(i: number) {
+        const q = createQuestionFromRef(i);
+
+        if(!verifyQuestion(q))
+            return throwError('Question is not complete. Please make sure there is a title and at least two options for multiple choice questions');
+
+        const newQuestions = [...questions];
+
+        newQuestions[i] = q;
+
+        updateQuestions(newQuestions);
+        updateEditingQuestion(-1);
+    }
+
+    function editQuestion(i: number) {
+        updateEditingQuestion(i);
+    }
+
+    function moveQuestion(i: number, dir: number) {
 
     }
 
-    async function save() {
+    function copyQuestion(i: number) {
 
     }
 
-    if(isLoading || !quiz || !questions) return <Loading />;
+    if(isLoading || !quiz) return <Loading />;
 
     return (
         <div className={ classes.container }>
@@ -98,7 +185,7 @@ export default function EditQuiz() {
                 <input
                     placeholder="Quiz Title"
                     className={ classes.title }
-                    value={ quiz.   name }
+                    value={ quiz.name }
                     onChange={ resizeInput }
                 />
 
@@ -113,9 +200,7 @@ export default function EditQuiz() {
 
             <div className={ classes.questions }>
                 {
-                    questions.filter(
-                        q => q.title.toLowerCase().includes(filter.toLowerCase())
-                    ).length === 0 && (
+                    questions.length === 0 && (
                         <h1>
                             You don't have any questions for this quiz!
                         </h1>
@@ -123,16 +208,20 @@ export default function EditQuiz() {
                 }
                 
                 {
-                    questions.filter(
-                        q => q.title.toLowerCase().includes(filter.toLowerCase())
-                    ).map(
+                    questions.map(
                         (q, i) => (
                             <QuestionCard
                                 key={ i }
                                 question={ q }
                                 questionNumber={ i + 1 }
+                                isEdit={ editingQuestion === i }
                                 delete={ deleteQuestion }
-                                isEdit={ i === editingQuestion }
+                                save={ saveQuestion }
+                                edit={ editQuestion }
+                                move={ moveQuestion }
+                                copy={ copyQuestion }
+                                numQuestions={ questions.length }
+                                ref={ (r: QuestionCardRef) => questionRefs.current[i] = r }
                             />
                         )
                     )

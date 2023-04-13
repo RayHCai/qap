@@ -11,12 +11,11 @@ def serialize_question(question):
         'id': question.id,
         'title': question.title,
         'content': question.content,
-        'isVisible': question.is_visible,
         'question_for': question.question_for.id,
         'choices': question.choices,
-        'selectMultiple': question.select_multiple,
         'correctAnswer': question.correct_answer,
-        'required': question.required,
+        'questionType': question.question_type,
+        'numPoints': question.num_points,
     }
 
 class QuestionsView(APIView):
@@ -87,6 +86,8 @@ class QuestionsView(APIView):
             correct_answer=form_data.get('correct_answer'),
             select_multiple=form_data.get('select_multiple'),
             required=form_data.get('required'),
+            question_type=form_data.get('question_type'),
+            num_points=form_data.get('num_points'),
         )
 
         return Response({'data': serialize_question(question)}, status=200)
@@ -136,6 +137,9 @@ class UpdateQuestionsView(APIView):
         question.correct_answer = change_obj.get('correct_answer')
 
         question.required = change_obj.get('required')
+
+        question.question_type = change_obj.get('question_type')
+        question.num_points = change_obj.get('num_points')
 
         question.save()
 

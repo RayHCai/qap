@@ -17,15 +17,18 @@ class Questions(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
 
-    is_visible = models.BooleanField()
-
     question_for = models.ForeignKey(Quizzes, on_delete=models.CASCADE)
+
+    class QuestionTypeChoices(models.TextChoices):
+        MC = 'mc', 'mc' # Multiple choice
+        TF = 'tf', 'tf' # True/false
+        SA = 'sa', 'sa' # Short answer
+
+    question_type = models.CharField(choices=QuestionTypeChoices.choices, max_length=255)
+    num_points = models.IntegerField()
 
     choices = ArrayField(
         models.CharField(max_length=255),
     )
-    select_multiple = models.BooleanField(null=True)
-    
-    required = models.BooleanField(default=True)
     
     correct_answer = models.TextField(null=True)

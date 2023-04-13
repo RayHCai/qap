@@ -15,7 +15,7 @@ const Question = forwardRef<HTMLDivElement & HTMLTextAreaElement, { question: Qu
 
             temp = temp.map(
                 (_, i) => {
-                    if(props.question.selectMultiple) return props.answer.selected!.includes(props.question.choices![i]);
+                    // if(props.question.selectMultiple) return props.answer.selected!.includes(props.question.choices![i]);
 
                     return props.question.choices![i] === props.answer.selected![i]
                 }
@@ -47,7 +47,7 @@ const Question = forwardRef<HTMLDivElement & HTMLTextAreaElement, { question: Qu
                                     (c, i) => (
                                         <div className="choice-container" key={ i }>
                                             <input
-                                                type={ props.question.selectMultiple ? "checkbox" : "radio" } 
+                                                // type={ props.question.selectMultiple ? "checkbox" : "radio" } 
                                                 value={ c } 
                                                 name={ `choice${ props.question.id }` }
                                                 checked={ checked[i] }

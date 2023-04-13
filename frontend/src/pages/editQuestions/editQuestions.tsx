@@ -57,390 +57,391 @@ function EditQuestionComponent(props: EditQuestionProps) {
 }
 
 export default function EditQuestions() {
-    const { classId } = useParams();
-    const { user } = useContext(TeacherContext);
-    const { throwError } = useContext(ErrorContext);
+    // const { classId } = useParams();
+    // const { user } = useContext(TeacherContext);
+    // const { throwError } = useContext(ErrorContext);
 
-    const [classObj, updateClass] = useState<Quiz>();
+    // const [classObj, updateClass] = useState<Quiz>();
 
-    const [questions, updateQuestions] = useState([] as Question[]);
-    const [isLoading, updateLoading] = useState(false);
-    const [modalOpen, updateModalState] = useState(false);
+    // const [questions, updateQuestions] = useState([] as Question[]);
+    // const [isLoading, updateLoading] = useState(false);
+    // const [modalOpen, updateModalState] = useState(false);
 
-    const [isUpdateModalOpen, updateUpdateModalState] = useState(false);
-    const [updatingId, updateId] = useState('');
-    const [updatingSelectBox, updateSelectBoxState] = useState(false);
-    const [updatingCorrectAnswer, updateCorrectAnswer] = useState('');
+    // const [isUpdateModalOpen, updateUpdateModalState] = useState(false);
+    // const [updatingId, updateId] = useState('');
+    // const [updatingSelectBox, updateSelectBoxState] = useState(false);
+    // const [updatingCorrectAnswer, updateCorrectAnswer] = useState('');
 
-    const [updatingTitle, updateUpdatingTitle] = useState('');
-    const [content, updateContent] = useState('');
+    // const [updatingTitle, updateUpdatingTitle] = useState('');
+    // const [content, updateContent] = useState('');
 
-    type Choice = { value: string; correct: boolean };
+    // type Choice = { value: string; correct: boolean };
 
-    const [choices, updateChoices] = useState<Choice[]>([]);
+    // const [choices, updateChoices] = useState<Choice[]>([]);
 
-    const title = useRef({} as HTMLInputElement);
-    const selectMultiple = useRef({} as HTMLInputElement)
-    const correctAnswer = useRef({} as HTMLInputElement)
+    // const title = useRef({} as HTMLInputElement);
+    // const selectMultiple = useRef({} as HTMLInputElement)
+    // const correctAnswer = useRef({} as HTMLInputElement)
 
-    const fetchQuestions = useCallback(async function() {
-        const res = await fetch(`${ SERVER_URL }/questions/${ classId }/`);
-        const json = await res.json();
+    // const fetchQuestions = useCallback(async function() {
+    //     const res = await fetch(`${ SERVER_URL }/questions/${ classId }/`);
+    //     const json = await res.json();
 
-        if(!res.ok) throwError(json.message);
-        else updateQuestions(json.data);
-    }, []);
+    //     if(!res.ok) throwError(json.message);
+    //     else updateQuestions(json.data);
+    // }, []);
 
-    const fetchClass = useCallback(async function() {
-        const res = await fetch(`${ SERVER_URL }/classes/${ classId }/`);
-        const json = await res.json();
+    // const fetchClass = useCallback(async function() {
+    //     const res = await fetch(`${ SERVER_URL }/classes/${ classId }/`);
+    //     const json = await res.json();
 
-        if(!res.ok) throwError(json.message);
-        else updateClass(json.data);
-    }, []);
+    //     if(!res.ok) throwError(json.message);
+    //     else updateClass(json.data);
+    // }, []);
 
-    useEffect(() => {
-        updateLoading(true);
+    // useEffect(() => {
+    //     updateLoading(true);
 
-        (async function() {
-            await fetchQuestions();
-            await fetchClass();
+    //     (async function() {
+    //         await fetchQuestions();
+    //         await fetchClass();
 
-            updateLoading(false);
-        })();
+    //         updateLoading(false);
+    //     })();
 
-    }, [fetchQuestions, fetchClass]);
+    // }, [fetchQuestions, fetchClass]);
 
-    async function createQuestion() {
-        const t = title.current.value.replaceAll(' ', '');
-        const c = content;
+    // async function createQuestion() {
+    //     const t = title.current.value.replaceAll(' ', '');
+    //     const c = content;
 
-        if(t.length === 0 || c.replaceAll(' ', '').length === 0) {
-            throwError('Title and Content cannot be empty');
+    //     if(t.length === 0 || c.replaceAll(' ', '').length === 0) {
+    //         throwError('Title and Content cannot be empty');
 
-            return;
-        }
+    //         return;
+    //     }
 
-        const res = await fetch(`${ SERVER_URL }/questions/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(
-                {
-                    title: t,
-                    content: c,
-                    is_visible: true,
-                    question_for: classId,
-                    choices: choices,
-                    required: true,
-                    ...(
-                        {
-                            select_multiple: correctAnswer
-                        }
-                    )
-                    // ...(
-                    //     choices.length === 0 ? {} : {
-                    //         choices: choices.map(
-                    //             c => c.value
-                    //         ).join(','),
-                    //         select_multiple: selectMultiple.current.checked,
-                    //         correct: correctAnswer.current.value
-                    //     }
-                    // )
-                }
-            )
-        });
+    //     const res = await fetch(`${ SERVER_URL }/questions/`, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify(
+    //             {
+    //                 title: t,
+    //                 content: c,
+    //                 is_visible: true,
+    //                 question_for: classId,
+    //                 choices: choices,
+    //                 required: true,
+    //                 ...(
+    //                     {
+    //                         select_multiple: correctAnswer
+    //                     }
+    //                 )
+    //                 // ...(
+    //                 //     choices.length === 0 ? {} : {
+    //                 //         choices: choices.map(
+    //                 //             c => c.value
+    //                 //         ).join(','),
+    //                 //         select_multiple: selectMultiple.current.checked,
+    //                 //         correct: correctAnswer.current.value
+    //                 //     }
+    //                 // )
+    //             }
+    //         )
+    //     });
         
-        console.log(choices);
+    //     console.log(choices);
 
-        const json = await res.json();
+    //     const json = await res.json();
 
-        if(!res.ok) alert(json.message);
-        else {
-            fetchQuestions();
-            refreshState();
-        }
-    }
+    //     if(!res.ok) alert(json.message);
+    //     else {
+    //         fetchQuestions();
+    //         refreshState();
+    //     }
+    // }
 
-    async function editQuestion(id: string, changeObj: ChangeParameters) {
-        updateLoading(true);
+    // async function editQuestion(id: string, changeObj: ChangeParameters) {
+    //     updateLoading(true);
         
-        const res = await fetch(`${ SERVER_URL }/update/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(
-                {
-                    id: id,
-                    change: changeObj
-                }
-            )
-        });
+    //     const res = await fetch(`${ SERVER_URL }/update/`, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify(
+    //             {
+    //                 id: id,
+    //                 change: changeObj
+    //             }
+    //         )
+    //     });
 
-        const json = await res.json();
+    //     const json = await res.json();
 
-        if(!res.ok) alert(json.message);
-        else fetchQuestions();
+    //     if(!res.ok) alert(json.message);
+    //     else fetchQuestions();
 
-        updateLoading(false)
-    }
+    //     updateLoading(false)
+    // }
 
-    async function deleteQuesiton(id: string) {
-        // !TODO: make this a modal
-        if(!window.confirm('Are you sure you want to delete this question?')) return;
+    // async function deleteQuesiton(id: string) {
+    //     // !TODO: make this a modal
+    //     if(!window.confirm('Are you sure you want to delete this question?')) return;
         
-        updateLoading(true);
+    //     updateLoading(true);
 
-        const res = await fetch(`${ SERVER_URL }/delete/question/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(
-                {
-                    id: id
-                }
-            )
-        });
+    //     const res = await fetch(`${ SERVER_URL }/delete/question/`, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify(
+    //             {
+    //                 id: id
+    //             }
+    //         )
+    //     });
 
-        const json = await res.json();
+    //     const json = await res.json();
 
-        if(!res.ok) alert(json.message);
-        else fetchQuestions();
+    //     if(!res.ok) alert(json.message);
+    //     else fetchQuestions();
 
-        updateLoading(false);
-    }
+    //     updateLoading(false);
+    // }
 
-    function updateQuestion() {
-        const stringifiedQuestion = choices.map(
-            c => c.value
-        ).join(',');
+    // function updateQuestion() {
+    //     const stringifiedQuestion = choices.map(
+    //         c => c.value
+    //     ).join(',');
 
-        editQuestion(updatingId, {
-            title: title.current.value,
-            content: content,
-            ...(
-                choices.length === 0 ? {} : {
-                    choices: stringifiedQuestion,
-                    select_multiple: updatingSelectBox,
-                    correct: updatingCorrectAnswer
-                }
-            )
-        });
+    //     editQuestion(updatingId, {
+    //         title: title.current.value,
+    //         content: content,
+    //         ...(
+    //             choices.length === 0 ? {} : {
+    //                 choices: stringifiedQuestion,
+    //                 select_multiple: updatingSelectBox,
+    //                 correct: updatingCorrectAnswer
+    //             }
+    //         )
+    //     });
 
-        refreshState();
-    }
+    //     refreshState();
+    // }
 
-    function deleteChoice(index: number) {
-        let newChoices = [...choices];
+    // function deleteChoice(index: number) {
+    //     let newChoices = [...choices];
 
-        newChoices = newChoices.filter(
-            (_, i) => i !== index
-        );
+    //     newChoices = newChoices.filter(
+    //         (_, i) => i !== index
+    //     );
 
-        updateChoices(newChoices);
-    }
+    //     updateChoices(newChoices);
+    // }
 
-    function changeChoice(index: number, value: string) {
-        let newChoices = [...choices];
+    // function changeChoice(index: number, value: string) {
+    //     let newChoices = [...choices];
 
-        newChoices[index] = { value: value, correct: false };
+    //     newChoices[index] = { value: value, correct: false };
         
-        console.log(newChoices);
+    //     console.log(newChoices);
 
-        updateChoices(newChoices);
-    }
+    //     updateChoices(newChoices);
+    // }
 
-    function changeCorrect(index: number, checked: boolean) {
-        let newChoices = [...choices];
+    // function changeCorrect(index: number, checked: boolean) {
+    //     let newChoices = [...choices];
 
-        newChoices[index].correct = checked;
+    //     newChoices[index].correct = checked;
 
-        console.log(newChoices);
+    //     console.log(newChoices);
 
-        updateChoices(newChoices);
-    }
+    //     updateChoices(newChoices);
+    // }
 
-    function refreshState() {
-        updateModalState(false);
-        updateUpdateModalState(false);
-        updateContent('');
-        updateChoices([]);
-        updateSelectBoxState(false);
-        updateCorrectAnswer('');
-    }
+    // function refreshState() {
+    //     updateModalState(false);
+    //     updateUpdateModalState(false);
+    //     updateContent('');
+    //     updateChoices([]);
+    //     updateSelectBoxState(false);
+    //     updateCorrectAnswer('');
+    // }
 
-    if(isLoading) return <Loading />;
+    // if(isLoading) return <Loading />;
 
-    return (
-        <div className="questions-container">
-            {
-                modalOpen ? (
-                    <Modal 
-                        closeModal={ refreshState }
-                    >
-                        <input ref={ title } type="text" placeholder="Question Title" />
+    // return (
+    //     <div className="questions-container">
+    //         {
+    //             modalOpen ? (
+    //                 <Modal 
+    //                     closeModal={ refreshState }
+    //                 >
+    //                     <input ref={ title } type="text" placeholder="Question Title" />
 
-                        <MDEditor
-                            className="md-editor"
-                            visibleDragbar={ false }
-                            value={ content }
-                            onChange={ (v) => updateContent(v!) }
-                        />
+    //                     <MDEditor
+    //                         className="md-editor"
+    //                         visibleDragbar={ false }
+    //                         value={ content }
+    //                         onChange={ (v) => updateContent(v!) }
+    //                     />
 
-                        <div>
-                            <button onClick={ () => updateChoices([...choices, { value: '', correct: false }]) }>
-                                Add choice
-                            </button>
+    //                     <div>
+    //                         <button onClick={ () => updateChoices([...choices, { value: '', correct: false }]) }>
+    //                             Add choice
+    //                         </button>
 
-                            <div className="select-multiple-container">
-                                <label>Allow Multiple Choices</label>
-                                <input type="checkbox" ref={ selectMultiple } disabled={ choices.length === 0 } />
-                            </div>
+    //                         <div className="select-multiple-container">
+    //                             <label>Allow Multiple Choices</label>
+    //                             <input type="checkbox" ref={ selectMultiple } disabled={ choices.length === 0 } />
+    //                         </div>
 
-                            <div className="correct-answer-container">
-                                <label>Correct Answer</label>
-                                <input type="text" className="choice-input" ref={ correctAnswer } disabled={ choices.length === 0 } />
-                            </div>
+    //                         <div className="correct-answer-container">
+    //                             <label>Correct Answer</label>
+    //                             <input type="text" className="choice-input" ref={ correctAnswer } disabled={ choices.length === 0 } />
+    //                         </div>
 
-                            <div className="choices-container">
-                                {
-                                    choices.map(
-                                        (c, index) => (
-                                            <EditChoice 
-                                                deleteChoice={ () => deleteChoice(index) }
-                                                changeChoice={ (v) => changeChoice(index, v) }
-                                                changeCorrect={ (v) => changeCorrect(index, v) }
-                                                correct={ c.correct }
-                                                value={ c.value }
-                                                key={ index }
-                                            />
-                                        )
-                                    )
-                                }
-                            </div>
-                        </div>
+    //                         <div className="choices-container">
+    //                             {
+    //                                 choices.map(
+    //                                     (c, index) => (
+    //                                         <EditChoice 
+    //                                             deleteChoice={ () => deleteChoice(index) }
+    //                                             changeChoice={ (v) => changeChoice(index, v) }
+    //                                             changeCorrect={ (v) => changeCorrect(index, v) }
+    //                                             correct={ c.correct }
+    //                                             value={ c.value }
+    //                                             key={ index }
+    //                                         />
+    //                                     )
+    //                                 )
+    //                             }
+    //                         </div>
+    //                     </div>
 
-                        <button onClick={ createQuestion }>Create</button>
-                    </Modal>
-                ) : <></>
-            }
+    //                     <button onClick={ createQuestion }>Create</button>
+    //                 </Modal>
+    //             ) : <></>
+    //         }
 
-            {
-                isUpdateModalOpen ? (
-                    <Modal 
-                        closeModal={ refreshState }
-                    >
-                        <input ref={ title } defaultValue={ updatingTitle } type="text" placeholder="Question Title" />
+    //         {
+    //             isUpdateModalOpen ? (
+    //                 <Modal 
+    //                     closeModal={ refreshState }
+    //                 >
+    //                     <input ref={ title } defaultValue={ updatingTitle } type="text" placeholder="Question Title" />
 
-                        <MDEditor
-                            className="md-editor"
-                            visibleDragbar={ false }
-                            value={ content }
-                            onChange={ (v) => updateContent(v!) }
-                        />
+    //                     <MDEditor
+    //                         className="md-editor"
+    //                         visibleDragbar={ false }
+    //                         value={ content }
+    //                         onChange={ (v) => updateContent(v!) }
+    //                     />
 
-                        <div>
-                            <button onClick={ () => updateChoices([...choices, { value: '', correct: false }]) }>
-                                Add choice
-                            </button>
+    //                     <div>
+    //                         <button onClick={ () => updateChoices([...choices, { value: '', correct: false }]) }>
+    //                             Add choice
+    //                         </button>
 
-                            <div className="select-multiple-container">
-                                <label>Allow Multiple Choices</label>
+    //                         <div className="select-multiple-container">
+    //                             <label>Allow Multiple Choices</label>
 
-                                <input 
-                                    type="checkbox" 
-                                    onChange={ (e) => updateSelectBoxState(e.target.checked) } 
-                                    checked={ updatingSelectBox } 
-                                    disabled={ choices.length === 0 } 
-                                />
-                            </div>
+    //                             <input 
+    //                                 type="checkbox" 
+    //                                 onChange={ (e) => updateSelectBoxState(e.target.checked) } 
+    //                                 checked={ updatingSelectBox } 
+    //                                 disabled={ choices.length === 0 } 
+    //                             />
+    //                         </div>
 
-                            <div className="correct-answer-container">
-                                <label>Correct Answer</label>
-                                <input 
-                                    type="text" 
-                                    className="choice-input" 
-                                    value={ updatingCorrectAnswer } 
-                                    disabled={ choices.length === 0 }
-                                    onChange={ (e) => updateCorrectAnswer(e.target.value) } 
-                                />
-                            </div>
+    //                         <div className="correct-answer-container">
+    //                             <label>Correct Answer</label>
+    //                             <input 
+    //                                 type="text" 
+    //                                 className="choice-input" 
+    //                                 value={ updatingCorrectAnswer } 
+    //                                 disabled={ choices.length === 0 }
+    //                                 onChange={ (e) => updateCorrectAnswer(e.target.value) } 
+    //                             />
+    //                         </div>
 
-                            <div className="choices-container">
-                                {
-                                    choices.map(
-                                        (c, index) => (
-                                            <div className="choice-container" key={ index }>
-                                                <EditChoice 
-                                                    deleteChoice={ () => deleteChoice(index) }
-                                                    changeChoice={ (v) => changeChoice(index, v) }
-                                                    changeCorrect={ (v) => changeCorrect(index, v) }
-                                                    correct={ c.correct }
-                                                    value={ c.value }
-                                                    key={ index }
-                                                />
-                                            </div>
-                                        )
-                                    )
-                                }
-                            </div>
-                        </div>
+    //                         <div className="choices-container">
+    //                             {
+    //                                 choices.map(
+    //                                     (c, index) => (
+    //                                         <div className="choice-container" key={ index }>
+    //                                             <EditChoice 
+    //                                                 deleteChoice={ () => deleteChoice(index) }
+    //                                                 changeChoice={ (v) => changeChoice(index, v) }
+    //                                                 changeCorrect={ (v) => changeCorrect(index, v) }
+    //                                                 correct={ c.correct }
+    //                                                 value={ c.value }
+    //                                                 key={ index }
+    //                                             />
+    //                                         </div>
+    //                                     )
+    //                                 )
+    //                             }
+    //                         </div>
+    //                     </div>
 
-                        <button onClick={ updateQuestion }>Update</button>
-                    </Modal>
-                ) : <></>
-            }
+    //                     <button onClick={ updateQuestion }>Update</button>
+    //                 </Modal>
+    //             ) : <></>
+    //         }
 
-            <h1>Questions for { classObj!.name }</h1>
+    //         <h1>Questions for { classObj!.name }</h1>
 
-            <button onClick={ () => updateModalState(true) }>Add a quesiton</button>
+    //         <button onClick={ () => updateModalState(true) }>Add a quesiton</button>
 
-            <div className="questions-content">
-                {
-                    questions.map(
-                        (q, i) => (
-                            <EditQuestionComponent 
-                                key={ i }
-                                title={ q.title } 
-                                visible={ q.isVisible } 
-                                changeVisibility={
-                                    (v: boolean) => editQuestion(q.id, v)
-                                }
-                                delete={
-                                    () => deleteQuesiton(q.id)
-                                }
-                                openModal={
-                                    () => {
-                                        updateUpdateModalState(true);
-                                        updateId(q.id);
-                                        updateContent(q.content);
-                                        updateUpdatingTitle(q.title);
+    //         <div className="questions-content">
+    //             {
+    //                 questions.map(
+    //                     (q, i) => (
+    //                         <EditQuestionComponent 
+    //                             key={ i }
+    //                             title={ q.title } 
+    //                             visible={ q.isVisible } 
+    //                             changeVisibility={
+    //                                 (v: boolean) => editQuestion(q.id, v)
+    //                             }
+    //                             delete={
+    //                                 () => deleteQuesiton(q.id)
+    //                             }
+    //                             openModal={
+    //                                 () => {
+    //                                     updateUpdateModalState(true);
+    //                                     updateId(q.id);
+    //                                     updateContent(q.content);
+    //                                     updateUpdatingTitle(q.title);
 
-                                        if(q.selectMultiple) updateSelectBoxState(q.selectMultiple);
-                                        // if(q.correctAnswer) updateCorrectAnswer(q.correctAnswer);
+    //                                     if(q.selectMultiple) updateSelectBoxState(q.selectMultiple);
+    //                                     // if(q.correctAnswer) updateCorrectAnswer(q.correctAnswer);
 
-                                        updateChoices(
-                                            q.choices ? q.choices.map(
-                                                s => {
-                                                    let isCorrect = false;
+    //                                     updateChoices(
+    //                                         q.choices ? q.choices.map(
+    //                                             s => {
+    //                                                 let isCorrect = false;
 
-                                                    if(q.correctAnswer!.includes(s)) isCorrect = true;
+    //                                                 if(q.correctAnswer!.includes(s)) isCorrect = true;
 
-                                                    return { value: s, correct: isCorrect };
-                                                }
-                                            ) 
-                                            : [] as Choice[]
-                                        );
-                                    }
-                                }
-                            />
-                        )
-                    )
-                }
-            </div>
-        </div>
-    );
+    //                                                 return { value: s, correct: isCorrect };
+    //                                             }
+    //                                         ) 
+    //                                         : [] as Choice[]
+    //                                     );
+    //                                 }
+    //                             }
+    //                         />
+    //                     )
+    //                 )
+    //             }
+    //         </div>
+    //     </div>
+    // );
+    return <></>
 }

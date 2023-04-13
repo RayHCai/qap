@@ -3,6 +3,12 @@
     margin-bottom: 3rem;
 }
 
+.displayContainer {
+    border-top: 1px solid var(--gray);
+    padding-top: 2rem;
+    border-bottom: 1px solid var(--gray);
+}
+
 .header {
     display: flex;
     margin-bottom: 2rem;
@@ -24,4 +30,73 @@
 
 .points::-webkit-inner-spin-button {
     -webkit-appearance: none;
+}
+
+.sidebar {
+    float: right;
+}
+
+.sidebarIcon {
+    cursor: pointer;
+    padding: 1rem;
+    font-size: 20px;
+    transition: 0.15s;
+    border-radius: 3px;
+    align-self: center;
+}
+
+.sidebarHori {
+    display: flex;
+}
+
+.sidebarIcon:hover {
+    color: var(--pink);
+    background: var(--navy);
+}
+
+.disabledIcon {
+    cursor: auto;
+    color: var(--gray);
+}
+
+.disabledIcon:hover {
+    color: var(--gray);
+    background: none;
+}
+
+.choicesContainer {
+    margin-top: 1rem;
+}
+
+.choice {
+    display: flex;
+    margin: 1rem 0;
+}
+
+.choice h1 {
+    font-size: 20px;
+    margin-right: 1rem;
+}
+
+.choice input[type="checkbox"] {
+    border-radius: 50px;
+    margin-right: 1rem;
+}
+
+.choice input[type="text"] {
+    padding: 0rem 1rem !important;
+    border-radius: 3px;
+    width: 50%;
+}
+
+.deleteChoiceBtn {
+    align-self: center;
+    margin-left: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.deleteChoiceBtn:hover {
+    color: var(--red);
 }

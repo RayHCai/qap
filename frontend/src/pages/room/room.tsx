@@ -12,189 +12,190 @@ import { SERVER_URL } from '../../settings';
 import './room.css';
 
 export default function Room() {
-    const navigate = useNavigate();
-    const { sessionCode } = useParams();
+    // const navigate = useNavigate();
+    // const { sessionCode } = useParams();
 
-    const { name } = useContext(StudentContext);
-    const { throwError } = useContext(ErrorContext);
+    // const { name } = useContext(StudentContext);
+    // const { throwError } = useContext(ErrorContext);
 
-    const [questions, updateQuestions] = useState<Question[]>([]);
-    const [isLoading, updateLoadingState] = useState(false);
+    // const [questions, updateQuestions] = useState<Question[]>([]);
+    // const [isLoading, updateLoadingState] = useState(false);
 
-    const [curPage, updateCurPage] = useState(0);
+    // const [curPage, updateCurPage] = useState(0);
 
-    const answer = createRef<HTMLDivElement & HTMLTextAreaElement>();
+    // const answer = createRef<HTMLDivElement & HTMLTextAreaElement>();
 
-    const [answers, updateAnswers] = useState<Answer[]>([]);
+    // const [answers, updateAnswers] = useState<Answer[]>([]);
 
-    useEffect(() => {
-        updateLoadingState(true);
+    // useEffect(() => {
+    //     updateLoadingState(true);
 
-        (async function() {
-            const res = await fetch(`${ SERVER_URL }/sessions/${ sessionCode }/`);
-            const json = await res.json();
+    //     (async function() {
+    //         const res = await fetch(`${ SERVER_URL }/sessions/${ sessionCode }/`);
+    //         const json = await res.json();
 
-            if(!res.ok) alert(json.message);
-            else {
-                const classId = json.data.session_for;
+    //         if(!res.ok) alert(json.message);
+    //         else {
+    //             const classId = json.data.session_for;
 
-                const questionsRes = await fetch(`${ SERVER_URL }/questions/${ classId }/`)
-                const questionsJson = await questionsRes.json();
+    //             const questionsRes = await fetch(`${ SERVER_URL }/questions/${ classId }/`)
+    //             const questionsJson = await questionsRes.json();
 
-                console.log('Questions looks like this: ', questionsJson.data);
+    //             console.log('Questions looks like this: ', questionsJson.data);
 
-                updateQuestions(questionsJson.data);
+    //             updateQuestions(questionsJson.data);
 
-                updateAnswers(
-                    (new Array(questionsJson.data.length)).fill({}).map((_, index) => (
-                        {
-                            id: '',
-                            studentName: '',
-                            answerFor: '',
-                            textAnswer: '',
-                            selected: [],
-                            correct: false,
-                            dateAnswered: ''
-                        }
-                    ))
-                );
+    //             updateAnswers(
+    //                 (new Array(questionsJson.data.length)).fill({}).map((_, index) => (
+    //                     {
+    //                         id: '',
+    //                         studentName: '',
+    //                         answerFor: '',
+    //                         textAnswer: '',
+    //                         selected: [],
+    //                         correct: false,
+    //                         dateAnswered: ''
+    //                     }
+    //                 ))
+    //             );
                 
-                updateLoadingState(false);
-            }
-        })();
-    }, []);
+    //             updateLoadingState(false);
+    //         }
+    //     })();
+    // }, []);
 
-    function getAnswer() {
-        if(answer.current!.value) { // if its a text area
-            const newAnswers = [...answers];
+    // function getAnswer() {
+    //     if(answer.current!.value) { // if its a text area
+    //         const newAnswers = [...answers];
 
-            const curQuestion = questions[curPage];
+    //         const curQuestion = questions[curPage];
 
-            newAnswers[curPage].answerFor = curQuestion.id;
-            newAnswers[curPage].textAnswer = answer.current!.value;
+    //         newAnswers[curPage].answerFor = curQuestion.id;
+    //         newAnswers[curPage].textAnswer = answer.current!.value;
 
-            updateAnswers(newAnswers);
+    //         updateAnswers(newAnswers);
 
-            return newAnswers;
-        }
-        else {
-            const newAnswers = [...answers];
+    //         return newAnswers;
+    //     }
+    //     else {
+    //         const newAnswers = [...answers];
 
-            const curAnswer = newAnswers[curPage];
-            const curQuestion = questions[curPage];
+    //         const curAnswer = newAnswers[curPage];
+    //         const curQuestion = questions[curPage];
 
-            for(const c of Array.from(answer.current!.children)) {
-                const inpElement = c.children[0] as HTMLInputElement;
+    //         for(const c of Array.from(answer.current!.children)) {
+    //             const inpElement = c.children[0] as HTMLInputElement;
 
-                if(!inpElement.checked) continue;
+    //             if(!inpElement.checked) continue;
 
-                curAnswer.answerFor = curQuestion.id;
-                curAnswer.selected!.push(inpElement.value);
+    //             curAnswer.answerFor = curQuestion.id;
+    //             curAnswer.selected!.push(inpElement.value);
 
-                if(inpElement.type === 'radio') break;
-            }
+    //             if(inpElement.type === 'radio') break;
+    //         }
 
-            newAnswers[curPage] = curAnswer;
+    //         newAnswers[curPage] = curAnswer;
 
-            updateAnswers(newAnswers);
+    //         updateAnswers(newAnswers);
 
-            return newAnswers;
-        }
-    }
+    //         return newAnswers;
+    //     }
+    // }
 
-    function nextQuestion() {
-        getAnswer();
-        updateCurPage(curPage + 1);
-    }
+    // function nextQuestion() {
+    //     getAnswer();
+    //     updateCurPage(curPage + 1);
+    // }
 
-    async function submit() {
-        const newAnswers = getAnswer();
+    // async function submit() {
+    //     const newAnswers = getAnswer();
 
-        const unanswered = newAnswers.filter(
-            (a, i) => (
-                questions[i].required && (
-                    questions[i].choices.length === 0 ? a.textAnswer!.replaceAll(' ', '').length === 0 : a.selected!.length === 0
-                )
-            )
-        );
+    //     const unanswered = newAnswers.filter(
+    //         (a, i) => (
+    //             questions[i].required && (
+    //                 questions[i].choices.length === 0 ? a.textAnswer!.replaceAll(' ', '').length === 0 : a.selected!.length === 0
+    //             )
+    //         )
+    //     );
 
-        if(unanswered.length !== 0) {
-            const missedQuestions = newAnswers.map(
-                (a, i) => unanswered.filter(a => a.answerFor === a.answerFor).length !== 0 ? i : -1
-            ).filter(i => i !== -1);
+    //     if(unanswered.length !== 0) {
+    //         const missedQuestions = newAnswers.map(
+    //             (a, i) => unanswered.filter(a => a.answerFor === a.answerFor).length !== 0 ? i : -1
+    //         ).filter(i => i !== -1);
 
-            throwError(`Questions: ${ missedQuestions.join(', ') }`);
+    //         throwError(`Questions: ${ missedQuestions.join(', ') }`);
 
-            return;
-        }
+    //         return;
+    //     }
 
-        const res = await Promise.all(
-            questions.map(
-                async (q, i) => {
-                    const answer = newAnswers[i];
+    //     const res = await Promise.all(
+    //         questions.map(
+    //             async (q, i) => {
+    //                 const answer = newAnswers[i];
 
-                    return await fetch(`${ SERVER_URL }/answers/`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(
-                            {
-                                answer_for: q.id,
-                                student_name: name,
-                                selected: answer.selected,
-                                text_answer: answer.textAnswer
-                            }
-                        )
-                    });
-                }
-            )
-        );
+    //                 return await fetch(`${ SERVER_URL }/answers/`, {
+    //                     method: 'POST',
+    //                     headers: {
+    //                         'Content-Type': 'application/json'
+    //                     },
+    //                     body: JSON.stringify(
+    //                         {
+    //                             answer_for: q.id,
+    //                             student_name: name,
+    //                             selected: answer.selected,
+    //                             text_answer: answer.textAnswer
+    //                         }
+    //                     )
+    //                 });
+    //             }
+    //         )
+    //     );
 
-        for(const r of res) {
-            const json = await r.json();
+    //     for(const r of res) {
+    //         const json = await r.json();
 
-            if(!r.ok) {
-                throwError(json.message);
+    //         if(!r.ok) {
+    //             throwError(json.message);
              
-                continue;
-            }
-            else {
-                console.log('Answer json ', json);
-            }
-        }
-    }
+    //             continue;
+    //         }
+    //         else {
+    //             console.log('Answer json ', json);
+    //         }
+    //     }
+    // }
 
-    if(isLoading) return <Loading />;
+    // if(isLoading) return <Loading />;
 
-    return (
-        <div className="room-container">
-            <div className="questions">
-                {
-                    questions.filter(
-                        (_, i) => i === curPage
-                    ).map(
-                        (q, i) => <Question key={ q.id } question={ q } ref={ answer } answer={ answers[i] } />
-                    )
-                }
+    // return (
+    //     <div className="room-container">
+    //         <div className="questions">
+    //             {
+    //                 questions.filter(
+    //                     (_, i) => i === curPage
+    //                 ).map(
+    //                     (q, i) => <Question key={ q.id } question={ q } ref={ answer } answer={ answers[i] } />
+    //                 )
+    //             }
 
-                <div className="room-btns-container">
-                    <div className="room-btns-back-and-submit">
-                        {
-                            curPage > 0 ? <button onClick={ () => {
-                                getAnswer();
-                                updateCurPage(curPage - 1);
-                            } }>Back</button> : <></>
-                        }
+    //             <div className="room-btns-container">
+    //                 <div className="room-btns-back-and-submit">
+    //                     {
+    //                         curPage > 0 ? <button onClick={ () => {
+    //                             getAnswer();
+    //                             updateCurPage(curPage - 1);
+    //                         } }>Back</button> : <></>
+    //                     }
 
-                        {
-                            curPage === questions.length - 1 
-                            ? <button onClick={ submit }>Submit</button>
-                            : <button onClick={ nextQuestion }>Next Question</button>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+    //                     {
+    //                         curPage === questions.length - 1 
+    //                         ? <button onClick={ submit }>Submit</button>
+    //                         : <button onClick={ nextQuestion }>Next Question</button>
+    //                     }
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     </div>
+    // );
+    return <></>
 }

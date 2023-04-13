@@ -13,14 +13,11 @@ declare interface Question {
     title: string;
     content: string;
 
-    isVisible: boolean;
-
     questionFor: string;
+    questionType: 'mc' | 'tf' | 'sa';
+    numPoints: number;
 
     choices: string[];
-    selectMultiple?: boolean;
-
-    required: boolean;
 
     correctAnswer?: string[];
 }
