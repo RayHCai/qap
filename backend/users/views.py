@@ -3,9 +3,9 @@ import hashlib
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from users.models import Users
-from users.forms import UserCreationForm, UserValidationForm
-from users.serializers import UserSerializer
+from .models import Users
+from .forms import UserCreationForm, UserValidationForm
+from .serializers import UserSerializer
 
 class UsersView(APIView):
     def get(self, request, user_id):

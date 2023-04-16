@@ -1,10 +1,12 @@
+import json
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from quizzes.models import Quizzes
 
-from questions.models import Questions
-from questions.forms import QuestionCreationForm
+from .models import Questions
+from .forms import QuestionCreationForm
 
 def serialize_question(question):
     return {
@@ -63,7 +65,13 @@ class QuestionsView(APIView):
         Create a question for a quiz
         '''
 
-        form = QuestionCreationForm(request.data)
+        form = QuestionCreationForm({
+            **request.data,
+            'choices': '', #json.dumps(request.data.get('choices')),
+            'correct_answer': '' #json.dumps(request.data.get('correct_answer')),
+        })
+
+        print(form.is_valid(), form.errors.as_data())
 
         if not form.is_valid():
             return Response({'message': 'Invalid request'}, status=400)
@@ -77,15 +85,13 @@ class QuestionsView(APIView):
         except Quizzes.DoesNotExist:
             return Response({'message': f'Quiz not found with id { question_for }'}, status=404)
         
+
         question = Questions.objects.create(
             title=form_data.get('title'),
             content=form_data.get('content'),
-            is_visible=form_data.get('is_visible'),
             question_for=quiz_obj,
-            choices=form_data.get('choices'),
-            correct_answer=form_data.get('correct_answer'),
-            select_multiple=form_data.get('select_multiple'),
-            required=form_data.get('required'),
+            choices=request.data.get('choices'),
+            correct_answer=request.data.get('correct_answer'),
             question_type=form_data.get('question_type'),
             num_points=form_data.get('num_points'),
         )
@@ -113,7 +119,7 @@ class DeleteQuestionsView(APIView):
 class UpdateQuestionsView(APIView):
     def post(self, request, question_id):
         '''
-        Updaet question from id
+        Update question from id
         '''
         
         change_obj = request.data.get('change_obj')
@@ -129,14 +135,8 @@ class UpdateQuestionsView(APIView):
         question.title = change_obj.get('title')
         question.content = change_obj.get('content')
 
-        question.is_visible = change_obj.get('is_visible')
-
         question.choices = change_obj.get('choices')
-
-        question.select_multiple = change_obj.get('select_multiple')
         question.correct_answer = change_obj.get('correct_answer')
-
-        question.required = change_obj.get('required')
 
         question.question_type = change_obj.get('question_type')
         question.num_points = change_obj.get('num_points')

@@ -7,7 +7,7 @@
 
 .clickContainer {
     cursor: pointer;
-    width: 80%;
+    width: 70%;
     transition: 0.15s;
 }
 
@@ -40,4 +40,21 @@
 
 .iconContainer:hover {
     color: var(--pink);
+}
+
+.viewDashboardBtn {
+    height: 100%;
+    cursor: pointer;
+    transition: 0.15s;
+    display: flex;
+    gap: 1rem;
+    margin-left: 1rem;
+}
+
+.viewDashboardBtn:hover {
+    color: var(--pink);
+}
+
+.viewDashboardBtn h1 {
+    font-size: 15px;
 }

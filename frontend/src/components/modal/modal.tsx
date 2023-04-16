@@ -35,3 +35,20 @@ export function ErrorModal(props: ModalProps) {
         </Modal>
     );
 }
+
+export type ConfirmModalProps = {
+    setStatus: (confirmed: boolean) => void;
+};
+
+export function ConfirmModal(props: ConfirmModalProps & ModalProps) {
+    return (
+        <Modal>
+            { props.children }
+
+            <div className={ classes.confirmModalButtons }>
+                <button className={ classes.confirmModalButton } onClick={ () => props.setStatus(true) }>Ok</button>
+                <button className={ classes.confirmModalButton } onClick={ () => props.setStatus(false) }>Cancel</button>
+            </div>
+        </Modal>
+    );
+}

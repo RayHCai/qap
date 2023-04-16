@@ -1,12 +1,13 @@
 .container {
     width: 70%;
-    margin-bottom: 3rem;
+    margin-top: 2rem;
 }
 
 .displayContainer {
     border-top: 1px solid var(--gray);
     padding-top: 2rem;
     border-bottom: 1px solid var(--gray);
+    margin-top: 0rem;
 }
 
 .header {
@@ -99,4 +100,35 @@
 
 .deleteChoiceBtn:hover {
     color: var(--red);
+}
+
+.notEditingChoicesContainer {
+    display: flex;
+    margin-bottom: 0.5rem;
+}
+
+.notEditingChoicesContainer h1 {
+    font-size: 20px;
+    align-self: center;
+    justify-self: center;
+    padding: 0.5rem;
+    height: 1rem;
+    line-height: 1rem;
+    border-radius: 50%;
+}
+
+.correctOption {
+    color: var(--white);
+    background: var(--green);
+}
+
+.notEditingChoicesContainer p {
+    margin-left: 1rem;
+    align-self: center;
+    font-size: 20px;
+}
+
+.editor {
+    padding: 1rem;
+    border-radius: 3px;
 }

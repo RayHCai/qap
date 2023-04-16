@@ -46,3 +46,12 @@ declare type Answer = {
     correct: boolean;
     dateAnswered: string;
 }
+
+declare interface Session {
+    id: string;
+    code: string;
+    active: boolean;
+    dateCreated: string;
+    sessionFor: string;
+    usersInSession: string[];
+}

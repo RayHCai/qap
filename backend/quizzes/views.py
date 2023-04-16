@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from quizzes.models import Quizzes
-from quizzes.forms import QuizCreationForm
+from .models import Quizzes
+from .forms import QuizCreationForm
 
 from users.models import Users
 

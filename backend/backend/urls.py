@@ -5,7 +5,7 @@ from quizzes.views import QuizzesView, TeacherQuizzesView, DeleteQuizView
 from questions.views import QuestionsView, DeleteQuestionsView, UpdateQuestionsView
 from answers.views import AnswersView
 from users.views import UsersView, ValidateUserView
-from quiz_sessions.views import QuizSessionsView, JoinSessionView
+from quiz_sessions.views import QuizSessionsView, JoinSessionView, AllSessionsView, TerminateSessionView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,5 +30,7 @@ urlpatterns = [
 
     path('sessions/manage/<str:session_code>/', QuizSessionsView.as_view()),
     path('sessions/manage/', QuizSessionsView.as_view()),
+    path('sessions/all/<str:quiz_id>/', AllSessionsView.as_view()),
     path('sessions/join/', JoinSessionView.as_view()),
+    path('sessions/terminate/<str:session_id>/', TerminateSessionView.as_view()),
 ]

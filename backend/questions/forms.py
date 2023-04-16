@@ -1,15 +1,12 @@
 from django import forms
-from django.contrib.postgres.forms import SimpleArrayField
-
-from questions.models import Questions
 
 class QuestionCreationForm(forms.Form):
     title = forms.CharField(max_length=255)
-    content = forms.CharField()
+    content = forms.CharField(required=False)
     
     question_for = forms.UUIDField()
-    quesiton_type = forms.ChoiceField(choices=Questions.QuestionTypeChoices)
+    question_type = forms.CharField()
     num_points = forms.IntegerField()
 
-    choices = SimpleArrayField(forms.CharField(max_length=255))
+    choices = forms.CharField(required=False)
     correct_answer = forms.CharField(required=False)

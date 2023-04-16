@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from quiz_sessions.models import QuizSessions
-from quiz_sessions.forms import QuizSessionCreationForm, QuizSessionJoinForm
+from .models import QuizSessions
+from .forms import QuizSessionCreationForm, QuizSessionJoinForm
 
 from quizzes.models import Quizzes
 
@@ -52,13 +52,46 @@ class QuizSessionsView(APIView):
 
         # ! Need to handle case where sessions with multiple codes exists!!!!!
 
+        if (prev_session := QuizSessions.objects.filter(session_for=quiz_obj, active=False)).exists():
+            prev_session = prev_session.first()
+            prev_session.active = True
+            
+            prev_session.save()
+            prev_session.refresh_from_db()
+
+            return Response({'data': serialize_session(prev_session)}, status=200)
+
         session = QuizSessions.objects.create(
-            code=quiz_obj.name,
+            code=form_data.get('code') if form_data.get('code') else quiz_obj.name,
             active=True,
             session_for=quiz_obj,
+            users_in_session=[],
         )
 
         return Response({'data': serialize_session(session)}, status=200)
+
+class AllSessionsView(APIView):
+    def get(self, request, quiz_id):
+        '''
+        Get all sessions for a quiz
+        '''
+
+        if not quiz_id:
+            return Response({'message': 'Invalid request'}, status=400)
+        
+        try:
+            quiz = Quizzes.objects.get(id=quiz_id)
+        except Quizzes.DoesNotExist:
+            return Response({'message': 'Quiz does not exist'}, status=404)
+
+        sessions = QuizSessions.objects.filter(session_for=quiz, active=True)
+
+        serialized_sessions = []
+
+        for session in sessions:
+            serialized_sessions.append(serialize_session(session))
+
+        return Response({'data': serialized_sessions}, status=200)
 
 class JoinSessionView(APIView):
     def post(self, request):
@@ -76,11 +109,33 @@ class JoinSessionView(APIView):
         session_code = form_data.get('session_code')
 
         try:
-            session = QuizSessions.objects.get(code=session_code)
+            session = QuizSessions.objects.get(code=session_code, active=True)
         except QuizSessions.DoesNotExist:
-            return Response({'message': f'Session with code { session_code } does not exist.'}, status=404)
+            return Response({'message': f'An active session with code { session_code } does not exist.'}, status=404)
 
         session.users_in_session.append(form_data.get('student_name'))
+
+        session.save()
+        session.refresh_from_db()
+
+        return Response({'data': serialize_session(session)}, status=200)
+
+class TerminateSessionView(APIView):
+    def post(self, request, session_id):
+        '''
+        Terminate a session
+        '''
+
+        if not session_id:
+            return Response({'message': 'Invalid request'}, status=400)
+        
+        try:
+            session = QuizSessions.objects.get(id=session_id)
+        except QuizSessions.DoesNotExist:
+            return Response({'message': f'Session does not exist with id { session_id }'}, status=404)
+
+        session.active = False
+        session.users_in_session = []
 
         session.save()
         session.refresh_from_db()

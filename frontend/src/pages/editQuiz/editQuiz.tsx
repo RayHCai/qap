@@ -22,6 +22,8 @@ export default function EditQuiz() {
 
     const { throwError } = useContext(ErrorContext);
 
+    const [originalQuestions, updateOriginalQuesitons] = useState<Question[]>([]);
+
     const [questions, updateQuestions] = useState<Question[]>([]);
     const [quiz, updateQuiz] = useState<Quiz>();
 
@@ -48,12 +50,77 @@ export default function EditQuiz() {
             if(!res.ok) return throwError(json.message);
 
             updateQuestions(json.data.questions);
+            updateOriginalQuesitons(json.data.questions);
             updateQuiz(json.data.quiz);
         })();
     }, []);
 
     async function saveQuiz() {
+        const promisesArr = questions.map(
+            q => q.id.length === 0 ? fetch(`${ SERVER_URL }/questions/manage/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        title: q.title,
+                        content: q.content,
+                        question_for: q.questionFor,
+                        question_type: q.questionType,
+                        num_points: q.numPoints,
+                        choices: q.choices,
+                        correct_answer: q.correctAnswer
+                    }
+                )
+            }): fetch(`${ SERVER_URL }/questions/update/${ q.id }/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        change_obj: {
+                            title: q.title,
+                            content: q.content,
+                            question_for: q.questionFor,
+                            question_type: q.questionType,
+                            num_points: q.numPoints,
+                            choices: q.choices,
+                            correct_answer: q.correctAnswer
+                        }
+                    }
+                )
+            })
+        );
 
+        for(const oQ of originalQuestions) {
+            if(
+                questions.filter(q => q.id.length > 0).filter(q => q.id === oQ.id).length === 0
+            ) {
+                promisesArr.push(
+                    fetch(`${ SERVER_URL }/questions/delete/${ oQ.id }/`, {
+                        method: 'POST'
+                    })
+                );    
+            }
+        }
+        
+        const promises = await Promise.all(promisesArr);
+
+        let allSuccess = true;
+
+        for(const p of promises) {
+            const json = await p.json();
+
+            if(!p.ok) {
+                throwError(json.message);
+
+                allSuccess = false;
+            }
+        }
+
+        if(allSuccess) navigate('/dashboard');
     }
     
     function resizeInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -169,6 +236,8 @@ export default function EditQuiz() {
         updateEditingQuestion(i);
     }
 
+    // TODO: need to implement these
+
     function moveQuestion(i: number, dir: number) {
 
     }
@@ -189,7 +258,7 @@ export default function EditQuiz() {
                     onChange={ resizeInput }
                 />
 
-                <button>
+                <button onClick={ saveQuiz }>
                     <p>Save and Exit</p>
 
                     <div className={ classes.iconContainer }>

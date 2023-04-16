@@ -6,7 +6,7 @@ import TeacherRoute from './components/teacherRoute';
 import StudentRoute from './components/studentRoute';
 import PageWrapper from './components/pageWrapper';
 
-import { ErrorModal } from './components/modal/modal';
+import { ErrorModal, ConfirmModal } from './components/modal/modal';
 import Loading from './components/loading/loading';
 
 import JoinRoom from './pages/joinRoom/joinRoom';
@@ -65,7 +65,7 @@ function App() {
         setUser(newUser);
     }
 
-    function throwError(title: string, description?: string) {
+    function throwError(title: string, description?: string, isConfirm: boolean = false, callback?: (c: boolean) => void) {
         if(
             errors.filter(
                 e => e.title === title
@@ -77,11 +77,17 @@ function App() {
         newErrors.push(
             {
                 title: title,
-                description: description
+                description: description,
+                isConfirm: isConfirm,
+                callback: callback
             }
         );
 
         updateErrors(newErrors);
+    }
+
+    function throwConfirm(title: string, callback: (c: boolean) => void, description?: string) {
+        throwError(title, description, true, callback);
     }
 
     function closeModal(index: number) {
@@ -93,7 +99,7 @@ function App() {
     }
 
     errors.forEach(
-        (e, i) => errorModals.push((
+        (e, i) => errorModals.push(!e.isConfirm ? (
             <ErrorModal key={ i } closeModal={ () => closeModal(i) }>
                 <div className="error-content">
                     <h1>{ e.title }</h1>
@@ -103,13 +109,23 @@ function App() {
                     }
                 </div>
             </ErrorModal>
+        ) : (
+            <ConfirmModal key={ i } setStatus={ (c: boolean) => { e.callback!(c); closeModal(i); } }>
+                <div className="error-content">
+                    <h1>{ e.title }</h1>
+
+                    {
+                        e.description && <p>{ e.description }</p>
+                    }
+                </div>
+            </ConfirmModal>
         ))
     )
 
     if (isLoading) return <Loading />;
 
     return (
-        <ErrorContext.Provider value={{ errors, throwError }}>
+        <ErrorContext.Provider value={{ errors, throwError, throwConfirm }}>
             { errorModals }
 
             <TeacherContext.Provider value={{ user, updateUser }}>

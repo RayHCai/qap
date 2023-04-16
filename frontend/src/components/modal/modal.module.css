@@ -38,15 +38,26 @@
     border-color: var(--red);
 }
 
-
-/* .md-editor {
-    margin: auto;
-} */
-
 .closeModalSVG {
     position: absolute;
     margin: 20px;
     right: 0;
     font-size: 30px;
     cursor: pointer;
+}
+
+.confirmModalButtons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.confirmModalButton {
+    color: var(--white);
+    border-color: var(--white);
+}
+
+.confirmModalButton:hover {
+    color: var(--pink);
+    border-color: var(--pink);
 }

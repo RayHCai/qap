@@ -11,7 +11,7 @@ export function verifyQuestion(q: Question) {
 
     if(
         title.replaceAll(' ', '').length === 0 ||
-        (choices.length === 0 && (type === 'mc' || type === 'tf'))
+        (choices.length < 2 && (type === 'mc' || type === 'tf'))
     )
         return false;
 

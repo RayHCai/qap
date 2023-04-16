@@ -3,9 +3,16 @@ import {
     forwardRef,
     useImperativeHandle,
     useRef,
-    useState
+    useState,
+    createRef
 } from 'react';
-import { BsArrowDown, BsArrowUp, BsFillTrashFill, BsFillPencilFill, BsFillCheckSquareFill } from 'react-icons/bs';
+import {
+    BsArrowDown,
+    BsArrowUp,
+    BsFillTrashFill,
+    BsFillPencilFill,
+    BsFillCheckSquareFill
+} from 'react-icons/bs';
 import { BiCopy } from 'react-icons/bi';
 import { TfiClose } from 'react-icons/tfi';
 
@@ -53,8 +60,8 @@ const QuestionCard = forwardRef(function(props: QuestionCardProps, ref) {
 
     const [content, updateContent] = useState(props.question.content);
     
-    const choiceRefs = useRef([]);
-    const correctOptions = useRef([]);
+    const choiceRefs = useRef<HTMLInputElement[]>([]);
+    const correctOptions = useRef<HTMLInputElement[]>([]);
 
     const [choices, updateChoices] = useState<Choice[]>(
         props.question.choices.map(
@@ -69,10 +76,10 @@ const QuestionCard = forwardRef(function(props: QuestionCardProps, ref) {
 
     if(choiceRefs.current.length !== choices.length) {
         choiceRefs.current = Array.from(choiceRefs.current)
-            .map((_, i) => choiceRefs.current[i] || useRef());
+            .map((_, i) => choiceRefs.current[i] || createRef());
         
         correctOptions.current = Array.from(correctOptions.current)
-            .map((_, i) => correctOptions.current[i] || useRef());
+            .map((_, i) => correctOptions.current[i] || createRef());
     }
 
     const titleRef = useRef<HTMLInputElement>({} as HTMLInputElement);
@@ -90,14 +97,19 @@ const QuestionCard = forwardRef(function(props: QuestionCardProps, ref) {
                 return content;
             },
             get choices() {
-                return choices;
+                const newChoices = Array.from(choiceRefs.current).map(
+                    (c, i) => (
+                        {
+                            value: c.value,
+                            isCorrect: correctOptions.current[i].checked
+                        }
+                    )
+                );
+
+                return newChoices;
             }
         }
-    ), []);
-
-    function save() {
-
-    }
+    ), [content, choices]);
 
     function addChoice() {
         updateChoices(
@@ -153,7 +165,7 @@ const QuestionCard = forwardRef(function(props: QuestionCardProps, ref) {
                 <MDEditor
                     visibleDragbar={ false }
                     value={ content }
-                    onChange={ (e) => updateContent(e ? e : '') }
+                    onChange={ (e) => updateContent(e!) }
                 />
 
                 {
@@ -167,13 +179,13 @@ const QuestionCard = forwardRef(function(props: QuestionCardProps, ref) {
 
                                             <input
                                                 defaultChecked={ c.isCorrect }
-                                                ref={r =>  }
+                                                ref={r => correctOptions.current[i] = r! }
                                                 type="checkbox" 
                                             />
 
                                             <input
                                                 defaultValue={ c.value }
-                                                ref={}
+                                                ref={r => choiceRefs.current[i] = r!}
                                                 type="text" 
                                             />
 
@@ -225,12 +237,29 @@ const QuestionCard = forwardRef(function(props: QuestionCardProps, ref) {
                 <h1>{ props.question.title }</h1>
             </div>
 
+            {
+                props.question.content.length > 0 && (
+                    <MDEditor.Markdown
+                        className={ classes.editor }
+                        source={ props.question.content }
+                    />
+                )
+            }
+
             <div>
                 {
                     props.question.choices.map(
                         (c, i) => (
                             <div key={ i } className={ classes.notEditingChoicesContainer }>
-                                { i + 1 }. { c }
+                                <h1
+                                    className={
+                                        props.question.correctAnswer!.includes(c) ? classes.correctOption : ''
+                                    }
+                                >
+                                    { i + 1 }.
+                                </h1>
+
+                                <p>{ c }</p>
                             </div>
                         )
                     )

@@ -31,4 +31,6 @@ class Questions(models.Model):
         models.CharField(max_length=255),
     )
     
-    correct_answer = models.TextField(null=True)
+    correct_answer = ArrayField(
+        models.CharField(max_length=255),
+    )
