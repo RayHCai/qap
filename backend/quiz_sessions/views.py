@@ -113,10 +113,13 @@ class JoinSessionView(APIView):
         except QuizSessions.DoesNotExist:
             return Response({'message': f'An active session with code { session_code } does not exist.'}, status=404)
 
-        session.users_in_session.append(form_data.get('student_name'))
+        student_name = form_data.get('student_name')
 
-        session.save()
-        session.refresh_from_db()
+        if student_name not in session.users_in_session:
+            session.users_in_session.append(student_name)
+
+            session.save()
+            session.refresh_from_db()
 
         return Response({'data': serialize_session(session)}, status=200)
 

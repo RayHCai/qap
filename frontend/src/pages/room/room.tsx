@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, createRef } from 'react';
+import { useEffect, useState, useContext, useRef, createRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import Loading from '../../components/loading/loading';
@@ -9,9 +9,60 @@ import { ErrorContext } from '../../contexts/errorContext';
 
 import { SERVER_URL } from '../../settings';
 
-import './room.css';
+import classes from './room.module.css';
 
 export default function Room() {
+    const { quizId } = useParams();
+    const { throwError, throwConfirm } = useContext(ErrorContext);
+    const { name } = useContext(StudentContext);
+
+    const [questions, updateQuestions] = useState<Question[]>([]);
+    const [isLoading, updateLoading] = useState(false);
+
+    const curAnswerRef = useRef<HTMLDivElement & HTMLTextAreaElement>();
+    const [answers, updateAnswers] = useState<Answer[]>([]);
+
+    useEffect(() => {
+        (async function() {
+            updateLoading(true);
+
+            const res = await fetch(`${ SERVER_URL }/questions/manage/${ quizId }/`);
+            const json = await res.json();
+
+            updateLoading(false);
+
+            if(!res.ok) return throwError(json.message);
+            
+            updateQuestions(json.data);
+            updateAnswers(json.data.map(
+                (q: Question) => (
+                    {
+                        id: '',
+                        studentName: name,
+                        answerFor: q.id,
+                        textAnswer: '',
+                        selected: [],
+                        correct: false,
+                        dateAnswered: ''
+                    }
+                )
+            ));
+        })();
+    }, []);
+
+    if(isLoading) return <Loading />;
+
+    return (
+        <div className={ classes.roomContainer }>
+            {
+                questions.map(
+                    (q, i) => <Question key={ i } question={ q } answer={ answers[i] } ref={ curAnswerRef } />
+                )
+            }
+        </div>
+    );
+
+    /*
     // const navigate = useNavigate();
     // const { sessionCode } = useParams();
 
@@ -197,5 +248,7 @@ export default function Room() {
     //         </div>
     //     </div>
     // );
-    return <></>
+
+    return <></>;
+    */
 }

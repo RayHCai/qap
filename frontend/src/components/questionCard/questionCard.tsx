@@ -235,6 +235,8 @@ const QuestionCard = forwardRef(function(props: QuestionCardProps, ref) {
             <div className={ classes.header }>
                 <h1>{ props.questionNumber }.</h1>
                 <h1>{ props.question.title }</h1>
+                
+                <p>{ props.question.numPoints } points</p>
             </div>
 
             {

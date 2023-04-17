@@ -47,7 +47,6 @@
     cursor: pointer;
     transition: 0.15s;
     display: flex;
-    gap: 1rem;
     margin-left: 1rem;
 }
 

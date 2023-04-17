@@ -54,8 +54,6 @@ export default function QuizCard(props: QuizCardProps) {
                     {
                         props.session && (
                             <div className={ classes.viewDashboardBtn } onClick={ () => navigate(`/dashboard/session/${ props.session!.id }`) }>
-                                <p>View active session</p>
-                                
                                 <div className={ classes.iconContainer }>
                                     <FaLongArrowAltRight />
                                 </div>
