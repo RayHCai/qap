@@ -1,11 +1,10 @@
-.question-container {
-    margin-bottom: 50px;
-    width: 40vw;
-    align-self: center;
+.questionContainer {
+    margin-bottom: 4rem;
 }
 
-.q {
+.content {
     padding: 10px;
+    border-radius: 3px;
 }
 
 .frq-section {
@@ -18,15 +17,15 @@
     padding: 10px;
 }
 
-.options-container {
+.optionsContainer {
     float: left !important;;
     margin-top: 20px;
 }
 
-.choice-container {
+.choiceContainer {
     display: flex;
 }
 
-.choice-container input {
-    margin-right: 20px;
+.choiceContainer input {
+    margin-right: 1rem;
 }

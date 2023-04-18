@@ -2,26 +2,23 @@
     margin-top: 20px;
 }
 
+.title {
+    text-align: center;
+}
+
+.buttonContainer {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.questionContainer {
+    display: flex;
+    justify-content: center;
+}
+
 .questions {
     display: flex;
     flex-direction: column;
     margin-top: 100px;
-}
-
-.room-btns-container {
-    margin: auto;
-}
-
-.room-btns-container button{
-    margin: 20px;
-    padding: 10px 20px;
-    cursor: pointer;
-    background: none;
-    transition: 0.2s;
-    border: 1px solid black;
-}
-
-.room-btns-container button:hover {
-    color: white;
-    background: black;
 }

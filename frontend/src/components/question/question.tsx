@@ -2,7 +2,7 @@ import { forwardRef, useState } from 'react';
 
 import MDEditor from '@uiw/react-md-editor';
 
-import './question.css';
+import classes from './question.module.css';
 
 const Question = forwardRef<HTMLDivElement & HTMLTextAreaElement, { question: Question, answer: Answer }>((props, ref) => {
     const [checked, updateChecked] = useState<boolean[]>(
@@ -32,22 +32,26 @@ const Question = forwardRef<HTMLDivElement & HTMLTextAreaElement, { question: Qu
         updateChecked(newChecked);
     }
 
+    // TODO make checkboxes not ass
+
     return (
-        <div className="question-container">
+        <div className={ classes.questionContainer }>
             <h1>{ props.question.title }</h1>
 
-            <MDEditor.Markdown className="q" source={ props.question.content } />
+            {
+                props.question.content.length > 0 && <MDEditor.Markdown className={ classes.content } source={ props.question.content } />
+            }
 
             {
                 props.question.choices ? (
-                    <div className="options-container">
+                    <div className={ classes.optionsContainer }>
                         <div ref={ ref }>
                             {
                                 props.question.choices.map(
                                     (c, i) => (
-                                        <div className="choice-container" key={ i }>
+                                        <div className={ classes.choiceContainer } key={ i }>
                                             <input
-                                                // type={ props.question.selectMultiple ? "checkbox" : "radio" } 
+                                                type={ props.question.choices.length > 1 ? 'checkbox' : 'radio' } 
                                                 value={ c } 
                                                 name={ `choice${ props.question.id }` }
                                                 checked={ checked[i] }

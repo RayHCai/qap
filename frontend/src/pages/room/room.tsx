@@ -19,8 +19,10 @@ export default function Room() {
     const [questions, updateQuestions] = useState<Question[]>([]);
     const [isLoading, updateLoading] = useState(false);
 
-    const curAnswerRef = useRef<HTMLDivElement & HTMLTextAreaElement>();
+    const curAnswerRef = createRef<HTMLDivElement & HTMLTextAreaElement>();
     const [answers, updateAnswers] = useState<Answer[]>([]);
+    const [curQuestion, updateCurQuestion] = useState(0);
+    const [quiz, updateQuiz] = useState<Quiz>();
 
     useEffect(() => {
         (async function() {
@@ -32,9 +34,10 @@ export default function Room() {
             updateLoading(false);
 
             if(!res.ok) return throwError(json.message);
-            
-            updateQuestions(json.data);
-            updateAnswers(json.data.map(
+
+            updateQuiz(json.data.quiz);
+            updateQuestions(json.data.questions);
+            updateAnswers(json.data.questions.map(
                 (q: Question) => (
                     {
                         id: '',
@@ -50,15 +53,41 @@ export default function Room() {
         })();
     }, []);
 
-    if(isLoading) return <Loading />;
+    function next() {
+        updateCurQuestion(curQuestion + 1);
+    }
+
+    function back() {
+        updateCurQuestion(curQuestion - 1);
+    }
+
+    async function submit() {
+
+    }
+
+    if(isLoading || !quiz) return <Loading />;
+
+    // TODO: Add nav at bottom to show all questions.
 
     return (
         <div className={ classes.roomContainer }>
-            {
-                questions.map(
-                    (q, i) => <Question key={ i } question={ q } answer={ answers[i] } ref={ curAnswerRef } />
-                )
-            }
+            <h1 className={ classes.title }>{ quiz.name }</h1>
+
+            <div className={ classes.questionContainer }>
+                <Question question={ questions[curQuestion] } answer={ answers[curQuestion] } ref={ curAnswerRef } />
+            </div>
+
+            <div className={ classes.buttonContainer }>
+                {
+                    curQuestion === questions.length - 1 ?
+                    <button onClick={ submit }>Submit</button>
+                    : <button onClick={ next }>Next</button>
+                }
+
+                {
+                    curQuestion === 0 ? null : <button onClick={ back }>Back</button>
+                }
+            </div>
         </div>
     );
 
