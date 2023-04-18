@@ -5,6 +5,7 @@ from .models import QuizSessions
 from .forms import QuizSessionCreationForm, QuizSessionJoinForm
 
 from quizzes.models import Quizzes
+from questions.models import Questions
 
 def serialize_session(session):
     return {
@@ -51,6 +52,9 @@ class QuizSessionsView(APIView):
             return Response({'message': f'Quiz does not exist with id { session_for }'}, status=404)
 
         # ! Need to handle case where sessions with multiple codes exists!!!!!
+
+        if Questions.objects.filter(question_for=quiz_obj).count() == 0:
+            return Response({'message': 'Quiz needs at least one question'}, status=400)
 
         if (prev_session := QuizSessions.objects.filter(session_for=quiz_obj, active=False)).exists():
             prev_session = prev_session.first()

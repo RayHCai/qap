@@ -152,7 +152,9 @@ function App() {
                                     <Route path="edit/:quizId" element={ <EditQuiz /> } />
                                 </Route>
                                 
-                                <Route path="/room/:quizId" element={ <StudentRoute /> }>
+                                {/* element={ <StudentRoute /> } */}
+
+                                <Route path="/room/:quizId" >
                                     <Route index element={ <Room /> } />
                                 </Route>
 
