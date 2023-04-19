@@ -43,7 +43,7 @@ const Question = forwardRef<HTMLDivElement & HTMLTextAreaElement, { question: Qu
             }
 
             {
-                props.question.choices ? (
+                props.question.choices!.length > 0 ? (
                     <div className={ classes.optionsContainer }>
                         <div ref={ ref }>
                             {
@@ -51,7 +51,7 @@ const Question = forwardRef<HTMLDivElement & HTMLTextAreaElement, { question: Qu
                                     (c, i) => (
                                         <div className={ classes.choiceContainer } key={ i }>
                                             <input
-                                                type={ props.question.choices.length > 1 ? 'checkbox' : 'radio' } 
+                                                type={ props.question.correctAnswer!.length > 1 ? 'checkbox' : 'radio' } 
                                                 value={ c } 
                                                 name={ `choice${ props.question.id }` }
                                                 checked={ checked[i] }
@@ -68,7 +68,7 @@ const Question = forwardRef<HTMLDivElement & HTMLTextAreaElement, { question: Qu
                 ) : (
                     <textarea
                         ref={ ref } 
-                        className="frq-section"
+                        className={ classes.frqBox }
                         defaultValue={ props.answer.textAnswer }
                     />
                 )

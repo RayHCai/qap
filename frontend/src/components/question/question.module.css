@@ -1,5 +1,11 @@
 .questionContainer {
+    width: 100%;
+    margin: 0 20%;
     margin-bottom: 4rem;
+}
+
+.questionContainer h1 {
+    font-size: 20px;
 }
 
 .content {
@@ -7,19 +13,9 @@
     border-radius: 3px;
 }
 
-.frq-section {
+.frqBox {
     resize: vertical;
-    width: 90%;
-    margin-left: 20px;
-    margin-top: 20px;
     outline: none;
-    height: 60%;
-    padding: 10px;
-}
-
-.optionsContainer {
-    float: left !important;;
-    margin-top: 20px;
 }
 
 .choiceContainer {

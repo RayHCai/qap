@@ -79,13 +79,12 @@ export default function Room() {
 
             <div className={ classes.buttonContainer }>
                 {
+                    curQuestion === 0 ? null : <button onClick={ back }>Back</button>
+                }
+                {
                     curQuestion === questions.length - 1 ?
                     <button onClick={ submit }>Submit</button>
                     : <button onClick={ next }>Next</button>
-                }
-
-                {
-                    curQuestion === 0 ? null : <button onClick={ back }>Back</button>
                 }
             </div>
         </div>
