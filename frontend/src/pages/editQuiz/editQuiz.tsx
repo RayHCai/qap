@@ -23,6 +23,7 @@ export default function EditQuiz() {
     const { throwError } = useContext(ErrorContext);
 
     const [originalQuestions, updateOriginalQuesitons] = useState<Question[]>([]);
+    const [originalQuiz, updateOriginalQuiz] = useState<Quiz>();
 
     const [questions, updateQuestions] = useState<Question[]>([]);
     const [quiz, updateQuiz] = useState<Quiz>();
@@ -51,7 +52,9 @@ export default function EditQuiz() {
 
             updateQuestions(json.data.questions);
             updateOriginalQuesitons(json.data.questions);
+            
             updateQuiz(json.data.quiz);
+            updateOriginalQuiz(json.data.quiz);
         })();
     }, []);
 
@@ -106,6 +109,11 @@ export default function EditQuiz() {
             }
         }
         
+        // if(quiz!.name !== originalQuiz!.name)
+        //     promisesArr.push(
+        //         fetch(`${ SERVER_URL }/questions/`)
+        //     );
+
         const promises = await Promise.all(promisesArr);
 
         let allSuccess = true;

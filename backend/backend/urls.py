@@ -3,9 +3,9 @@ from django.urls import path
 
 from quizzes.views import QuizzesView, TeacherQuizzesView, DeleteQuizView
 from questions.views import QuestionsView, DeleteQuestionsView, UpdateQuestionsView
-from answers.views import AnswersView
+from answers.views import AnswersView, AnswersFromSessionView
 from users.views import UsersView, ValidateUserView
-from quiz_sessions.views import QuizSessionsView, JoinSessionView, AllSessionsView, TerminateSessionView
+from quiz_sessions.views import QuizSessionsView, JoinSessionView, AllSessionsView, TerminateSessionView, QuizSessionsView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,6 +23,7 @@ urlpatterns = [
     
     path('answers/manage/<uuid:question_id>/', AnswersView.as_view()),
     path('answers/manage/', AnswersView.as_view()),
+    path('answers/getfromsession/<str:session_id>/', AnswersFromSessionView.as_view()),
 
     path('users/manage/<uuid:user_id>/', UsersView.as_view()),
     path('users/manage/', UsersView.as_view()),

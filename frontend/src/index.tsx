@@ -16,6 +16,7 @@ import LoginOrSignup from './pages/loginOrSignup/loginOrSignup';
 import Dashboard from './pages/dashboard/dashboard';
 import CreateQuiz from './pages/createQuiz/createQuiz';
 import EditQuiz from './pages/editQuiz/editQuiz';
+import SessionDashboard from './pages/sessionDashboard/sessionDashboard';
 
 import PageNotFound from './pages/pageNotFound/pageNotFound';
 
@@ -150,11 +151,11 @@ function App() {
 
                                     <Route path="create" element={ <CreateQuiz /> } />
                                     <Route path="edit/:quizId" element={ <EditQuiz /> } />
-                                </Route>
-                                
-                                {/* element={ <StudentRoute /> } */}
 
-                                <Route path="/room/:quizId" >
+                                    <Route path="session/:sessionId" element={ <SessionDashboard /> } />
+                                </Route>
+
+                                <Route path="/room/:quizId/:sessionId" element={ <StudentRoute /> }>
                                     <Route index element={ <Room /> } />
                                 </Route>
 

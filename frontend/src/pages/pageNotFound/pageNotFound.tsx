@@ -1,9 +1,9 @@
-import './pageNotFound.module.css';
+import classes from './pageNotFound.module.css';
 
 export default function PageNotFound() {
     return (
-        <div>
-            404
+        <div className={ classes.container }>
+            <h1>404</h1>
         </div>
     );
 }

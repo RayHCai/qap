@@ -9,19 +9,9 @@ const Question = forwardRef<HTMLDivElement & HTMLTextAreaElement, { question: Qu
         (function() {
             if(props.question.choices!.length === 0) return [];
 
-            let temp = (new Array(props.question.choices.length)).fill(false);
-
-            if(props.answer.selected!.length === 0) return temp;
-
-            temp = temp.map(
-                (_, i) => {
-                    // if(props.question.selectMultiple) return props.answer.selected!.includes(props.question.choices![i]);
-
-                    return props.question.choices![i] === props.answer.selected![i]
-                }
+            return props.question.choices.map(
+                c => props.answer.selected!.includes(c)
             );
-
-            return temp;
         })()
     );
 

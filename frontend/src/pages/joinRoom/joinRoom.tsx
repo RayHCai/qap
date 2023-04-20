@@ -48,10 +48,11 @@ export default function JoinRoom() {
         const json = await res.json();
 
         if(!res.ok) throwError(json.message);
+        else if(json.data.completed) {}
         else {
             updateName(studentName);
 
-            navigate(`/room/${ json.data.sessionFor }`);
+            navigate(`/room/${ json.data.sessionFor }/${ json.data.id }`);
         }
     }
 

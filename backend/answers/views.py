@@ -5,6 +5,7 @@ from .models import Answers
 from .forms import AnswerCreationForm
 
 from questions.models import Questions
+from quiz_sessions.models import QuizSessions
 
 def serialize_answer(answer):
     return {
@@ -53,13 +54,20 @@ class AnswersView(APIView):
         except Questions.DoesNotExist:
             return Response({'message': f'Question does not exist with id { answer_for }'}, status=404)
 
+        session_for = form_data.get('session_for')
+
+        try:
+            session = QuizSessions.objects.get(id=session_for)
+        except QuizSessions.DoesNotExist:
+            return Response({'message': f'Session does not exist with id { session_for }'}, status=404)
+
+        selected = request.data.get('selected')
+        
         if not question.choices:
             correct = False
         else:
-            selected = form_data.get('selected')
-
-            if not question.select_multiple:
-                correct = question.correct_answer == selected[0]
+            if len(question.correct_answer) == 1:
+                correct = question.correct_answer[0] == selected[0]
             else:
                 correct = True
 
@@ -84,6 +92,30 @@ class AnswersView(APIView):
             text_answer=form_data.get('text_answer'),
             selected=selected,
             correct=correct,
+            session_for=session,
         )
 
         return Response({'data': serialize_answer(answer)}, status=200)
+
+class AnswersFromSessionView(APIView):
+    def get(self, request, session_id):
+        '''
+        Get all answers from session
+        '''
+
+        if not session_id:
+            return Response({'message': 'Invalid request'}, status=400)
+
+        try:
+            session = QuizSessions.objects.get(id=session_id)
+        except QuizSessions.DoesNotExist:
+            return Response({'message': f'Session does not exist with id { session_id }'}, status=404)
+        
+        answers = Answers.objects.filter(session_for=session)
+
+        serialized_answers = []
+
+        for answer in answers:
+            serialized_answers.append(serialize_answer(answer))
+
+        return Response({'data': serialized_answers}, status=200)

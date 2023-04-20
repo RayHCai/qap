@@ -1,0 +1,8 @@
+.container {
+    text-align: center;
+}
+
+.container h1 {
+    letter-spacing: 1rem;
+    font-size: 50px;
+}

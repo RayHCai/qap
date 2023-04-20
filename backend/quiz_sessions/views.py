@@ -6,6 +6,7 @@ from .forms import QuizSessionCreationForm, QuizSessionJoinForm
 
 from quizzes.models import Quizzes
 from questions.models import Questions
+from answers.models import Answers
 
 def serialize_session(session):
     return {
@@ -118,6 +119,12 @@ class JoinSessionView(APIView):
             return Response({'message': f'An active session with code { session_code } does not exist.'}, status=404)
 
         student_name = form_data.get('student_name')
+
+        answers = Answers.objects.filter(session_for=session, student_name=student_name)
+        num_questions = Questions.objects.filter(question_for=session.session_for).count()
+
+        if num_questions == answers.count():
+            return Response({'data': {'completed': True}}, status=200)
 
         if student_name not in session.users_in_session:
             session.users_in_session.append(student_name)
