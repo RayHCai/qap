@@ -109,6 +109,7 @@ export default function EditQuiz() {
             }
         }
         
+        // TODO: update quiz name
         // if(quiz!.name !== originalQuiz!.name)
         //     promisesArr.push(
         //         fetch(`${ SERVER_URL }/questions/`)
@@ -265,6 +266,9 @@ export default function EditQuiz() {
                     value={ quiz.name }
                     onChange={ resizeInput }
                 />
+
+                <button>Fill with AI generated questions</button>
+                <button>Fill with questions from other quizzes</button>
 
                 <button onClick={ saveQuiz }>
                     <p>Save and Exit</p>
