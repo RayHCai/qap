@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 :root {
-    --white: #E1DBD1;
-    --pink: #EA899A;
+    --white: #e1dbd1;
+    --pink: #ea899a;
     --navy: #252850;
-    --red: #E74C3C;
-    --green: #27AE60;
-    --orange: #F39C12;
+    --red: #e74c3c;
+    --green: #27ae60;
+    --orange: #f39c12;
     --gray: #a8a8a8;
 }
 
@@ -71,23 +71,23 @@ input:focus::placeholder {
     text-decoration: none;
 }
 
-.animated-link:after {    
+.animated-link:after {
     background: none repeat scroll 0 0 transparent;
-    background: var(--navy);    
+    background: var(--navy);
 
-    content: "";
-    
+    content: '';
+
     height: 2px;
     width: 0;
     left: 50%;
 
     display: block;
     position: absolute;
-    
+
     transition: width 0.15s ease 0s, left 0.15s ease 0s;
 }
 
-.animated-link:hover:after { 
-    width: 100%; 
+.animated-link:hover:after {
+    width: 100%;
     left: 0;
 }

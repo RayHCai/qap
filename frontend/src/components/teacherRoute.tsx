@@ -6,7 +6,7 @@ import { TeacherContext } from '../contexts/teacherContext';
 export default function TeacherRoute() {
     const { user } = useContext(TeacherContext);
 
-    if(user) return <Outlet />
+    if (user) return <Outlet />;
 
     return <Navigate to="/login" />;
 }

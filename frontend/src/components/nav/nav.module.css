@@ -1,15 +1,33 @@
 .nav {
-    padding: 30px 20px;
-    margin-bottom: 40px;
+    margin: 20px;
+}
+
+.nav img {
+    user-select: none;
+    cursor: pointer;
+    width: 30px;
+}
+
+.leftContainer {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.navLinkContainer {
+    align-content: center;
+    display: flex;
+    justify-content: center;
+    gap: 32px;
 }
 
 .linksContainer {
     display: flex;
+    justify-content: space-between;
     align-items: center;
 }
 
 .link {
-    margin: 0px 40px;
     color: var(--navy);
     text-decoration: none;
     transition: 0.15s;
@@ -20,16 +38,10 @@
 }
 
 .profileBtnContainer {
-    align-self: center;
-    align-items: center;
-    vertical-align: center;
-    
-    margin-left: auto;
-    float: right;
     padding: 0rem 1rem;
     border-radius: 3px;
     border: 1px solid var(--navy);
-    transition: .15s;
+    transition: 0.15s;
     cursor: pointer;
 }
 

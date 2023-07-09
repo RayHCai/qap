@@ -1,8 +1,8 @@
-import { useEffect, useState, useContext, useRef, createRef } from 'react';
+import { useEffect, useState, useContext, createRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import Loading from '../../components/loading/loading';
-import Question from '../../components/question/question';
+import Loading from '../../components/loading';
+import Question from '../../components/question';
 
 import { StudentContext } from '../../contexts/studentContext';
 import { ErrorContext } from '../../contexts/errorContext';
@@ -27,31 +27,31 @@ export default function Room() {
     const [quiz, updateQuiz] = useState<Quiz>();
 
     useEffect(() => {
-        (async function() {
+        (async function () {
             updateLoading(true);
 
-            const res = await fetch(`${ SERVER_URL }/questions/manage/${ quizId }/`);
+            const res = await fetch(
+                `${ SERVER_URL }/questions/manage/${ quizId }/`
+            );
             const json = await res.json();
 
             updateLoading(false);
 
-            if(!res.ok) return throwError(json.message);
+            if (!res.ok) return throwError(json.message);
 
             updateQuiz(json.data.quiz);
             updateQuestions(json.data.questions);
-            updateAnswers(json.data.questions.map(
-                (q: Question) => (
-                    {
-                        id: '',
-                        studentName: name,
-                        answerFor: q.id,
-                        textAnswer: '',
-                        selected: [],
-                        correct: false,
-                        dateAnswered: ''
-                    }
-                )
-            ));
+            updateAnswers(
+                json.data.questions.map((q: Question) => ({
+                    id: '',
+                    studentName: name,
+                    answerFor: q.id,
+                    textAnswer: '',
+                    selected: [],
+                    correct: false,
+                    dateAnswered: '',
+                }))
+            );
         })();
     }, []);
 
@@ -63,15 +63,16 @@ export default function Room() {
             textAnswer: '',
             selected: [] as string[],
             correct: false,
-            dateAnswered: ''
+            dateAnswered: '',
         };
 
-        if(curAnswerRef.current!.value) newAnswer.textAnswer = curAnswerRef.current!.value;       
+        if (curAnswerRef.current!.value)
+            newAnswer.textAnswer = curAnswerRef.current!.value;
         else
-            newAnswer.selected = Array.from(curAnswerRef.current!.querySelectorAll('input:checked')).map(
-                (i) => (i as HTMLInputElement).value
-            );
-        
+            newAnswer.selected = Array.from(
+                curAnswerRef.current!.querySelectorAll('input:checked')
+            ).map((i) => (i as HTMLInputElement).value);
+
         return newAnswer;
     }
 
@@ -97,35 +98,39 @@ export default function Room() {
         const newAnswers = [...answers];
         newAnswers[curQuestion] = getAnswer();
 
-        const promises = await Promise.all(newAnswers.map(
-            a => fetch(`${ SERVER_URL }/answers/manage/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(
-                    {
+        const promises = await Promise.all(
+            newAnswers.map((a) =>
+                fetch(`${ SERVER_URL }/answers/manage/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        // eslint-disable-next-line camelcase
                         answer_for: a.answerFor,
+                        // eslint-disable-next-line camelcase
                         session_for: sessionId,
+                        // eslint-disable-next-line camelcase
                         student_name: name,
+                        // eslint-disable-next-line camelcase
                         text_answer: a.textAnswer,
-                        selected: a.selected
-                    }
-                )
-            })
-        ));
-        
-        for(const p of promises) {
+                        selected: a.selected,
+                    }),
+                })
+            )
+        );
+
+        for (const p of promises) {
             const json = await p.json();
 
-            if(!p.ok) throwError(json.message);
+            if (!p.ok) throwError(json.message);
         }
 
         // TODO: add loading screen like socrative or show num right/wrong
         navigate('/');
     }
 
-    if(isLoading || !quiz) return <Loading />;
+    if (isLoading || !quiz) return <Loading />;
 
     // TODO: Add nav at bottom to show all questions.
 
@@ -134,19 +139,23 @@ export default function Room() {
             <h1 className={ classes.title }>{ quiz.name }</h1>
 
             <div className={ classes.questionContainer }>
-                <Question question={ questions[curQuestion] } answer={ answers[curQuestion] } ref={ curAnswerRef } />
+                <Question
+                    question={ questions[curQuestion] }
+                    answer={ answers[curQuestion] }
+                    ref={ curAnswerRef }
+                />
             </div>
 
             <div className={ classes.buttonContainer }>
-                {
-                    curQuestion === 0 ? null : <button onClick={ back }>Back</button>
-                }
-                
-                {
-                    curQuestion === questions.length - 1 ?
+                { curQuestion === 0 ? null : (
+                    <button onClick={ back }>Back</button>
+                ) }
+
+                { curQuestion === questions.length - 1 ? (
                     <button onClick={ submit }>Submit</button>
-                    : <button onClick={ next }>Next</button>
-                }
+                ) : (
+                    <button onClick={ next }>Next</button>
+                ) }
             </div>
         </div>
     );

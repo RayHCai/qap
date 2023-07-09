@@ -21,38 +21,42 @@ export default function JoinRoom() {
         const studentName = name.current.value;
         const sessionCode = code.current.value;
 
-        if(studentName.replaceAll(' ', '').length === 0 || sessionCode.replaceAll(' ', '').length === 0) {
+        if (
+            studentName.replaceAll(' ', '').length === 0 ||
+            sessionCode.replaceAll(' ', '').length === 0
+        ) {
             throwError('Name and code cannot be empty');
 
             return;
         }
-        else if(studentName.length > 255) {
+        else if (studentName.length > 255) {
             throwError('Name must be less than 255 characters');
 
             return;
         }
-        
-        const res = await fetch(`${ SERVER_URL }/sessions/join/`, {
+
+        const res = await fetch(`${SERVER_URL}/sessions/join/`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(
-                {
-                    student_name: studentName,
-                    session_code: sessionCode
-                }
-            )
+            body: JSON.stringify({
+                // eslint-disable-next-line camelcase
+                student_name: studentName,
+                // eslint-disable-next-line camelcase
+                session_code: sessionCode,
+            }),
         });
 
         const json = await res.json();
 
-        if(!res.ok) throwError(json.message);
-        else if(json.data.completed) {}
-        else {
+        if (!res.ok) throwError(json.message);
+        else if (json.data.completed) {
+        }
+ else {
             updateName(studentName);
 
-            navigate(`/room/${ json.data.sessionFor }/${ json.data.id }`);
+            navigate(`/room/${json.data.sessionFor}/${json.data.id}`);
         }
     }
 
@@ -65,9 +69,13 @@ export default function JoinRoom() {
                 <input placeholder="Enter Room Code" ref={ code } />
             </div>
 
-            <button className="styled-button" onClick={ joinRoom }>Join</button>
+            <button className="styled-button" onClick={ joinRoom }>
+                Join
+            </button>
 
-            <Link className="animated-link" to="/login">Or signin/signup here if you're a teacher</Link>
+            <Link className="animated-link" to="/login">
+                Or signin/signup here if you're a teacher
+            </Link>
         </div>
     );
 }

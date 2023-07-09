@@ -7,14 +7,19 @@ import './manage.css';
 
 export default function Manage() {
     const { user } = useContext(TeacherContext);
+    user;
 
     return (
         <div className="manage-container">
             <h1>Manage Class </h1>
 
             <div>
-                <Link className="manage-link" to="responses">View Student Responses</Link>
-                <Link className="manage-link" to="edit">Or Edit Questions</Link>
+                <Link className="manage-link" to="responses">
+                    View Student Responses
+                </Link>
+                <Link className="manage-link" to="edit">
+                    Or Edit Questions
+                </Link>
             </div>
         </div>
     );

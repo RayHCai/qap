@@ -6,7 +6,7 @@ import { StudentContext } from '../contexts/studentContext';
 export default function StudentRoute() {
     const { name } = useContext(StudentContext);
 
-    if(name) return <Outlet />
+    if (name) return <Outlet />;
 
     return <Navigate to="/" />;
 }

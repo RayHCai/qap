@@ -1,7 +1,7 @@
 import { useState, useContext, createRef } from 'react';
 import { useNavigate } from 'react-router';
 
-import Loading from '../../components/loading/loading';
+import Loading from '../../components/loading';
 
 import { TeacherContext } from '../../contexts/teacherContext';
 import { ErrorContext } from '../../contexts/errorContext';
@@ -23,35 +23,37 @@ export default function CreateQuiz() {
     async function create() {
         const quizName = name.current!.value;
 
-        if(quizName.replaceAll(' ', '').length !== quizName.length) return throwError('Name cannot contain spaces');
-        else if(quizName.length === 0) return throwError('Name cannot be empty');
-        else if(quizName.length > 255) return throwError('Name cannot exceed 255 characters');
+        if (quizName.replaceAll(' ', '').length !== quizName.length)
+            return throwError('Name cannot contain spaces');
+        else if (quizName.length === 0)
+            return throwError('Name cannot be empty');
+        else if (quizName.length > 255)
+            return throwError('Name cannot exceed 255 characters');
 
         updateLoading(true);
 
         const res = await fetch(`${ SERVER_URL }/quizzes/manage/`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(
-                {
-                    teacher_id: user!.id,
-                    name: quizName
-                }
-            )
+            body: JSON.stringify({
+                // eslint-disable-next-line camelcase
+                teacher_id: user!.id,
+                name: quizName,
+            }),
         });
 
         const json = await res.json();
 
         updateLoading(false);
 
-        if(!res.ok) return throwError(json.message);
+        if (!res.ok) return throwError(json.message);
 
-        navigate(`/dashboard/edit/${ json.data }`);
+        navigate(`/dashboard/edit/${json.data}`);
     }
 
-    if(isLoading) return <Loading />;
+    if (isLoading) return <Loading />;
 
     return (
         <div className={ classes.createContainer }>

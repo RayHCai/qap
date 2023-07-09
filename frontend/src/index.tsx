@@ -6,19 +6,19 @@ import TeacherRoute from './components/teacherRoute';
 import StudentRoute from './components/studentRoute';
 import PageWrapper from './components/pageWrapper';
 
-import { ErrorModal, ConfirmModal } from './components/modal/modal';
-import Loading from './components/loading/loading';
+import { ErrorModal, ConfirmModal } from './components/modal';
+import Loading from './components/loading';
 
-import JoinRoom from './pages/joinRoom/joinRoom';
-import Room from './pages/room/room';
+import JoinRoom from './pages/joinRoom';
+import Room from './pages/room';
 
-import LoginOrSignup from './pages/loginOrSignup/loginOrSignup';
-import Dashboard from './pages/dashboard/dashboard';
-import CreateQuiz from './pages/createQuiz/createQuiz';
-import EditQuiz from './pages/editQuiz/editQuiz';
-import SessionDashboard from './pages/sessionDashboard/sessionDashboard';
+import LoginOrSignup from './pages/loginOrSignup';
+import Dashboard from './pages/dashboard';
+import CreateQuiz from './pages/createQuiz';
+import EditQuiz from './pages/editQuiz';
+import SessionDashboard from './pages/sessionDashboard';
 
-import PageNotFound from './pages/pageNotFound/pageNotFound';
+import PageNotFound from './pages/pageNotFound';
 
 import { TeacherContext } from './contexts/teacherContext';
 import { StudentContext } from './contexts/studentContext';
@@ -66,71 +66,76 @@ function App() {
         setUser(newUser);
     }
 
-    function throwError(title: string, description?: string, isConfirm: boolean = false, callback?: (c: boolean) => void) {
-        if(
-            errors.filter(
-                e => e.title === title
-            ).length !== 0
-        ) return;
+    function throwError(
+        title: string,
+        description?: string,
+        isConfirm: boolean = false,
+        callback?: (c: boolean) => void
+    ) {
+        if (errors.filter((e) => e.title === title).length !== 0) return;
 
         const newErrors = [...errors];
-            
-        newErrors.push(
-            {
-                title: title,
-                description: description,
-                isConfirm: isConfirm,
-                callback: callback
-            }
-        );
+
+        newErrors.push({
+            title: title,
+            description: description,
+            isConfirm: isConfirm,
+            callback: callback,
+        });
 
         updateErrors(newErrors);
     }
 
-    function throwConfirm(title: string, callback: (c: boolean) => void, description?: string) {
+    function throwConfirm(
+        title: string,
+        callback: (c: boolean) => void,
+        description?: string
+    ) {
         throwError(title, description, true, callback);
     }
 
     function closeModal(index: number) {
-        const newErrors = [...errors].filter(
-            (_, i) => i !== index
-        );
-                
+        const newErrors = [...errors].filter((_, i) => i !== index);
+
         updateErrors(newErrors);
     }
 
-    errors.forEach(
-        (e, i) => errorModals.push(!e.isConfirm ? (
-            <ErrorModal key={ i } closeModal={ () => closeModal(i) }>
-                <div className="error-content">
-                    <h1>{ e.title }</h1>
+    errors.forEach((e, i) =>
+        errorModals.push(
+            !e.isConfirm ? (
+                <ErrorModal key={ i } closeModal={ () => closeModal(i) }>
+                    <div className="error-content">
+                        <h1>{ e.title }</h1>
 
-                    {
-                        e.description && <p>{ e.description }</p>
-                    }
-                </div>
-            </ErrorModal>
-        ) : (
-            <ConfirmModal key={ i } setStatus={ (c: boolean) => { e.callback!(c); closeModal(i); } }>
-                <div className="error-content">
-                    <h1>{ e.title }</h1>
+                        { e.description && <p>{ e.description }</p> }
+                    </div>
+                </ErrorModal>
+            ) : (
+                <ConfirmModal
+                    key={ i }
+                    setStatus={ (c: boolean) => {
+                        e.callback!(c);
+                        closeModal(i);
+                    } }
+                >
+                    <div className="error-content">
+                        <h1>{ e.title }</h1>
 
-                    {
-                        e.description && <p>{ e.description }</p>
-                    }
-                </div>
-            </ConfirmModal>
-        ))
-    )
+                        { e.description && <p>{ e.description }</p> }
+                    </div>
+                </ConfirmModal>
+            )
+        )
+    );
 
     if (isLoading) return <Loading />;
 
     return (
-        <ErrorContext.Provider value={{ errors, throwError, throwConfirm }}>
+        <ErrorContext.Provider value={ { errors, throwError, throwConfirm } }>
             { errorModals }
 
-            <TeacherContext.Provider value={{ user, updateUser }}>
-                <StudentContext.Provider value={{ name, updateName }}>
+            <TeacherContext.Provider value={ { user, updateUser } }>
+                <StudentContext.Provider value={ { name, updateName } }>
                     <BrowserRouter>
                         <Routes>
                             <Route element={ <PageWrapper /> }>
@@ -146,16 +151,31 @@ function App() {
                                     element={ <LoginOrSignup isLogin={ false } /> }
                                 />
 
-                                <Route path="/dashboard" element={ <TeacherRoute /> }>
+                                <Route
+                                    path="/dashboard"
+                                    element={ <TeacherRoute /> }
+                                >
                                     <Route index element={ <Dashboard /> } />
 
-                                    <Route path="create" element={ <CreateQuiz /> } />
-                                    <Route path="edit/:quizId" element={ <EditQuiz /> } />
+                                    <Route
+                                        path="create"
+                                        element={ <CreateQuiz /> }
+                                    />
+                                    <Route
+                                        path="edit/:quizId"
+                                        element={ <EditQuiz /> }
+                                    />
 
-                                    <Route path="session/:sessionId" element={ <SessionDashboard /> } />
+                                    <Route
+                                        path="session/:sessionId"
+                                        element={ <SessionDashboard /> }
+                                    />
                                 </Route>
 
-                                <Route path="/room/:quizId/:sessionId" element={ <StudentRoute /> }>
+                                <Route
+                                    path="/room/:quizId/:sessionId"
+                                    element={ <StudentRoute /> }
+                                >
                                     <Route index element={ <Room /> } />
                                 </Route>
 

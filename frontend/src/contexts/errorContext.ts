@@ -7,10 +7,16 @@ export interface Error {
     callback?: (confirmed: boolean) => void;
 }
 
-export const ErrorContext = createContext(
-    {
-        errors: [] as Error[],
-        throwError: (title: string, description?: string, isConfirm: boolean = false) => {},
-        throwConfirm: (title: string, callback: (confirmed: boolean) => void, description?: string) => {}
-    }
-);
+export const ErrorContext = createContext({
+    errors: [] as Error[],
+    throwError: (
+        _title: string,
+        _description?: string,
+        _isConfirm: boolean = false
+    ) => {},
+    throwConfirm: (
+        _title: string,
+        _callback: (confirmed: boolean) => void,
+        _description?: string
+    ) => {},
+});

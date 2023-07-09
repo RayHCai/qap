@@ -12,7 +12,8 @@ export default function validateEmail(email: string) {
         email.split('@')[0].length > 0 &&
         email.split('.')[1].length > 0 &&
         email.split('@')[1].split('')[0] !== '.'
-    ) return true;
-    
+    )
+        return true;
+
     return false;
 }
