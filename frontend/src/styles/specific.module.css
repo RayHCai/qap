@@ -1,0 +1,22 @@
+.button {
+    color: var(--text);
+    font-family: 'Raleway', sans-serif;
+    padding: 10px 30px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.15s;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    user-select: none;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.button:hover {
+    background: var(--hover-background);
+    color: var(--hover-text);
+}

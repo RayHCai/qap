@@ -1,0 +1,29 @@
+.overlay {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 999;
+    display: flex;
+}
+
+.blurBg {
+    backdrop-filter: blur(1px);
+}
+
+.darkenBg {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.container {
+    max-width: 95vw;
+    min-width: 30vw;
+    max-height: 90vh;
+    
+    margin: auto;
+
+    overflow-y: scroll;
+    background: var(--dark-grey);
+    padding: 10px;
+    border-radius: 3px;
+    box-shadow: 0px 0px 10px 10px rgba(0, 0, 0, 0.3);
+}

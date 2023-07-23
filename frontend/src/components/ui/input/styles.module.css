@@ -1,0 +1,23 @@
+.input {
+    border-radius: 3px;
+    border: 1px solid var(--white);
+    background: none;
+    font: inherit;
+    padding: 7px 15px;
+    outline: none;
+    transition: 0.15s;
+}
+
+.input::placeholder {
+    color: var(--white);
+}
+
+.input:focus {
+    background: var(--white);
+    color: var(--black);
+}
+
+.input:focus::placeholder {
+    color: var(--light-grey);
+    opacity: 0.5;
+}

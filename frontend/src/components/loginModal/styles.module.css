@@ -1,0 +1,10 @@
+.label {
+    font-size: 1.2rem;
+    font-weight: 500;
+    display: block;
+    color: var(--white);
+}
+
+.label p {
+    margin: 10px 0;
+}

@@ -1,0 +1,45 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    position: relative;
+}
+
+.header {
+    color: var(--white);
+    margin-top: 5px;
+    text-align: center;
+}
+
+.header h1 {
+    margin: auto;
+}
+
+.closeButton {
+    top: 0;
+    right: 0;
+    background: none;
+    cursor: pointer;
+    transition: 0.15s;
+
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    color: var(--white);
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    font-size: 1.35rem;
+    border: 2px solid var(--grey);
+    position: absolute;
+}
+
+.closeButton:hover {
+    background: var(--white);
+    border-color: var(--white);
+    color: var(--grey);
+}
+
+.submitContainer {
+    align-self: center;
+}

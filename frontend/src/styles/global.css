@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+
+:root {
+    --white: rgb(224, 224, 224);
+    --black: #141414;
+    --dark-grey: #1e1e1e;
+    --grey: #666666;
+
+    --green: rgb(69, 180, 69);
+    --red: rgb(255, 70, 70);
+    --pink: #ea899a;
+    --navy: #252850;
+
+    --font-family: 'Raleway', sans-serif;
+}
+
+body {
+    font-family: 'Raleway', sans-serif;
+    margin: 0;
+    padding: none;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    background-color: rgba(239, 247, 255, 0.514);
+}
+
+::-webkit-scrollbar-corner {
+    background: rgba(0, 0, 0, 0);
+}
