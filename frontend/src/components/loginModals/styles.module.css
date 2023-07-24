@@ -1,0 +1,13 @@
+.content {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    align-items: center;
+    padding: 50px 0;
+}
+
+.content span {
+    width: 2px;
+    height: 100px;
+    background: var(--grey);
+}

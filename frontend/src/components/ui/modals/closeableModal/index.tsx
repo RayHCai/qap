@@ -8,8 +8,10 @@ import classes from './styles.module.css';
 
 type CloseableModalProps = BaseModalProps & {
     title: string;
-    submitButtonText: string;
     onClose: () => void;
+    
+    submitButtonText?: string;
+    onSubmit?: () => void;
 }
 
 export default function CloseableModal(
@@ -36,11 +38,16 @@ export default function CloseableModal(
                     { props.children }
                 </div>
 
-                <div className={ classes.submitContainer }>
-                    <Button onClick={ props.onClose }>
-                        { props.submitButtonText }
-                    </Button>
-                </div>
+                {
+                    props.onSubmit &&
+                        (
+                            <div className={ classes.submitContainer }>
+                                <Button onClick={ props.onSubmit }>
+                                    { props.submitButtonText }
+                                </Button>
+                            </div>
+                        )
+                }
             </div>
         </ModalBase>
     );

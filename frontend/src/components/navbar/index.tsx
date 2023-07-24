@@ -1,17 +1,18 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { BsArrowRight } from 'react-icons/bs';
 
 import Button from '@/components/ui/button';
-import LoginModal from '@/components/loginModal';
+import LoginModalBase from '@/components/loginModals';
 
 import { ModalContext } from '@/contexts/modalContext';
 
 import classes from './styles.module.css';
 
 export default function Navbar() {
-    const { addModal } = useContext(ModalContext);
+    const { addModal, removeModal } = useContext(ModalContext);
+    const [loginModalId, updateLoginModalId] = useState(-1);
 
     const links = [
         {
@@ -28,8 +29,18 @@ export default function Navbar() {
         },
     ];
     
-    function login() {
-        addModal(<LoginModal />); 
+    function openLoginModal() {
+        updateLoginModalId(
+            addModal(
+                <LoginModalBase
+                    onClose={ onLoginModalClose }
+                />
+            )
+        ); 
+    }
+
+    function onLoginModalClose() {
+        removeModal(loginModalId);
     }
 
     return (
@@ -58,7 +69,7 @@ export default function Navbar() {
                 }
             </div>
 
-            <Button onClick={ login } className={ classes.loginButton }>
+            <Button onClick={ openLoginModal } className={ classes.loginButton }>
                 Login <BsArrowRight className={ classes.arrow } />
             </Button>
         </nav>
