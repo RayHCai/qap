@@ -48,3 +48,19 @@
 .rememberMeContainer span:hover {
     opacity: 0.8;
 }
+
+.switchType {
+    font-size: 0.75rem;
+    text-align: center;
+    color: var(--white);
+}
+
+.switchTypeLink {
+    text-decoration: underline;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.switchTypeLink:hover {
+    color: var(--pink);
+}

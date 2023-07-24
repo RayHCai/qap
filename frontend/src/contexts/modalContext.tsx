@@ -10,7 +10,7 @@ export const ModalContext = createContext<
     {
         modals: [],
         addModal: (_: JSX.Element) => {
-            return -1
+            return -1;
         },
         removeModal: (_: number) => {},
     }
