@@ -16,22 +16,26 @@ urlpatterns = [
     path('quizzes/teacher/<uuid:teacher_id>/', TeacherQuizzesView.as_view()),
 
     path('questions/manage/<uuid:quiz_id>/', QuestionsView.as_view()),
-    path('questions/manage/<uuid:quiz_id>/<uuid:question_id>/', QuestionsView.as_view()),
+    path('questions/manage/<uuid:quiz_id>/<uuid:question_id>/',
+         QuestionsView.as_view()),
     path('questions/manage/', QuestionsView.as_view()),
     path('questions/delete/<uuid:question_id>/', DeleteQuestionsView.as_view()),
     path('questions/update/<uuid:question_id>/', UpdateQuestionsView.as_view()),
-    
+
     path('answers/manage/<uuid:question_id>/', AnswersView.as_view()),
     path('answers/manage/', AnswersView.as_view()),
-    path('answers/getfromsession/<str:session_id>/', AnswersFromSessionView.as_view()),
+    path('answers/getfromsession/<str:session_id>/',
+         AnswersFromSessionView.as_view()),
 
     path('users/manage/<uuid:user_id>/', UsersView.as_view()),
-    path('users/manage/', UsersView.as_view()),
-    path('users/validate/', ValidateUserView.as_view()),
+    
+    path('auth/signup/', UsersView.as_view()),
+    path('auth/validate/', ValidateUserView.as_view()),
 
     path('sessions/manage/<str:session_code>/', QuizSessionsView.as_view()),
     path('sessions/manage/', QuizSessionsView.as_view()),
     path('sessions/all/<str:quiz_id>/', AllSessionsView.as_view()),
     path('sessions/join/', JoinSessionView.as_view()),
-    path('sessions/terminate/<str:session_id>/', TerminateSessionView.as_view()),
+    path('sessions/terminate/<str:session_id>/',
+         TerminateSessionView.as_view()),
 ]
