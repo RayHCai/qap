@@ -1,4 +1,3 @@
-import json
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -7,6 +6,7 @@ from quizzes.models import Quizzes
 
 from .models import Questions
 from .forms import QuestionCreationForm
+
 
 def serialize_question(question):
     return {
@@ -19,6 +19,7 @@ def serialize_question(question):
         'questionType': question.question_type,
         'numPoints': question.num_points,
     }
+
 
 class QuestionsView(APIView):
     def get(self, request, quiz_id, question_id=None):
@@ -41,7 +42,7 @@ class QuestionsView(APIView):
                 quiz_obj = Quizzes.objects.get(id=quiz_id)
             except Quizzes.DoesNotExist:
                 return Response({'message': f'Quiz not found with id { quiz_id }'}, status=404)
-            
+
             questions = Questions.objects.filter(question_for=quiz_obj)
 
             serialized_questions = []
@@ -67,8 +68,9 @@ class QuestionsView(APIView):
 
         form = QuestionCreationForm({
             **request.data,
-            'choices': '', #json.dumps(request.data.get('choices')),
-            'correct_answer': '' #json.dumps(request.data.get('correct_answer')),
+            'choices': '',  # json.dumps(request.data.get('choices')),
+            # json.dumps(request.data.get('correct_answer')),
+            'correct_answer': ''
         })
 
         print(form.is_valid(), form.errors.as_data())
@@ -84,7 +86,6 @@ class QuestionsView(APIView):
             quiz_obj = Quizzes.objects.get(id=question_for)
         except Quizzes.DoesNotExist:
             return Response({'message': f'Quiz not found with id { question_for }'}, status=404)
-        
 
         question = Questions.objects.create(
             title=form_data.get('title'),
@@ -98,15 +99,16 @@ class QuestionsView(APIView):
 
         return Response({'data': serialize_question(question)}, status=200)
 
+
 class DeleteQuestionsView(APIView):
     def post(self, request, question_id):
         '''
             Delete question from id
         '''
-        
+
         if not question_id:
             return Response({'message': 'Invalid Request'}, status=400)
-        
+
         try:
             question = Questions.objects.get(id=question_id)
         except Questions.DoesNotExist:
@@ -116,12 +118,13 @@ class DeleteQuestionsView(APIView):
 
         return Response({'message': 'Success'}, status=200)
 
+
 class UpdateQuestionsView(APIView):
     def post(self, request, question_id):
         '''
         Update question from id
         '''
-        
+
         change_obj = request.data.get('change_obj')
 
         if not change_obj or not question_id:

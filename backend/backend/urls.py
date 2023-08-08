@@ -28,7 +28,7 @@ urlpatterns = [
          AnswersFromSessionView.as_view()),
 
     path('users/manage/<uuid:user_id>/', UsersView.as_view()),
-    
+
     path('auth/signup/', UsersView.as_view()),
     path('auth/validate/', ValidateUserView.as_view()),
 

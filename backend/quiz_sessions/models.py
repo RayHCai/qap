@@ -5,6 +5,7 @@ from django.contrib.postgres.fields import ArrayField
 
 from quizzes.models import Quizzes
 
+
 class QuizSessions(models.Model):
     id = models.UUIDField(
         primary_key=True,

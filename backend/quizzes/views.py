@@ -6,6 +6,7 @@ from .forms import QuizCreationForm
 
 from users.models import Users
 
+
 class QuizzesView(APIView):
     def get(self, request, quiz_id):
         '''
@@ -14,7 +15,7 @@ class QuizzesView(APIView):
 
         if not quiz_id:
             return Response({'message': 'Invalid request'}, status=400)
-        
+
         try:
             quiz_obj = Quizzes.objects.get(id=quiz_id)
         except Quizzes.DoesNotExist:
@@ -37,7 +38,7 @@ class QuizzesView(APIView):
 
         if not form.is_valid():
             return Response({'message': 'Invalid request'}, status=400)
-        
+
         form_data = form.cleaned_data
 
         teacher_id = form_data.get('teacher_id')
@@ -59,6 +60,7 @@ class QuizzesView(APIView):
 
         return Response({'data': q.id}, status=200)
 
+
 class TeacherQuizzesView(APIView):
     def get(self, request, teacher_id):
         '''
@@ -67,12 +69,12 @@ class TeacherQuizzesView(APIView):
 
         if not teacher_id:
             return Response({'message': 'Invalid request'}, status=400)
-        
+
         try:
             teacher = Users.objects.get(id=teacher_id)
         except Users.DoesNotExist:
             return Response({'message': f'User does not exist with id { teacher_id }'}, status=404)
-        
+
         quizzes = Quizzes.objects.filter(teacher=teacher)
 
         serialized_quizzes = []
@@ -88,6 +90,7 @@ class TeacherQuizzesView(APIView):
 
         return Response({'data': serialized_quizzes}, status=200)
 
+
 class DeleteQuizView(APIView):
     def post(self, request, quiz_id):
         '''
@@ -101,7 +104,7 @@ class DeleteQuizView(APIView):
             quiz = Quizzes.objects.get(id=quiz_id)
         except Quizzes.DoesNotExist:
             return Response({'message': f'Quiz does not exist with id { quiz_id }'}, status=404)
-        
+
         quiz.delete()
 
         return Response({'message': 'Success'}, status=200)

@@ -7,6 +7,7 @@ from .models import Users
 from .forms import UserCreationForm, UserValidationForm
 from .serializers import UserSerializer
 
+
 class UsersView(APIView):
     def get(self, request, user_id):
         '''
@@ -20,10 +21,10 @@ class UsersView(APIView):
             user = Users.objects.get(id=user_id)
         except Users.DoesNotExist:
             return Response({'message': 'User with id does not exist'}, status=404)
-        
+
         serialized_user = UserSerializer(user).data
 
-        return Response({'data': serialized_user}, status=200)
+        return Response(serialized_user, status=200)
 
     def post(self, request):
         '''
@@ -34,7 +35,7 @@ class UsersView(APIView):
 
         if not form.is_valid():
             return Response({'message': 'Invalid request'}, status=400)
-        
+
         form_data = form.cleaned_data
 
         password = form_data.get('password')
@@ -48,7 +49,8 @@ class UsersView(APIView):
 
         serialized_user = UserSerializer(user).data
 
-        return Response({'data': serialized_user}, status=200)
+        return Response(serialized_user, status=200)
+
 
 class ValidateUserView(APIView):
     def post(self, request):
@@ -73,6 +75,9 @@ class ValidateUserView(APIView):
         password = form_data.get('password')
         hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
 
-        user_verified = user.password == hashed_password        
+        user_verified = user.password == hashed_password
 
-        return Response({'success': user_verified, 'data': UserSerializer(user).data}, status=200)
+        if not user_verified:
+            return Response({'message': 'Invalid credentials'}, status=400)
+
+        return Response(UserSerializer(user).data, status=200)

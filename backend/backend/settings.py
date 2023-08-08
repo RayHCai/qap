@@ -21,7 +21,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
 ]
 
-DEBUG = True #ps.environ.get('DEBUG').lower() == 'true'
+DEBUG = True  # ps.environ.get('DEBUG').lower() == 'true'
 
 # Application definition
 
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'answers',
     'users',
     'quiz_sessions',
+    'rooms',
 ]
 
 MIDDLEWARE = [
