@@ -57,6 +57,7 @@
 
 .switchTypeLink {
     text-decoration: underline;
+    text-underline-offset: 2px;
     cursor: pointer;
     transition: 0.15s;
 }

@@ -11,6 +11,7 @@
     --red: rgb(255, 70, 70);
     --pink: #ea899a;
     --navy: #252850;
+    --dark-navy: #0b0e2e;
 
     --font-family: 'Raleway', sans-serif;
 }
@@ -18,7 +19,7 @@
 body {
     font-family: 'Raleway', sans-serif;
     margin: 0;
-    padding: none;
+    background: var(--dark-navy);
 }
 
 ::-webkit-scrollbar {
@@ -32,4 +33,12 @@ body {
 
 ::-webkit-scrollbar-corner {
     background: rgba(0, 0, 0, 0);
+}
+
+::-moz-selection {
+    background: rgba(228, 228, 255, 0.39);
+}
+
+::selection {
+    background: rgba(228, 228, 255, 0.39);
 }

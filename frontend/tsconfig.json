@@ -1,34 +1,33 @@
 {
-    "compilerOptions": {
-        "target": "es6",
-        "lib": [
-            "DOM.Iterable",
-            "DOM",
-            "ESNext",
-            "ESNext.Array",
-            "ES2019.Array"
-        ],
-        "allowJs": true,
-        "noEmit": false,
-        "resolveJsonModule": true,
-        "isolatedModules": false,
-        "downlevelIteration": true,
-        "jsx": "react-jsx",
-        "incremental": true,
-        "rootDir": "./",
-        "moduleResolution": "node",
-        // "baseUrl": "./src",
-        "paths": {
-            "*": ["./src/*.d.ts"],
-            "@/*": ["./src/*"]
-        },
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
-        "strict": true,
-        "noImplicitAny": true,
-        "alwaysStrict": true,
-        "skipLibCheck": true
-    },
-    "include": ["**/*.ts", "**/*.tsx"],
-    "exclude": ["node_modules"]
+	"compilerOptions": {
+		"target": "es6",
+		"lib": [
+			"DOM.Iterable",
+			"DOM",
+			"ESNext",
+			"ESNext.Array",
+			"ES2019.Array"
+		],
+		"jsx": "react-jsx",
+		"moduleResolution": "node",
+		"rootDir": "./",
+		"paths": {
+			"*": ["./src/*.d.ts"],
+			"@/*": ["./src/*"]
+		},
+		"allowJs": true,
+		"noEmit": false,
+		"resolveJsonModule": true,
+		"isolatedModules": false,
+		"downlevelIteration": true,
+		"incremental": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"noImplicitAny": true,
+		"alwaysStrict": true,
+		"skipLibCheck": true
+	},
+	"include": ["**/*.ts", "**/*.tsx"],
+	"exclude": ["node_modules"]
 }

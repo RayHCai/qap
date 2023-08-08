@@ -1,77 +1,107 @@
 import { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { BsArrowRight } from 'react-icons/bs';
+import { RxHamburgerMenu } from 'react-icons/rx';
+import { GrClose } from 'react-icons/gr';
 
 import Button from '@/components/ui/button';
-import LoginModalBase from '@/components/loginModals';
+import Logo from '@/components/logo';
+import { UserContext } from '@/contexts/userContext';
 
-import { ModalContext } from '@/contexts/modalContext';
+import useLogout from '@/helpers/useLogout';
 
 import classes from './styles.module.css';
 
 export default function Navbar() {
-    const { addModal, removeModal } = useContext(ModalContext);
-    const [loginModalId, updateLoginModalId] = useState(-1);
+    const { user } = useContext(UserContext);
+    const logout = useLogout();
 
-    const links = [
+    const [sideNavOpen, setSideNavOpen] = useState(false);
+
+    const loggedInLinks = [
         {
-            to: '/',
-            name: 'Home',
+            to: '/dashboard',
+            text: 'Dashboard'
         },
         {
-            to: '/about',
-            name: 'About',
+            to: '/rooms',
+            text: 'Rooms'
         },
         {
-            to: '/blog',
-            name: 'Blog',
-        },
+            to: '/live',
+            text: 'Live Results'
+        }
     ];
-    
-    function openLoginModal() {
-        updateLoginModalId(
-            addModal(
-                <LoginModalBase
-                    onClose={ onLoginModalClose }
-                />
-            )
-        ); 
-    }
-
-    function onLoginModalClose() {
-        removeModal(loginModalId);
-    }
 
     return (
         <nav className={ classes.nav }>
-            <div className={ classes.linkContainer }>
-                {
-                    links.map(
-                        (link, index) =>
-                            (
-                                <NavLink
-                                    key={ index }
-                                    to={ link.to }
-                                    className={
-                                        (linkData) => (
-                                            `
-                                            ${ classes.navLink }
-                                            ${ linkData.isActive && classes.activeNavLink }
-                                            `
+            <Logo />
+
+            {
+                user && (
+                    (
+                        sideNavOpen ? (
+                            <div className={ classes.sideNav }>
+                                <div className={ classes.closeButtonContainer }>
+                                    <GrClose
+                                        onClick={ () => setSideNavOpen(false) }
+                                        className={ classes.closeIcon }
+                                    />
+                                </div>
+
+                                <div className={ classes.linkContainer }>
+                                    {
+                                        loggedInLinks.map(
+                                            ({ to, text }) => (
+                                                <NavLink
+                                                    key={ to }
+                                                    to={ to }
+                                                    onClick={
+                                                        () => setSideNavOpen(false)
+                                                    }
+                                                    className={
+                                                        (navData) => (
+                                                            `
+                                                                ${ classes.link }
+                                                                ${
+                                                                    navData.isActive
+                                                                    ? classes.active
+                                                                    : ''
+                                                                }
+                                                            `
+                                                        )
+                                                    }
+                                                >
+                                                    { text }
+                                                </NavLink>
+                                            )
                                         )
                                     }
-                                >
-                                    { link.name }
-                                </NavLink>
-                            )
-                    )
-                }
-            </div>
+                                </div>
 
-            <Button onClick={ openLoginModal } className={ classes.loginButton }>
-                Login <BsArrowRight className={ classes.arrow } />
-            </Button>
+                                <Button
+                                    onClick={
+                                        () => {
+                                            setSideNavOpen(false);
+                                            logout();
+                                        }
+                                    }
+                                    className={ classes.logoutButton }
+                                >
+                                    Logout
+                                </Button>
+                            </div>
+                        ) : (
+                            <div className={ classes.hamburgerContainer }>
+                                <RxHamburgerMenu
+                                    onClick={ () => setSideNavOpen(true) }
+                                    className={ classes.icon }
+                                />
+                            </div>
+                        )
+                    )
+                )
+            }
         </nav>
     );
 }

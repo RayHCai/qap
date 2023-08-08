@@ -7,11 +7,11 @@
 }
 
 .blurBg {
-    backdrop-filter: blur(1px);
+    backdrop-filter: blur(3px);
 }
 
 .darkenBg {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
 .container {
@@ -22,7 +22,7 @@
     margin: auto;
 
     overflow-y: scroll;
-    background: var(--dark-grey);
+    background: var(--black);
     padding: 10px;
     border-radius: 3px;
     box-shadow: 0px 0px 10px 10px rgba(0, 0, 0, 0.3);
