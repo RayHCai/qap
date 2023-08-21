@@ -9,5 +9,5 @@ export default function TeacherRoute() {
     if(user && 'id' in user)
         return <Outlet />;
 
-    return <Navigate to='/' />;
+    return <Navigate to="/" />;
 }
