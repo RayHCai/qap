@@ -6,6 +6,7 @@ yarn-error.log*
 
 # backend
 __pycache__
+backend/env
 
 # misc
 .DS_Store
