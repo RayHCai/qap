@@ -15,19 +15,15 @@ jobs:
         name: Run linters
         runs-on: ubuntu-latest
 
-        defaults:
-          run:
-          working-directory: frontend
-
         steps:
             - name: Check out Git repository
               uses: actions/checkout@v3
+
+            - run: cd frontend
 
             - name: Set up Node.js
               uses: actions/setup-node@v3
 
             - run: npm install yarn
-              working-directory: frontend
-
             - run: yarn
             - run: yarn run lint
