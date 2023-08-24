@@ -24,6 +24,5 @@ jobs:
             - name: Set up Node.js
               uses: actions/setup-node@v3
 
-            - run: npm install yarn
-            - run: yarn
-            - run: yarn run lint
+            - run: npm i
+            - run: npm run lint
