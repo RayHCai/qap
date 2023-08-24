@@ -5,7 +5,7 @@ from quizzes.views import QuizzesView, TeacherQuizzesView, DeleteQuizView
 from questions.views import QuestionsView, DeleteQuestionsView, UpdateQuestionsView
 from answers.views import AnswersView, AnswersFromSessionView
 from users.views import UsersView, ValidateUserView
-from quiz_sessions.views import QuizSessionsView, JoinSessionView, AllSessionsView, TerminateSessionView, QuizSessionsView
+from quiz_sessions.views import QuizSessionsView, JoinSessionView, AllSessionsView, TerminateSessionView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
