@@ -15,7 +15,7 @@ class UsersView(APIView):
         '''
 
         if not user_id:
-            return Response({'message': 'Invalid request'}, status=400)
+            return Response({'message': 'Invalid request'}, status=400);
 
         try:
             user = Users.objects.get(id=user_id)
