@@ -22,7 +22,8 @@ jobs:
             - name: Set up Node.js
               uses: actions/setup-node@v3
 
-            - run: cd frontend
             - run: npm install yarn
+              working-directory: frontend
+              
             - run: yarn
             - run: yarn run lint
