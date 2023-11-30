@@ -10,18 +10,17 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('rooms', '0001_initial'),
         ('users', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Quizzes',
+            name='Rooms',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('name', models.CharField(max_length=255)),
-                ('quiz_for', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='rooms.rooms')),
-                ('teacher', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.users')),
+                ('room_name', models.CharField(max_length=100)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.users')),
             ],
         ),
     ]

@@ -30,6 +30,9 @@ async function login(email: string, password: string, rememberMe: boolean) {
 
 	const data = await res.json();
 
+	console.log(data);
+
+
 	if (!res.ok) return;
 
 	return data;

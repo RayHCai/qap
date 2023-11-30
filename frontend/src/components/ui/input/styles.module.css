@@ -21,7 +21,8 @@
 }
 
 .input:focus::placeholder {
-    color: var(--light-grey);
+    color: var(--grey);
+    opacity: 0.6;
 }
 
 .input:hover {

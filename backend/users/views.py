@@ -1,5 +1,8 @@
 import hashlib
 
+from rest_framework.mixins import CreateModelMixin
+from rest_framework.generics import GenericAPIView
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -8,7 +11,10 @@ from .forms import UserCreationForm, UserValidationForm
 from .serializers import UserSerializer
 
 
-class UsersView(APIView):
+class UsersView(CreateModelMixin, GenericAPIView):
+    serializer_class = UserSerializer
+    queryset = Users.objects.all()
+
     def get(self, request, user_id):
         '''
         Get user from id
@@ -30,17 +36,18 @@ class UsersView(APIView):
         '''
         Create new user
         '''
-
+        
         form = UserCreationForm(request.data)
 
         if not form.is_valid():
             return Response({'message': 'Invalid request'}, status=400)
+        
 
         form_data = form.cleaned_data
 
         password = form_data.get('password')
         hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
-
+        
         user = Users.objects.create(
             username=form_data.get('username'),
             email=form_data.get('email'),

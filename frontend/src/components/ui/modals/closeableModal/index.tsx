@@ -6,7 +6,7 @@ import Button from '@/components/ui/button';
 
 import classes from './styles.module.css';
 
-type CloseableModalProps = BaseModalProps & {
+export type CloseableModalProps = BaseModalProps & {
     title: string;
     onClose: () => void;
     

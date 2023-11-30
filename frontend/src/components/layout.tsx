@@ -4,16 +4,18 @@ import Navbar from '@/components/navbar';
 import Footer from '@/components/footer';
 
 import UserContextWrapper from '@/contexts/userContext';
-import ModalContextWrapper from '@/contexts/modalContext';
+import ErrorContextWrapper from '@/contexts/errorContext';
 
 export default function Layout() {
-    return (
-        <UserContextWrapper>
-            <ModalContextWrapper>
-                <Navbar />
-                <Outlet />
-                <Footer />
-            </ModalContextWrapper>
-        </UserContextWrapper>
-    );
+	return (
+		<UserContextWrapper>
+			<ErrorContextWrapper>
+				<Navbar />
+
+				<Outlet />
+
+				<Footer />
+			</ErrorContextWrapper>
+		</UserContextWrapper>
+	);
 }

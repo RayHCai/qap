@@ -73,16 +73,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'qaapp',
-        'USER': 'qaapp',
-        'PASSWORD': 'qaapp',
+        'NAME': 'qap',
+        'USER': 'qap',
+        'PASSWORD': 'qap',
         'HOST': '127.0.0.1' if DEBUG else '',
         'PORT': '5432',
     }

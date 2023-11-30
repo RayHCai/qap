@@ -10,4 +10,5 @@ class UserSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'email',
+            'created_at'
         ]

@@ -4,10 +4,9 @@ import { Outlet, Navigate } from 'react-router';
 import { UserContext } from '@/contexts/userContext';
 
 export default function TeacherRoute() {
-    const { user } = useContext(UserContext);
-    
-    if(user && 'id' in user)
-        return <Outlet />;
+	const { user } = useContext(UserContext);
 
-    return <Navigate to="/" />;
+	if (user && 'id' in user) return <Outlet />;
+
+	return <Navigate to="/" />;
 }
