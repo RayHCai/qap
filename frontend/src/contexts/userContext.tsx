@@ -1,19 +1,17 @@
 import { useState, createContext, type PropsWithChildren } from 'react';
 
-export const UserContext = createContext<
-    {
-        user: Student | User | null;
-        setUser: (_: Student | User | null) => void;
-    }
->(
-    {
-        user: null,
-        setUser: (_: Student | User | null) => {},
-    }
-);
+type UserContext = {
+    user: Student | Teacher | null;
+    setUser: (_user: Student | Teacher | null) => void;
+};
+
+export const UserContext = createContext<UserContext>({
+    user: null,
+    setUser: (_user: Student | Teacher | null) => {},
+});
 
 export default function UserContextWrapper({ children }: PropsWithChildren) {
-    const [user, setUser] = useState<Student | User | null>(null);
+    const [user, setUser] = useState<Student | Teacher | null>(null);
 
     return (
         <UserContext.Provider value={ { user, setUser } }>

@@ -1,44 +1,46 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
 
 :root {
-	--white: rgb(224, 224, 224);
-	--black: #141414;
-	--dark-grey: #1e1e1e;
-	--grey: #666666;
-	--light-grey: silver;
+    --white: rgb(240, 237, 237);
+    --black: rgb(20, 20, 20);
+    --dark-grey: rgb(36, 35, 35);
+    --grey: rgb(120, 120, 120);
+    --light-grey: rgb(214, 214, 214);
 
-	--green: rgb(69, 180, 69);
-	--red: rgb(255, 70, 70);
-	--pink: #ea899a;
-	--navy: #252850;
-	--dark-navy: #0b0e2e;
+    --green: rgb(69, 180, 69);
+    --red: rgb(250, 57, 57);
+    --pink: rgb(234, 137, 154);
 
-	--font-family: 'Raleway', sans-serif;
+    --navy: rgb(37, 40, 80);
+    --dark-navy: rgb(11, 14, 46);
+
+    --font-family: 'Raleway', sans-serif;
 }
 
 body {
-	font-family: 'Raleway', sans-serif;
-	margin: 0;
-	background: var(--dark-navy);
+    margin: 0;
+    background: var(--black);
+
+    font-family: var(--font-family);
 }
 
 ::-webkit-scrollbar {
-	width: 5px;
+    width: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
-	border-radius: 2px;
-	background-color: rgba(239, 247, 255, 0.514);
+    border-radius: 2px;
+    background-color: rgba(239, 247, 255, 0.45);
 }
 
 ::-webkit-scrollbar-corner {
-	background: rgba(0, 0, 0, 0);
+    background: none;
 }
 
 ::-moz-selection {
-	background: rgba(228, 228, 255, 0.39);
+    background: rgba(228, 228, 255, 0.39);
 }
 
 ::selection {
-	background: rgba(228, 228, 255, 0.39);
+    background: rgba(184, 184, 184, 0.51);
 }

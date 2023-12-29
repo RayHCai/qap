@@ -1,0 +1,25 @@
+.logoContainer {
+    color: var(--light-grey);
+    font-weight: bold;
+    letter-spacing: 3px;
+    font-size: 40px;
+    display: flex;
+    gap: 8px;
+    position: relative;
+    text-align: center;
+    cursor: pointer;
+}
+
+.logo {
+    z-index: 1;
+}
+
+.logoShape {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 2px;
+    top: 60%;
+    left: -2%;
+    background: var(--pink);
+}

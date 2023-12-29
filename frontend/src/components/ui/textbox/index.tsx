@@ -2,11 +2,13 @@ import { forwardRef } from 'react';
 
 import classes from './styles.module.css';
 
-type CheckboxProps = {
+type TextboxProps = {
     className?: string;
+    placeholder: string;
+    type: string;
 };
 
-const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function (
+const Textbox = forwardRef<HTMLInputElement, TextboxProps>(function (
     props,
     ref
 ) {
@@ -14,9 +16,10 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function (
         <input
             ref={ ref }
             className={ `${classes.input} ${props.className}` }
-            type="checkbox"
+            placeholder={ props.placeholder }
+            type={ props.type }
         />
     );
 });
 
-export default Checkbox;
+export default Textbox;

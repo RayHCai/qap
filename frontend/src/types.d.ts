@@ -3,53 +3,53 @@ declare module '*.png';
 declare module '*.svg';
 
 declare interface Student {
-	studentName: string;
+    studentName: string;
 }
 
-declare interface User {
-	id: string;
+declare interface Teacher {
+    id: string;
 
-	username: string;
-	email: string;
+    username: string;
+    email: string;
 }
 
 declare interface Question {
-	id: string;
+    id: string;
 
-	title: string;
-	content: string;
+    title: string;
+    content: string;
 
-	questionFor: string; // quiz id
-	questionType: 'mc' | 'tf' | 'sa';
-	numPoints: number;
+    questionFor: string; // quiz id
+    questionType: 'mc' | 'tf' | 'sa';
+    numPoints: number;
 
-	choices: string[];
+    choices: string[];
 
-	correctAnswer?: string[];
+    correctAnswer?: string[];
 }
 
 declare interface Session {
-	id: string;
-	code: string;
-	active: boolean;
-	dateCreated: string;
-	sessionFor: string; // quiz id
-	usersInSession: string[];
+    id: string;
+    code: string;
+    active: boolean;
+    dateCreated: string;
+    sessionFor: string; // quiz id
+    usersInSession: string[];
 }
 
 declare interface Quiz {
-	id: string;
+    id: string;
 
-	name: string;
-	teacher: string; // user id
+    name: string;
+    teacher: string; // user id
 }
 
 declare interface Answer {
-	id: string;
-	studentName: string;
-	answerFor: string; // question id
-	textAnswer?: string;
-	selected?: string[];
-	correct: boolean;
-	dateAnswered: string;
+    id: string;
+    studentName: string;
+    answerFor: string; // question id
+    textAnswer?: string;
+    selected?: string[];
+    correct: boolean;
+    dateAnswered: string;
 }

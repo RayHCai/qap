@@ -2,7 +2,7 @@ import {
     PiNewspaperThin,
     PiQuestionThin,
     PiCheckCircleThin,
-    PiChatCircleTextThin
+    PiChatCircleTextThin,
 } from 'react-icons/pi';
 
 import classes from './styles.module.css';
@@ -32,12 +32,12 @@ export default function Dashboard() {
                     <PiQuestionThin className={ classes.icon } />
                     <span>Multiple Choice</span>
                 </div>
-                
+
                 <div className={ classes.iconContainer }>
                     <PiCheckCircleThin className={ classes.icon } />
                     <span>True / False</span>
                 </div>
-                
+
                 <div className={ classes.iconContainer }>
                     <PiChatCircleTextThin className={ classes.icon } />
                     <span>Short Answer</span>

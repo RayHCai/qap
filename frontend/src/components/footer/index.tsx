@@ -1,4 +1,4 @@
-import Logo from '@/components/logo';
+import Logo from '@/components/ui/logo';
 
 import classes from './styles.module.css';
 
@@ -7,5 +7,5 @@ export default function Footer() {
         <footer className={ classes.container }>
             <Logo logoClassName={ classes.logo } />
         </footer>
-    );  
+    );
 }
