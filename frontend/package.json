@@ -7,7 +7,7 @@
         "build": "webpack --mode=production",
         "lint": "eslint \"**/*.{ts,tsx}\"",
         "lint:fix": "eslint --fix --ext .ts,.tsx .",
-        "prepare": "husky install"
+        "prepare": "cd .. && husky install frontend/.husky"
     },
     "dependencies": {
         "react": "^18.2.0",
