@@ -8,6 +8,7 @@
     position: relative;
     text-align: center;
     cursor: pointer;
+    transition: 0.15s;
 }
 
 .logo {
@@ -22,4 +23,8 @@
     top: 60%;
     left: -2%;
     background: var(--pink);
+}
+
+.logoContainer:hover {
+    color: var(--white);
 }

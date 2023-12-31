@@ -10,6 +10,7 @@
         "prepare": "cd .. && husky install frontend/.husky"
     },
     "dependencies": {
+        "@uiw/react-md-editor": "^4.0.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-icons": "^4.12.0",

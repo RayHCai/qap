@@ -1,7 +1,7 @@
 import { useState, useRef, useContext } from 'react';
 import { useNavigate } from 'react-router';
 
-import Input from '@/components/ui/textbox';
+import Input from '@/components/ui/input';
 import Checkbox from '@/components/ui/checkbox';
 import CloseableModal from '@/components/ui/modal/closeable';
 

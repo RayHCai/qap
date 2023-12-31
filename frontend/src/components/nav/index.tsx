@@ -24,6 +24,10 @@ export default function Navbar() {
             text: 'Dashboard',
         },
         {
+            to: '/library',
+            text: 'Library',
+        },
+        {
             to: '/rooms',
             text: 'Rooms',
         },

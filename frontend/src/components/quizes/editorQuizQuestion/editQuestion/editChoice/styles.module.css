@@ -1,0 +1,38 @@
+.container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.container h3 {
+    text-decoration: underline;
+    text-underline-offset: 5px;
+}
+
+.correct {
+    color: var(--green);
+}
+
+.mdContainer {
+    height: 70px;
+}
+
+.closeButton {
+    font-size: 25px;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.closeButton:hover {
+    color: var(--grey);
+}
+
+.true {
+    background: var(--green);
+    border-color: var(--green);
+}
+
+.false {
+    background: var(--red);
+    border-color: var(--red);
+}

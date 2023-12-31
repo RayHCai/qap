@@ -1,0 +1,8 @@
+.header {
+    display: flex;
+    gap: 16px;
+}
+
+.markdownContainer {
+    height: 150px;
+}

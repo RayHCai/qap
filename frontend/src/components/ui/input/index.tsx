@@ -2,13 +2,13 @@ import { forwardRef } from 'react';
 
 import classes from './styles.module.css';
 
-type TextboxProps = {
+type InputProps = {
     className?: string;
-    placeholder: string;
+    placeholder?: string;
     type: string;
 };
 
-const Textbox = forwardRef<HTMLInputElement, TextboxProps>(function (
+const Input = forwardRef<HTMLInputElement, InputProps>(function (
     props,
     ref
 ) {
@@ -22,4 +22,4 @@ const Textbox = forwardRef<HTMLInputElement, TextboxProps>(function (
     );
 });
 
-export default Textbox;
+export default Input;

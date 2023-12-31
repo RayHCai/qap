@@ -1,0 +1,25 @@
+.container {
+    display: flex;
+    gap: 16px;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    gap: 16px;
+}
+
+.markdownContainer {
+    height: 150px;
+}
+
+.choices {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tfChoices {
+    display: flex;
+    gap: 8px;
+}

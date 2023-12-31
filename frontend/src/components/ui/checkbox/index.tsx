@@ -4,6 +4,8 @@ import classes from './styles.module.css';
 
 type CheckboxProps = {
     className?: string;
+    checked?: boolean;
+    onClick?: () => void;
 };
 
 const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function (
@@ -13,8 +15,10 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function (
     return (
         <input
             ref={ ref }
-            className={ `${classes.input} ${props.className}` }
             type="checkbox"
+            className={ `${classes.input} ${props.className}` }
+            defaultChecked={ props.checked }
+            onClick={ props.onClick }
         />
     );
 });

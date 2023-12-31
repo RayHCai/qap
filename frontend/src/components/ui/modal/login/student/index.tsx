@@ -1,7 +1,6 @@
 import { useRef } from 'react';
 
-import Textbox from '@/components/ui/textbox';
-import Button from '@/components/ui/button';
+import Input from '@/components/ui/input';
 import CloseableModal from '../../closeable';
 
 import classes from './styles.module.css';
@@ -29,7 +28,7 @@ export default function StudentLoginModal(props: StudentLoginModalProps) {
                 <label>
                     <span>Room Name</span>
 
-                    <Textbox type="text" placeholder="" ref={ roomNameField } />
+                    <Input type="text" placeholder="" ref={ roomNameField } />
                 </label>
             </div>
         </CloseableModal>

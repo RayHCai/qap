@@ -1,0 +1,16 @@
+.sidebar {
+    display: flex;
+    gap: 32px;
+    flex-direction: column;
+}
+
+.icon {
+    transition: 0.15s;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 100;
+}
+
+.icon:hover {
+    color: var(--grey);
+}

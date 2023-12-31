@@ -2,6 +2,8 @@ declare module '*.css';
 declare module '*.png';
 declare module '*.svg';
 
+// #region Users
+
 declare interface Student {
     studentName: string;
 }
@@ -13,20 +15,43 @@ declare interface Teacher {
     email: string;
 }
 
+// #endregion
+
+// #region Questions
+
+declare const enum QuestionType {
+    MC = 'mc',
+    TF = 'tf',
+    SA = 'sa',
+}
+
 declare interface Question {
     id: string;
 
-    title: string;
+    title: string; // TODO: What is this
     content: string;
 
     questionFor: string; // quiz id
-    questionType: 'mc' | 'tf' | 'sa';
+    questionType: QuestionType;
     numPoints: number;
 
-    choices: string[];
-
+    choices: string[]; // TODO: see if this is optional?
     correctAnswer?: string[];
 }
+
+declare interface Answer {
+    id: string;
+    studentName: string;
+    answerFor: string; // question id
+    textAnswer?: string;
+    selected?: string[];
+    correct: boolean;
+    dateAnswered: string;
+}
+
+// #endregion
+
+// #region Quizzes
 
 declare interface Session {
     id: string;
@@ -44,12 +69,4 @@ declare interface Quiz {
     teacher: string; // user id
 }
 
-declare interface Answer {
-    id: string;
-    studentName: string;
-    answerFor: string; // question id
-    textAnswer?: string;
-    selected?: string[];
-    correct: boolean;
-    dateAnswered: string;
-}
+// #endregion

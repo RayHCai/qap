@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router';
+
 import {
     PiNewspaperThin,
     PiQuestionThin,
@@ -8,10 +10,12 @@ import {
 import classes from './styles.module.css';
 
 export default function Dashboard() {
+    const navigate = useNavigate();
+
     return (
         <div className={ classes.container }>
             <div className={ classes.topLaunch }>
-                <div className={ classes.iconContainer }>
+                <div className={ classes.iconContainer } onClick={ () => navigate('/quiz-editor') }>
                     <PiNewspaperThin className={ classes.icon } />
                     <span>Quiz</span>
                 </div>

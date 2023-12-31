@@ -20,12 +20,14 @@
 body {
     margin: 0;
     background: var(--black);
+    color: var(--white);
 
     font-family: var(--font-family);
+    position: relative;
 }
 
 ::-webkit-scrollbar {
-    width: 5px;
+    width: 2px;
 }
 
 ::-webkit-scrollbar-thumb {

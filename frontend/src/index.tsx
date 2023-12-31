@@ -4,14 +4,15 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // #region Pages
 
 import Home from '@/pages/home';
-import PageNotFound from '@/pages/pageNotFound';
 import Dashboard from '@/pages/dashboard';
+
+import QuizEditor from '@/pages/quizEditor';
 // import Rooms from '@/pages/rooms';
-// import CreateQuiz from '@/pages/createQuiz';
 // import CreateQuestion from '@/pages/createQuestion';
 // import CreateRoom from '@/pages/createRoom';
 // import Quiz from '@/pages/quiz';
 // import LiveResults from '@/pages/liveResults';
+import PageNotFound from '@/pages/pageNotFound';
 
 // #endregion
 
@@ -29,7 +30,10 @@ function App() {
 
                     <Route element={ <TeacherRoute /> }>
                         <Route path="/dashboard" element={ <Dashboard /> } />
+
                     </Route>
+                    
+                    <Route path="/quiz-editor" element={ <QuizEditor /> } />
 
                     <Route path="*" element={ <PageNotFound /> } />
                 </Route>
