@@ -2,7 +2,6 @@ from django import forms
 
 
 class QuestionCreationForm(forms.Form):
-    title = forms.CharField(max_length=255)
     content = forms.CharField(required=False)
 
     question_for = forms.UUIDField()
@@ -10,4 +9,4 @@ class QuestionCreationForm(forms.Form):
     num_points = forms.IntegerField()
 
     choices = forms.CharField(required=False)
-    correct_answer = forms.CharField(required=False)
+    correct_answers = forms.CharField(required=False)

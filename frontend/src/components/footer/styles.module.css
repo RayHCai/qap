@@ -2,6 +2,8 @@
     display: flex;
 
     position: absolute;
+    bottom: 0;
+    right: 0;
 
     padding: 20px 50px;
     z-index: -1;

@@ -50,7 +50,7 @@
 }
 
 .switchType {
-    font-size: 0.75rem;
+    font-size: 12px;
     text-align: center;
     color: var(--white);
 }

@@ -2,10 +2,10 @@
 
 :root {
     --white: rgb(240, 237, 237);
-    --black: rgb(20, 20, 20);
-    --dark-grey: rgb(36, 35, 35);
-    --grey: rgb(120, 120, 120);
     --light-grey: rgb(214, 214, 214);
+    --grey: rgb(120, 120, 120);
+    --dark-grey: rgb(36, 35, 35);
+    --black: rgb(20, 20, 20);
 
     --green: rgb(69, 180, 69);
     --red: rgb(250, 57, 57);
@@ -23,7 +23,6 @@ body {
     color: var(--white);
 
     font-family: var(--font-family);
-    position: relative;
 }
 
 ::-webkit-scrollbar {

@@ -2,22 +2,24 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // #region Pages
-
 import Home from '@/pages/home';
+
+import Quiz from '@/pages/quiz';
+
 import Dashboard from '@/pages/dashboard';
+import Library from '@/pages/library';
+import LiveResults from '@/pages/liveResults';
 
 import QuizEditor from '@/pages/quizEditor';
-// import Rooms from '@/pages/rooms';
-// import CreateQuestion from '@/pages/createQuestion';
-// import CreateRoom from '@/pages/createRoom';
-// import Quiz from '@/pages/quiz';
-// import LiveResults from '@/pages/liveResults';
-import PageNotFound from '@/pages/pageNotFound';
+import CreateQuestion from '@/pages/createQuestion';
+import CreateRoom from '@/pages/createRoom';
 
+import PageNotFound from '@/pages/pageNotFound';
 // #endregion
 
-import Layout from '@/components/layout';
+import StudentRoute from '@/components/studentRoute';
 import TeacherRoute from '@/components/teacherRoute';
+import Layout from '@/components/layout';
 
 import '@/styles/global.css';
 
@@ -31,9 +33,24 @@ function App() {
                     <Route element={ <TeacherRoute /> }>
                         <Route path="/dashboard" element={ <Dashboard /> } />
 
+                        <Route path="/library" element={ <Library /> } />
+
+                        <Route
+                            path="/live-results/:sessionId"
+                            element={ <LiveResults /> }
+                        />
+
+                        <Route path="/quiz-editor" element={ <QuizEditor /> } />
+                        <Route
+                            path="/create-question/:questionType"
+                            element={ <CreateQuestion /> }
+                        />
+                        <Route path="/create-room" element={ <CreateRoom /> } />
                     </Route>
-                    
-                    <Route path="/quiz-editor" element={ <QuizEditor /> } />
+
+                    <Route element={ <StudentRoute /> }>
+                        <Route path="/quiz/:sessionId" element={ <Quiz /> } />
+                    </Route>
 
                     <Route path="*" element={ <PageNotFound /> } />
                 </Route>

@@ -15,7 +15,6 @@ class Questions(models.Model):
         editable=False
     )
 
-    title = models.CharField(max_length=255)
     content = models.TextField()
 
     question_for = models.ForeignKey(Quizzes, on_delete=models.CASCADE)
@@ -33,6 +32,6 @@ class Questions(models.Model):
         models.CharField(max_length=255),
     )
 
-    correct_answer = ArrayField(
+    correct_answers = ArrayField(
         models.CharField(max_length=255),
     )

@@ -3,9 +3,8 @@ declare module '*.png';
 declare module '*.svg';
 
 // #region Users
-
 declare interface Student {
-    studentName: string;
+    name: string;
 }
 
 declare interface Teacher {
@@ -13,12 +12,12 @@ declare interface Teacher {
 
     username: string;
     email: string;
-}
 
+    createdAt: Date;
+}
 // #endregion
 
 // #region Questions
-
 declare const enum QuestionType {
     MC = 'mc',
     TF = 'tf',
@@ -28,45 +27,50 @@ declare const enum QuestionType {
 declare interface Question {
     id: string;
 
-    title: string; // TODO: What is this
     content: string;
 
-    questionFor: string; // quiz id
+    questionFor: string; // ID of quiz that question belongs to
+
     questionType: QuestionType;
     numPoints: number;
 
-    choices: string[]; // TODO: see if this is optional?
-    correctAnswer?: string[];
+    choices: string[];
+    correctAnswers?: string[];
 }
 
 declare interface Answer {
     id: string;
-    studentName: string;
-    answerFor: string; // question id
+
+    answeredBy: string;
+
+    answerFor: string; // ID of question that answer belongs to
+    sessionFor: string; // ID of session that answer belongs to
+
+    correct: boolean;
+    dateAnswered: Date;
+
     textAnswer?: string;
     selected?: string[];
-    correct: boolean;
-    dateAnswered: string;
 }
-
 // #endregion
 
 // #region Quizzes
-
 declare interface Session {
     id: string;
+
     code: string;
     active: boolean;
-    dateCreated: string;
-    sessionFor: string; // quiz id
+
+    sessionFor: string; // ID of quiz that session belongs to
     usersInSession: string[];
+
+    dateCreated: string;
 }
 
 declare interface Quiz {
     id: string;
 
     name: string;
-    teacher: string; // user id
+    teacher: string; // ID of teacher that owns the quiz
 }
-
 // #endregion

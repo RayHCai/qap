@@ -15,8 +15,12 @@ export default function Dashboard() {
     return (
         <div className={ classes.container }>
             <div className={ classes.topLaunch }>
-                <div className={ classes.iconContainer } onClick={ () => navigate('/quiz-editor') }>
+                <div
+                    className={ classes.iconContainer }
+                    onClick={ () => navigate('/quiz-editor') }
+                >
                     <PiNewspaperThin className={ classes.icon } />
+
                     <span>Quiz</span>
                 </div>
             </div>
@@ -34,16 +38,19 @@ export default function Dashboard() {
             <div className={ classes.quickLaunch }>
                 <div className={ classes.iconContainer }>
                     <PiQuestionThin className={ classes.icon } />
+
                     <span>Multiple Choice</span>
                 </div>
 
                 <div className={ classes.iconContainer }>
                     <PiCheckCircleThin className={ classes.icon } />
+
                     <span>True / False</span>
                 </div>
 
                 <div className={ classes.iconContainer }>
                     <PiChatCircleTextThin className={ classes.icon } />
+                    
                     <span>Short Answer</span>
                 </div>
             </div>

@@ -4,7 +4,7 @@ import ErrorModal from '@/components/ui/modal/error';
 
 import { ModalContext } from '@/contexts/modalContext';
 
-export default function useThrowError(error: string, title?: string) {
+export default function useThrowError() {
     const { openModal, closeModal } = useContext(ModalContext);
 
     const [modalIndex, updateModalIndex] = useState(-1);
@@ -14,7 +14,7 @@ export default function useThrowError(error: string, title?: string) {
         updateModalIndex(-1);
     }
 
-    return () => {
+    return (error: string, title?: string) => {
         const index = openModal(
             <ErrorModal error={ error } title={ title } onClose={ onClose } />
         );

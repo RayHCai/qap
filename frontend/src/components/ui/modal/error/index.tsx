@@ -3,6 +3,7 @@ import CloseableModal from '../closeable';
 type ErrorModalProps = {
     error: string;
     onClose: () => void;
+    
     title?: string;
 };
 

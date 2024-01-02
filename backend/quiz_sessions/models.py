@@ -18,10 +18,10 @@ class QuizSessions(models.Model):
     code = models.CharField(max_length=255)
     active = models.BooleanField(default=True)
 
-    date_created = models.DateTimeField(auto_now_add=True)
-
     session_for = models.ForeignKey(Quizzes, on_delete=models.CASCADE)
 
     users_in_session = ArrayField(
         models.CharField(max_length=255)
     )
+
+    date_created = models.DateTimeField(auto_now_add=True)

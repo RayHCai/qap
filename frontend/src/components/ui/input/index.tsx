@@ -8,10 +8,7 @@ type InputProps = {
     type: string;
 };
 
-const Input = forwardRef<HTMLInputElement, InputProps>(function (
-    props,
-    ref
-) {
+const Input = forwardRef<HTMLInputElement, InputProps>(function (props, ref) {
     return (
         <input
             ref={ ref }

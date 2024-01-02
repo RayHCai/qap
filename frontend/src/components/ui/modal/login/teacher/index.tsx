@@ -12,7 +12,7 @@ import validateEmail from '@/helpers/validateEmail';
 
 import classes from './styles.module.css';
 
-async function login(email: string, password: string, rememberMe: boolean) {
+async function login(email: string, password: string, _rememberMe: boolean) {
     const res = await fetch(`${SERVER_URL}/auth/validate/`, {
         method: 'POST',
         headers: {
@@ -35,7 +35,7 @@ async function signUp(
     username: string,
     email: string,
     password: string,
-    rememberMe: boolean
+    _rememberMe: boolean
 ) {
     const res = await fetch(`${SERVER_URL}/auth/signup/`, {
         method: 'POST',
@@ -148,6 +148,7 @@ export default function LoginModal(props: LoginModalProps) {
                     <div className={ classes.rememberMeContainer }>
                         <label>
                             <Checkbox ref={ rememberMeInput } />
+                            
                             <span>Remember Me</span>
                         </label>
                     </div>

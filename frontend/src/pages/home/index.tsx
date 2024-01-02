@@ -2,13 +2,13 @@ import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import Button from '@/components/ui/button';
+import Footer from '@/components/footer';
+
 import StudentLoginModal from '@/components/ui/modal/login/student';
 import TeacherLoginModal from '@/components/ui/modal/login/teacher';
 
 import { UserContext } from '@/contexts/userContext';
 import { ModalContext } from '@/contexts/modalContext';
-
-import Footer from '@/components/footer';
 
 import classes from './styles.module.css';
 
@@ -42,13 +42,14 @@ export default function Home() {
                 <div className={ classes.contentContainer }>
                     <div className={ classes.introContainer }>
                         <h1>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit.
                         </h1>
 
                         <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            Odit, optio exercitationem. Rem eius eligendi dolores
-                            omnis commodi tempore, cum dolor.
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Odit, optio exercitationem. Rem eius eligendi
+                            dolores omnis commodi tempore, cum dolor.
                         </p>
                     </div>
 
@@ -68,22 +69,14 @@ export default function Home() {
                             <div className={ classes.getStartedButtons }>
                                 <Button
                                     onClick={ openTeacherLoginModal }
-                                    className={
-                                        classes.loginButton +
-                                        ' ' +
-                                        classes.teacherLogin
-                                    }
+                                    className={ `${classes.loginButton} ${classes.teacherLogin}` }
                                 >
                                     Teacher Login
                                 </Button>
 
                                 <Button
                                     onClick={ openStudentLoginModal }
-                                    className={
-                                        classes.loginButton +
-                                        ' ' +
-                                        classes.studentLogin
-                                    }
+                                    className={ `${classes.loginButton} ${classes.studentLogin}` }
                                     light={ true }
                                 >
                                     Student Login

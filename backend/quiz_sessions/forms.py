@@ -7,5 +7,5 @@ class QuizSessionCreationForm(forms.Form):
 
 
 class QuizSessionJoinForm(forms.Form):
-    student_name = forms.CharField(max_length=255)
+    answered_by = forms.CharField(max_length=255)
     session_code = forms.CharField(max_length=255)

@@ -17,4 +17,3 @@ class Quizzes(models.Model):
 
     name = models.CharField(max_length=255)
     teacher = models.ForeignKey(Users, on_delete=models.CASCADE)
-    quiz_for = models.ForeignKey(Rooms, on_delete=models.CASCADE)

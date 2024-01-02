@@ -13,7 +13,7 @@ export default function StudentLoginModal(props: StudentLoginModalProps) {
     const roomNameField = useRef<HTMLInputElement>(null);
 
     async function joinRoom() {
-        const roomName = roomNameField.current!.value;
+        // const roomName = roomNameField.current!.value;
     }
 
     return (

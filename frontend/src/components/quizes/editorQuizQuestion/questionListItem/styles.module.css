@@ -4,5 +4,42 @@
 }
 
 .markdownContainer {
-    height: 150px;
+    align-self: center;
+    max-height: 150px;
+    overflow-y: scroll;
+    width: 100%;
+}
+
+.choice {
+    display: flex;
+    gap: 8px;
+}
+
+.choice h3 {
+    text-decoration: underline;
+    text-underline-offset: 5px;
+}
+
+.correct h3 {
+    color: var(--green);
+}
+
+.true {
+    background: var(--green);
+    cursor: default;
+    border-color: var(--green);
+}
+
+.true:hover {
+    background: var(--green);
+}
+
+.false {
+    background: var(--red);
+    border-color: var(--red);
+    cursor: default;
+}
+
+.false:hover {
+    background: var(--red);
 }

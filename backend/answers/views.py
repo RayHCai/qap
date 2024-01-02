@@ -10,7 +10,7 @@ from quiz_sessions.models import QuizSessions
 
 def serialize_answer(answer):
     return {
-        'studentName': answer.student_name,
+        'answeredBy': answer.answered_by,
         'answerFor': answer.answer_for.id,
         'textAnswer': answer.text_answer,
         'selected': answer.selected,
@@ -68,12 +68,12 @@ class AnswersView(APIView):
         if not question.choices:
             correct = False
         else:
-            if len(question.correct_answer) == 1:
-                correct = question.correct_answer[0] == selected[0]
+            if len(question.correct_answers) == 1:
+                correct = question.correct_answers[0] == selected[0]
             else:
                 correct = True
 
-                correct_choices = question.correct_answer
+                correct_choices = question.correct_answers
                 selected_choices = selected
 
                 correct_choices.sort()
@@ -90,7 +90,7 @@ class AnswersView(APIView):
 
         answer = Answers.objects.create(
             answer_for=question,
-            student_name=form_data.get('student_name'),
+            answered_by=form_data.get('answered_by'),
             text_answer=form_data.get('text_answer'),
             selected=selected,
             correct=correct,
