@@ -1,0 +1,20 @@
+.input {
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    border: 2px solid var(--grey);
+    font: inherit;
+    outline: none;
+    transition: 0.15s;
+    cursor: pointer;
+}
+
+.input:focus {
+    background: var(--white);
+    color: var(--black);
+    border-color: var(--white);
+}
+
+.input:hover {
+    border-color: var(--white);
+}

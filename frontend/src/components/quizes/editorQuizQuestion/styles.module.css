@@ -1,0 +1,18 @@
+.container {
+    width: 100%;
+    padding: 20px 40px;
+    background: var(--dark-grey);
+    border-radius: 5px;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.header {
+    display: flex;
+    gap: 16px;
+}
+
+.markdownContainer {
+    height: 150px;
+}

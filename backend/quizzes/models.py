@@ -3,6 +3,8 @@ import uuid
 from django.db import models
 
 from users.models import Users
+from rooms.models import Rooms
+
 
 class Quizzes(models.Model):
     id = models.UUIDField(

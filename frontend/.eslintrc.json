@@ -16,6 +16,7 @@
     },
     "plugins": ["react", "@typescript-eslint"],
     "rules": {
+        "react/no-unescaped-entities": "off",
         "no-constant-condition": "error",
         "no-dupe-else-if": "error",
         "no-dupe-args": "error",
@@ -103,6 +104,13 @@
                 "prop": "parens-new-line"
             }
         ],
-        "object-curly-spacing": ["error", "always"]
+        "object-curly-spacing": ["error", "always"],
+        "react/function-component-definition": [
+            "error",
+            {
+                "namedComponents": "function-declaration",
+                "unnamedComponents": "arrow-function"
+            }
+        ]
     }
 }

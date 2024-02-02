@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    padding: 20px 50px;
+    z-index: -1;
+}
+
+.logoContainer {
+    right: 0;
+    width: fit-content;
+}
+
+.logo {
+    font-size: 25px;
+}

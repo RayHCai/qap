@@ -7,9 +7,10 @@ from .forms import AnswerCreationForm
 from questions.models import Questions
 from quiz_sessions.models import QuizSessions
 
+
 def serialize_answer(answer):
     return {
-        'studentName': answer.student_name,
+        'answeredBy': answer.answered_by,
         'answerFor': answer.answer_for.id,
         'textAnswer': answer.text_answer,
         'selected': answer.selected,
@@ -17,12 +18,13 @@ def serialize_answer(answer):
         'dateAnswered': answer.date_answered,
     }
 
+
 class AnswersView(APIView):
     def get(self, request, question_id):
         '''
         Get all answers for a given question
         '''
-        
+
         try:
             question = Questions.objects.get(id=question_id)
         except Questions.DoesNotExist:
@@ -34,12 +36,12 @@ class AnswersView(APIView):
             serialized_answers.append(serialize_answer(answer))
 
         return Response({'data': serialized_answers}, status=200)
-    
+
     def post(self, request):
         '''
         Create an answer
         '''
-        
+
         form = AnswerCreationForm(request.data)
 
         if not form.is_valid():
@@ -62,16 +64,16 @@ class AnswersView(APIView):
             return Response({'message': f'Session does not exist with id { session_for }'}, status=404)
 
         selected = request.data.get('selected')
-        
+
         if not question.choices:
             correct = False
         else:
-            if len(question.correct_answer) == 1:
-                correct = question.correct_answer[0] == selected[0]
+            if len(question.correct_answers) == 1:
+                correct = question.correct_answers[0] == selected[0]
             else:
                 correct = True
 
-                correct_choices = question.correct_answer
+                correct_choices = question.correct_answers
                 selected_choices = selected
 
                 correct_choices.sort()
@@ -88,7 +90,7 @@ class AnswersView(APIView):
 
         answer = Answers.objects.create(
             answer_for=question,
-            student_name=form_data.get('student_name'),
+            answered_by=form_data.get('answered_by'),
             text_answer=form_data.get('text_answer'),
             selected=selected,
             correct=correct,
@@ -96,6 +98,7 @@ class AnswersView(APIView):
         )
 
         return Response({'data': serialize_answer(answer)}, status=200)
+
 
 class AnswersFromSessionView(APIView):
     def get(self, request, session_id):
@@ -110,7 +113,7 @@ class AnswersFromSessionView(APIView):
             session = QuizSessions.objects.get(id=session_id)
         except QuizSessions.DoesNotExist:
             return Response({'message': f'Session does not exist with id { session_id }'}, status=404)
-        
+
         answers = Answers.objects.filter(session_for=session)
 
         serialized_answers = []

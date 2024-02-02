@@ -1,0 +1,22 @@
+.container {
+    padding-left: 32px;
+}
+
+.header {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+}
+
+.createRoomModal {
+    margin: 36px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.roomsContainer {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}

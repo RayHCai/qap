@@ -8,17 +8,18 @@ from quizzes.models import Quizzes
 from .models import Questions
 from .forms import QuestionCreationForm
 
+
 def serialize_question(question):
     return {
         'id': question.id,
-        'title': question.title,
         'content': question.content,
         'question_for': question.question_for.id,
         'choices': question.choices,
-        'correctAnswer': question.correct_answer,
+        'correctAnswers': question.correct_answers,
         'questionType': question.question_type,
         'numPoints': question.num_points,
     }
+
 
 class QuestionsView(APIView):
     def get(self, request, quiz_id, question_id=None):
@@ -41,7 +42,7 @@ class QuestionsView(APIView):
                 quiz_obj = Quizzes.objects.get(id=quiz_id)
             except Quizzes.DoesNotExist:
                 return Response({'message': f'Quiz not found with id { quiz_id }'}, status=404)
-            
+
             questions = Questions.objects.filter(question_for=quiz_obj)
 
             serialized_questions = []
@@ -65,13 +66,15 @@ class QuestionsView(APIView):
         Create a question for a quiz
         '''
 
+        print(request.data)
+
         form = QuestionCreationForm({
             **request.data,
-            'choices': '', #json.dumps(request.data.get('choices')),
-            'correct_answer': '' #json.dumps(request.data.get('correct_answer')),
+            'choices': json.dumps(request.data.get('choices')),
+            'correct_answers': json.dumps(request.data.get('correct_answers'))
         })
 
-        print(form.is_valid(), form.errors.as_data())
+        # print(form.is_valid(), form.errors.as_data())
 
         if not form.is_valid():
             return Response({'message': 'Invalid request'}, status=400)
@@ -84,29 +87,33 @@ class QuestionsView(APIView):
             quiz_obj = Quizzes.objects.get(id=question_for)
         except Quizzes.DoesNotExist:
             return Response({'message': f'Quiz not found with id { question_for }'}, status=404)
-        
+
+        print(quiz_obj)
+
+        # print(request.data.get('correct_answers'))
 
         question = Questions.objects.create(
-            title=form_data.get('title'),
             content=form_data.get('content'),
             question_for=quiz_obj,
-            choices=request.data.get('choices'),
-            correct_answer=request.data.get('correct_answer'),
+            choices=json.loads(form_data.get('choices')),
+            correct_answers=json.loads(form_data.get('correct_answers')),
             question_type=form_data.get('question_type'),
             num_points=form_data.get('num_points'),
         )
 
-        return Response({'data': serialize_question(question)}, status=200)
+        # return Response({'data': serialize_question(question)}, status=200)
+        return Response({'data': ''}, status=200)
+
 
 class DeleteQuestionsView(APIView):
     def post(self, request, question_id):
         '''
             Delete question from id
         '''
-        
+
         if not question_id:
             return Response({'message': 'Invalid Request'}, status=400)
-        
+
         try:
             question = Questions.objects.get(id=question_id)
         except Questions.DoesNotExist:
@@ -116,12 +123,13 @@ class DeleteQuestionsView(APIView):
 
         return Response({'message': 'Success'}, status=200)
 
+
 class UpdateQuestionsView(APIView):
     def post(self, request, question_id):
         '''
         Update question from id
         '''
-        
+
         change_obj = request.data.get('change_obj')
 
         if not change_obj or not question_id:
@@ -132,11 +140,10 @@ class UpdateQuestionsView(APIView):
         except Questions.DoesNotExist:
             return Response({'message': f'Question does not exist with id { question_id }'}, status=404)
 
-        question.title = change_obj.get('title')
         question.content = change_obj.get('content')
 
         question.choices = change_obj.get('choices')
-        question.correct_answer = change_obj.get('correct_answer')
+        question.correct_answers = change_obj.get('correct_answers')
 
         question.question_type = change_obj.get('question_type')
         question.num_points = change_obj.get('num_points')

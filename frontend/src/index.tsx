@@ -1,196 +1,68 @@
-import { useState, useEffect, ReactNode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import TeacherRoute from './components/teacherRoute';
-import StudentRoute from './components/studentRoute';
-import PageWrapper from './components/pageWrapper';
+// #region Pages
+import Home from '@/pages/home';
 
-import { ErrorModal, ConfirmModal } from './components/modal';
-import Loading from './components/loading';
+import Quiz from '@/pages/quiz';
 
-import JoinRoom from './pages/joinRoom';
-import Room from './pages/room';
+import Dashboard from '@/pages/dashboard';
+import Library from '@/pages/library';
+import LiveResults from '@/pages/liveResults';
+import Launch from '@/pages/launch';
+import Rooms from '@/pages/rooms';
 
-import LoginOrSignup from './pages/loginOrSignup';
-import Dashboard from './pages/dashboard';
-import CreateQuiz from './pages/createQuiz';
-import EditQuiz from './pages/editQuiz';
-import SessionDashboard from './pages/sessionDashboard';
+import QuizEditor from '@/pages/quizEditor';
+import CreateQuestion from '@/pages/createQuestion';
+import CreateRoom from '@/pages/createRoom';
 
-import PageNotFound from './pages/pageNotFound';
+import PageNotFound from '@/pages/pageNotFound';
+// #endregion
 
-import { TeacherContext } from './contexts/teacherContext';
-import { StudentContext } from './contexts/studentContext';
-import { ErrorContext, Error } from './contexts/errorContext';
+import StudentRoute from '@/components/studentRoute';
+import TeacherRoute from '@/components/teacherRoute';
+import Layout from '@/components/layout';
 
-import { SERVER_URL } from './settings';
-
-import './index.css';
+import '@/styles/global.css';
 
 function App() {
-    const [name, updateName] = useState<string | null>(null);
-    const [user, setUser] = useState<User | null>(
-        localStorage.getItem('user')
-            ? JSON.parse(localStorage.getItem('user')!)
-            : null
-    );
-
-    const [errors, updateErrors] = useState<Error[]>([]);
-    const errorModals: ReactNode[] = [];
-
-    const [isLoading, updateLoading] = useState(false);
-
-    useEffect(() => {
-        if (!user) return;
-
-        updateLoading(true);
-
-        (async function () {
-            const res = await fetch(`${ SERVER_URL }/users/manage/${ user.id }`);
-
-            if (!res.ok) {
-                setUser(null);
-
-                localStorage.removeItem('user');
-            }
-
-            updateLoading(false);
-        })();
-    }, []);
-
-    function updateUser(newUser: User | null) {
-        if (newUser) localStorage.setItem('user', JSON.stringify(newUser));
-        else localStorage.removeItem('user');
-
-        setUser(newUser);
-    }
-
-    function throwError(
-        title: string,
-        description?: string,
-        isConfirm: boolean = false,
-        callback?: (c: boolean) => void
-    ) {
-        if (errors.filter((e) => e.title === title).length !== 0) return;
-
-        const newErrors = [...errors];
-
-        newErrors.push({
-            title: title,
-            description: description,
-            isConfirm: isConfirm,
-            callback: callback,
-        });
-
-        updateErrors(newErrors);
-    }
-
-    function throwConfirm(
-        title: string,
-        callback: (c: boolean) => void,
-        description?: string
-    ) {
-        throwError(title, description, true, callback);
-    }
-
-    function closeModal(index: number) {
-        const newErrors = [...errors].filter((_, i) => i !== index);
-
-        updateErrors(newErrors);
-    }
-
-    errors.forEach((e, i) =>
-        errorModals.push(
-            !e.isConfirm ? (
-                <ErrorModal key={ i } closeModal={ () => closeModal(i) }>
-                    <div className="error-content">
-                        <h1>{ e.title }</h1>
-
-                        { e.description && <p>{ e.description }</p> }
-                    </div>
-                </ErrorModal>
-            ) : (
-                <ConfirmModal
-                    key={ i }
-                    setStatus={ (c: boolean) => {
-                        e.callback!(c);
-                        closeModal(i);
-                    } }
-                >
-                    <div className="error-content">
-                        <h1>{ e.title }</h1>
-
-                        { e.description && <p>{ e.description }</p> }
-                    </div>
-                </ConfirmModal>
-            )
-        )
-    );
-
-    if (isLoading) return <Loading />;
-
     return (
-        <ErrorContext.Provider value={ { errors, throwError, throwConfirm } }>
-            { errorModals }
+        <BrowserRouter>
+            <Routes>
+                <Route element={ <Layout /> }>
+                    <Route path="/" element={ <Home /> } />
 
-            <TeacherContext.Provider value={ { user, updateUser } }>
-                <StudentContext.Provider value={ { name, updateName } }>
-                    <BrowserRouter>
-                        <Routes>
-                            <Route element={ <PageWrapper /> }>
-                                <Route index element={ <JoinRoom /> } />
+                    <Route element={ <TeacherRoute /> }>
+                        <Route path="/dashboard" element={ <Dashboard /> } />
 
-                                <Route
-                                    path="/login"
-                                    element={ <LoginOrSignup isLogin={ true } /> }
-                                />
+                        <Route path="/library" element={ <Library /> } />
+                        <Route path="/launch" element={ <Launch /> } />
+                        <Route path="/rooms" element={ <Rooms /> } />
+                        
+                        <Route
+                            path="/live-results/:sessionId"
+                            element={ <LiveResults /> }
+                        />
 
-                                <Route
-                                    path="/signup"
-                                    element={ <LoginOrSignup isLogin={ false } /> }
-                                />
+                        <Route path="/quiz-editor/:quizId?" element={ <QuizEditor /> } />
+                        <Route
+                            path="/create-question/:questionType"
+                            element={ <CreateQuestion /> }
+                        />
+                        <Route path="/create-room" element={ <CreateRoom /> } />
+                    </Route>
 
-                                <Route
-                                    path="/dashboard"
-                                    element={ <TeacherRoute /> }
-                                >
-                                    <Route index element={ <Dashboard /> } />
+                    <Route element={ <StudentRoute /> }>
+                        <Route path="/quiz/:sessionId" element={ <Quiz /> } />
+                    </Route>
 
-                                    <Route
-                                        path="create"
-                                        element={ <CreateQuiz /> }
-                                    />
-                                    <Route
-                                        path="edit/:quizId"
-                                        element={ <EditQuiz /> }
-                                    />
-
-                                    <Route
-                                        path="session/:sessionId"
-                                        element={ <SessionDashboard /> }
-                                    />
-                                </Route>
-
-                                <Route
-                                    path="/room/:quizId/:sessionId"
-                                    element={ <StudentRoute /> }
-                                >
-                                    <Route index element={ <Room /> } />
-                                </Route>
-
-                                <Route path="*" element={ <PageNotFound /> } />
-                            </Route>
-                        </Routes>
-                    </BrowserRouter>
-                </StudentContext.Provider>
-            </TeacherContext.Provider>
-        </ErrorContext.Provider>
+                    <Route path="*" element={ <PageNotFound /> } />
+                </Route>
+            </Routes>
+        </BrowserRouter>
     );
 }
 
-const root = ReactDOM.createRoot(
-    document.getElementById('root') as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById('root')!);
 
 root.render(<App />);

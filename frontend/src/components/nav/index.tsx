@@ -1,68 +1,99 @@
-import { useContext } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useContext, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
-import { BsArrowRight } from 'react-icons/bs';
+import { RxHamburgerMenu } from 'react-icons/rx';
+import { GrClose } from 'react-icons/gr';
 
-import { TeacherContext } from '../../contexts/teacherContext';
+import Button from '@/components/ui/button';
+import Logo from '@/components/ui/logo';
+import UnderlinedLink from '@/components/ui/underlinedLink';
 
-import calvinLogo from '../../images/calvinLogo.svg';
+import { UserContext } from '@/contexts/userContext';
 
-import classes from './nav.module.css';
+import useLogout from '@/hooks/useLogout';
 
-export default function Nav() {
-    const { user } = useContext(TeacherContext);
-    const navigate = useNavigate();
+import classes from './styles.module.css';
 
-    const links = [
+export default function Navbar() {
+    const { user } = useContext(UserContext);
+    const logout = useLogout();
+
+    const [sideNavOpen, setSideNavOpen] = useState(false);
+
+    const loggedInLinks = [
         {
-            to: '/',
-            name: 'Student Login',
+            to: '/dashboard',
+            text: 'Dashboard',
         },
         {
-            to: '/login',
-            name: 'Teacher Login',
-        }
+            to: '/library',
+            text: 'Library',
+        },
+        {
+            to: '/launch',
+            text: 'Launch',
+        },
+        {
+            to: '/rooms',
+            text: 'Rooms',
+        },
+        {
+            to: '/live',
+            text: 'Live Results',
+        },
     ];
-
-    // TODO: Add logo
 
     return (
         <nav className={ classes.nav }>
-            <div className={ classes.linksContainer }>
-                <div className={ classes.leftContainer }>
-                    <img src={ calvinLogo } alt="calvin logo" onClick={ () => navigate('/') } />
-                    
-                    <div className={ classes.navLinkContainer }>
-                        {
-                            links.map((link, i) => (
-                                <NavLink key={ i } className={ classes.link } to={ link.to }>
-                                    { link.name }
-                                </NavLink>
-                            ))
-                        }
-                    </div>
-                </div>
-                
+            <Logo />
 
-                <div className={ classes.buttonContainer }>
-                    {
-                        user && (
-                            <div className={ classes.profileBtnContainer }>
-                                <NavLink
-                                    className={ classes.profileLink }
-                                    to="/dashboard"
-                                >
-                                    <p>Go to your account</p>
-                                    <p className={ classes.iconContainer }>
-                                        <BsArrowRight size={ 15 } />
-                                    </p>
-                                </NavLink>
+            { user && (
+                <div className={ classes.userNav }>
+                    <div className={ classes.roomSelector }>dsadsada</div>
+
+                    { sideNavOpen ? (
+                        <div className={ classes.sideNav }>
+                            <div className={ classes.closeButtonContainer }>
+                                <GrClose
+                                    onClick={ () => setSideNavOpen(false) }
+                                    className={ classes.closeIcon }
+                                />
                             </div>
-                        )
-                    }
-                </div>
 
-            </div>
+                            <div className={ classes.linkContainer }>
+                                { loggedInLinks.map(({ to, text }) => (
+                                    <UnderlinedLink
+                                        key={ to }
+                                        to={ to }
+                                        onClick={ () => setSideNavOpen(false) }
+                                        isNavLink={ true }
+                                        className={ classes.link }
+                                    >
+                                        { text }
+                                    </UnderlinedLink>
+                                )) }
+                            </div>
+
+                            <Button
+                                onClick={ () => {
+                                    setSideNavOpen(false);
+                                    logout();
+                                } }
+                                className={ classes.logoutButton }
+                            >
+                                Logout
+                            </Button>
+                        </div>
+                    ) : (
+                        <div className={ classes.hamburgerContainer }>
+                            <RxHamburgerMenu
+                                onClick={ () => setSideNavOpen(true) }
+                                className={ classes.icon }
+                            />
+                        </div>
+                    ) }
+                </div>
+            ) }
         </nav>
     );
 }

@@ -1,0 +1,74 @@
+.container::before {
+    content: '';
+    background: url(https://i.imgur.com/AtM12Dc.png);
+    z-index: -1;
+    position: absolute;
+    display: block;
+    top: 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    filter: brightness(0.4);
+    height: 100%;
+    width: 100%;
+}
+
+.contentContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    top: 40%;
+    width: 100%;
+    position: absolute;
+    padding: 0px 50px;
+    box-sizing: border-box;
+}
+
+.introContainer {
+    color: var(--white);
+    width: 40%;
+}
+
+.introContainer h1 {
+    font-size: 48px;
+}
+
+.introContainer p {
+    color: var(--light-grey);
+}
+
+.getStarted {
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.getStarted h1 {
+    text-align: center;
+    color: var(--white);
+    letter-spacing: 3px;
+}
+
+.getStartedButtons {
+    align-self: center;
+    width: fit-content;
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dashboardButtonContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.loginButton {
+    padding: 15px 50px;
+}
+
+.teacherLogin:hover {
+    background: var(--dark-grey);
+    border-color: var(--grey);
+    color: var(--light-grey);
+}

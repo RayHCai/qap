@@ -2,50 +2,82 @@ declare module '*.css';
 declare module '*.png';
 declare module '*.svg';
 
-declare interface User {
+// #region Users
+declare interface Student {
+    name: string;
+}
+
+declare interface Teacher {
     id: string;
 
     username: string;
     email: string;
+
+    createdAt: Date;
+}
+// #endregion
+
+// #region Questions
+declare const enum QuestionType {
+    MC = 'mc',
+    TF = 'tf',
+    SA = 'sa',
 }
 
 declare interface Question {
     id: string;
 
-    title: string;
     content: string;
 
-    questionFor: string; // quiz id
-    questionType: 'mc' | 'tf' | 'sa';
+    questionFor: string; // ID of quiz that question belongs to
+
+    questionType: QuestionType;
     numPoints: number;
 
     choices: string[];
-
-    correctAnswer?: string[];
+    correctAnswers?: string[];
 }
 
+declare interface Answer {
+    id: string;
+
+    answeredBy: string;
+
+    answerFor: string; // ID of question that answer belongs to
+    sessionFor: string; // ID of session that answer belongs to
+
+    correct: boolean;
+    dateAnswered: Date;
+
+    textAnswer?: string;
+    selected?: string[];
+}
+// #endregion
+
+// #region Quizzes
 declare interface Session {
     id: string;
+
     code: string;
     active: boolean;
-    dateCreated: string;
-    sessionFor: string; // quiz id
+
+    sessionFor: string; // ID of quiz that session belongs to
     usersInSession: string[];
+
+    dateCreated: string;
 }
 
 declare interface Quiz {
     id: string;
 
     name: string;
-    teacher: string; // user id
+    teacher: string; // ID of teacher that owns the quiz
 }
 
-declare interface Answer {
+declare interface Room {
     id: string;
-    studentName: string;
-    answerFor: string; // question id
-    textAnswer?: string;
-    selected?: string[];
-    correct: boolean;
-    dateAnswered: string;
+
+    name: string;
+    createdAt: Date;
 }
+// #endregion

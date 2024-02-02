@@ -1,23 +1,15 @@
-# dependencies
-__pycache__
+# frontend
 node_modules/
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# production
-/build
-
-# misc
-*.sqlite3
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-npm-debug.log*
+build/
 yarn-debug.log*
 yarn-error.log*
+
+# backend
+__pycache__
+backend/venv
+.ruff_cache
+
+# misc
+.DS_Store
+.vs_code
+.idea
