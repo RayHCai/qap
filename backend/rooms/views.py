@@ -24,7 +24,7 @@ class RoomManagementView(APIView):
             return Response({'message': 'Cannot create room, user does not exist'}, status=404)
 
         room = Rooms.objects.create(
-            room_name=form_data.get('room_name'),
+            name=form_data.get('name'),
             owner=owner,
         )
 
@@ -32,7 +32,13 @@ class RoomManagementView(APIView):
 
         return Response(serialized_room, status=200)
     
-    def get(self, request):
+    def get(self, request, owner):
         '''
-        Get a Room object from ID
+        Get all room objects
         '''
+
+        rooms = Rooms.objects.filter(owner=owner)
+
+        serialized_rooms = RoomSerializer(rooms, many=True).data
+
+        return Response({'data': serialized_rooms}, status=200)

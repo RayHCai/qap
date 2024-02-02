@@ -24,8 +24,8 @@ class Questions(models.Model):
         TF = 'tf', 'tf'  # True/false
         SA = 'sa', 'sa'  # Short answer
 
-    question_type = models.CharField(
-        choices=QuestionTypeChoices.choices, max_length=255)
+    question_type = models.CharField(choices=QuestionTypeChoices.choices, max_length=255)
+    
     num_points = models.IntegerField()
 
     choices = ArrayField(

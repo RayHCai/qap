@@ -16,7 +16,7 @@ export type EditQuestionRef = {
 const EditQuestion = forwardRef(function (props: EditorQuizQuestionProps, ref) {
     const [questionContent, updateQuestionContent] = useState<
         string | undefined
-    >(props.question.content);
+    >(props.question.content);  
     const [choices, updateChoices] = useState(props.question.choices);
 
     const [tfCorrect, updateCorrect] = useState(
@@ -44,7 +44,7 @@ const EditQuestion = forwardRef(function (props: EditorQuizQuestionProps, ref) {
                 content: questionContent,
                 numPoints: parseInt(numPointsRef.current.value),
                 choices: newChoices,
-                correctAnswer: correctAnswers,
+                correctAnswers: correctAnswers,
             };
         },
     }));

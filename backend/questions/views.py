@@ -1,3 +1,4 @@
+import json
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -69,9 +70,8 @@ class QuestionsView(APIView):
 
         form = QuestionCreationForm({
             **request.data,
-            'choices': '',  # json.dumps(request.data.get('choices')),
-            # json.dumps(request.data.get('correct_answer')),
-            'correct_answers': ''
+            'choices': json.dumps(request.data.get('choices')),
+            'correct_answers': json.dumps(request.data.get('correct_answers'))
         })
 
         # print(form.is_valid(), form.errors.as_data())
@@ -88,16 +88,21 @@ class QuestionsView(APIView):
         except Quizzes.DoesNotExist:
             return Response({'message': f'Quiz not found with id { question_for }'}, status=404)
 
+        print(quiz_obj)
+
+        # print(request.data.get('correct_answers'))
+
         question = Questions.objects.create(
             content=form_data.get('content'),
             question_for=quiz_obj,
-            choices=request.data.get('choices'),
-            correct_answers=request.data.get('correct_answers'),
+            choices=json.loads(form_data.get('choices')),
+            correct_answers=json.loads(form_data.get('correct_answers')),
             question_type=form_data.get('question_type'),
             num_points=form_data.get('num_points'),
         )
 
-        return Response({'data': serialize_question(question)}, status=200)
+        # return Response({'data': serialize_question(question)}, status=200)
+        return Response({'data': ''}, status=200)
 
 
 class DeleteQuestionsView(APIView):

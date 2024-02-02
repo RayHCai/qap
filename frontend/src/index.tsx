@@ -9,6 +9,8 @@ import Quiz from '@/pages/quiz';
 import Dashboard from '@/pages/dashboard';
 import Library from '@/pages/library';
 import LiveResults from '@/pages/liveResults';
+import Launch from '@/pages/launch';
+import Rooms from '@/pages/rooms';
 
 import QuizEditor from '@/pages/quizEditor';
 import CreateQuestion from '@/pages/createQuestion';
@@ -34,13 +36,15 @@ function App() {
                         <Route path="/dashboard" element={ <Dashboard /> } />
 
                         <Route path="/library" element={ <Library /> } />
-
+                        <Route path="/launch" element={ <Launch /> } />
+                        <Route path="/rooms" element={ <Rooms /> } />
+                        
                         <Route
                             path="/live-results/:sessionId"
                             element={ <LiveResults /> }
                         />
 
-                        <Route path="/quiz-editor" element={ <QuizEditor /> } />
+                        <Route path="/quiz-editor/:quizId?" element={ <QuizEditor /> } />
                         <Route
                             path="/create-question/:questionType"
                             element={ <CreateQuestion /> }

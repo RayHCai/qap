@@ -73,4 +73,11 @@ declare interface Quiz {
     name: string;
     teacher: string; // ID of teacher that owns the quiz
 }
+
+declare interface Room {
+    id: string;
+
+    name: string;
+    createdAt: Date;
+}
 // #endregion

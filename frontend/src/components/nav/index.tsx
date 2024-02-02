@@ -6,6 +6,8 @@ import { GrClose } from 'react-icons/gr';
 
 import Button from '@/components/ui/button';
 import Logo from '@/components/ui/logo';
+import UnderlinedLink from '@/components/ui/underlinedLink';
+
 import { UserContext } from '@/contexts/userContext';
 
 import useLogout from '@/hooks/useLogout';
@@ -28,6 +30,10 @@ export default function Navbar() {
             text: 'Library',
         },
         {
+            to: '/launch',
+            text: 'Launch',
+        },
+        {
             to: '/rooms',
             text: 'Rooms',
         },
@@ -41,56 +47,53 @@ export default function Navbar() {
         <nav className={ classes.nav }>
             <Logo />
 
-            { user &&
-                (sideNavOpen ? (
-                    <div className={ classes.sideNav }>
-                        <div className={ classes.closeButtonContainer }>
-                            <GrClose
-                                onClick={ () => setSideNavOpen(false) }
-                                className={ classes.closeIcon }
+            { user && (
+                <div className={ classes.userNav }>
+                    <div className={ classes.roomSelector }>dsadsada</div>
+
+                    { sideNavOpen ? (
+                        <div className={ classes.sideNav }>
+                            <div className={ classes.closeButtonContainer }>
+                                <GrClose
+                                    onClick={ () => setSideNavOpen(false) }
+                                    className={ classes.closeIcon }
+                                />
+                            </div>
+
+                            <div className={ classes.linkContainer }>
+                                { loggedInLinks.map(({ to, text }) => (
+                                    <UnderlinedLink
+                                        key={ to }
+                                        to={ to }
+                                        onClick={ () => setSideNavOpen(false) }
+                                        isNavLink={ true }
+                                        className={ classes.link }
+                                    >
+                                        { text }
+                                    </UnderlinedLink>
+                                )) }
+                            </div>
+
+                            <Button
+                                onClick={ () => {
+                                    setSideNavOpen(false);
+                                    logout();
+                                } }
+                                className={ classes.logoutButton }
+                            >
+                                Logout
+                            </Button>
+                        </div>
+                    ) : (
+                        <div className={ classes.hamburgerContainer }>
+                            <RxHamburgerMenu
+                                onClick={ () => setSideNavOpen(true) }
+                                className={ classes.icon }
                             />
                         </div>
-
-                        <div className={ classes.linkContainer }>
-                            { loggedInLinks.map(({ to, text }) => (
-                                <NavLink
-                                    key={ to }
-                                    to={ to }
-                                    onClick={ () => setSideNavOpen(false) }
-                                    className={ (navData) =>
-                                        `
-                                                                ${classes.link}
-                                                                ${
-                                                                    navData.isActive
-                                                                        ? classes.active
-                                                                        : ''
-                                                                }
-                                                            `
-                                    }
-                                >
-                                    { text }
-                                </NavLink>
-                            )) }
-                        </div>
-
-                        <Button
-                            onClick={ () => {
-                                setSideNavOpen(false);
-                                logout();
-                            } }
-                            className={ classes.logoutButton }
-                        >
-                            Logout
-                        </Button>
-                    </div>
-                ) : (
-                    <div className={ classes.hamburgerContainer }>
-                        <RxHamburgerMenu
-                            onClick={ () => setSideNavOpen(true) }
-                            className={ classes.icon }
-                        />
-                    </div>
-                )) }
+                    ) }
+                </div>
+            ) }
         </nav>
     );
 }

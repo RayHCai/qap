@@ -6,7 +6,7 @@ import classes from './styles.module.css';
 type UnderlinedLinkProps = PropsWithChildren & {
     to: string;
     className?: string;
-    isNavLink?: string;
+    isNavLink?: boolean;
     onClick?: () => void;
 };
 

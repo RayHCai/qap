@@ -4,15 +4,18 @@ import Nav from '@/components/nav';
 
 import ModalContextWrapper from '@/contexts/modalContext';
 import UserContextWrapper from '@/contexts/userContext';
+import { RoomContextWrapper } from '@/contexts/roomContext';
 
 export default function Layout() {
     return (
         <UserContextWrapper>
-            <ModalContextWrapper>
-                <Nav />
+            <RoomContextWrapper>
+                <ModalContextWrapper>
+                    <Nav />
 
-                <Outlet />
-            </ModalContextWrapper>
+                    <Outlet />
+                </ModalContextWrapper>
+            </RoomContextWrapper>
         </UserContextWrapper>
     );
 }

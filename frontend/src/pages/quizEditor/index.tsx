@@ -61,7 +61,7 @@ export default function QuizEditor() {
 
         if (name.replaceAll(' ', '').length !== name.length)
             return throwError('Name cannot contain spaces');
-        else if (name.length === 0) return throwError('Name cannot be empty');
+        else if (name.length === 0) return throwError('Name cannot be empty');      
         else if (name.length > 255)
             return throwError('Name cannot exceed 255 characters');
 
@@ -80,12 +80,18 @@ export default function QuizEditor() {
         const json = await res.json();
 
         if (!res.ok) return throwError(json.message);
+
+        return json.data;
     }
 
     async function saveQuiz() {
-        const quizId = quiz?.id;
+        let quizId = quiz?.id;
 
-        if (!quiz) await createQuiz();
+        if (!quiz) {
+            quizId = await createQuiz();
+
+            if (!quizId) return;
+        }
 
         const promisesArr = questions.map((q) =>
             q.id.length === 0
@@ -101,10 +107,10 @@ export default function QuizEditor() {
                           // eslint-disable-next-line camelcase
                           question_type: q.questionType,
                           // eslint-disable-next-line camelcase
-                          num_points: q.numPoints,
+                          num_points: q.numPoints, 
                           choices: q.choices,
                           // eslint-disable-next-line camelcase
-                          correct_answers: quizId,
+                          correct_answers: q.correctAnswers,
                       }),
                   })
                 : fetch(`${SERVER_URL}/questions/update/${q.id}/`, {
@@ -174,7 +180,7 @@ export default function QuizEditor() {
             numPoints: 1,
             choices:
                 questionType === QuestionType.MC ? new Array(4).fill('') : [],
-            correctAnswers: ['True'],
+            correctAnswers: questionType === QuestionType.TF ? ['True'] : [],
         };
 
         updateEditingQuestion(questions.length);
